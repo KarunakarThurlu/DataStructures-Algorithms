@@ -5,12 +5,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Array {
+	
 	/*
 	 *==================================
 	 * Array Problems
@@ -72,12 +74,13 @@ public class Array {
 	 * 58.  Two Sum II
 	 * 59.  Two Sum less than target
 	 * 60.  Shortest Word Distance
+	 * 61.  Sum of Unique Elements
 	 */
 	private static final Logger logger= Logger.getLogger(Array.class.getName());
 	
 	public static void main(String... args) {
 		
-		
+		/*
 		logger.log(Level.INFO, "Two Sum  {0}",Arrays.toString(twoSum(new int[] {1,2,3,4,5,6,7,8,9},12)));  //indices of two elements whose sum is equal to 3  [4,6]
 		logger.log(Level.INFO, "Three Sum  {0}",threeSum(new int[] {-1,0,1,2,-1,-4},0));  //Sum of Three elements in array whose sum is 0 ==> [[-1, -1, 2], [-1, 0, 1], [-1, 0, 1]]
 		logger.log(Level.INFO, "Merge Sorted Arrays  {0}",Arrays.toString(mergeSortedArrays(new int[] {1,4,8,10,19},new int[] {3,5,9,12}))); //Merge Sorted Arrays  [1, 3, 4, 5, 8, 9, 10, 12, 19]
@@ -93,23 +96,211 @@ public class Array {
 		logger.log(Level.INFO, "Merge Interval  {0} :", mergeInterVal(new int[][] {{1,4},{3,6},{7,9},{8,12}})); //Merge Intervals: [{1,6},{7,12},{13,16}]
 		logger.log(Level.INFO, "Merge Interval  {0} :", mergeInterVal(new int[][] {{1,4},{3,6},{7,9},{8,12},new int[]{13,16}})); //[{1,6},{7,12},{13,16}]
 		logger.log(Level.INFO, "Insert Interval {0} :", insertInterVal(new int[][] {{1,3},{6,9}},new int[] {2,5})); //[{1,5},{6,9}}]
-		logger.log(Level.INFO,"Sub array Sum is equal to k  :  {0} ", subArraySumIsEqualToK(new int[] {1,2,3},3)); //Sub array Sum is equal to k  :  2 
+		logger.log(Level.INFO, "Sub array Sum is equal to k  :  {0} ", subArraySumIsEqualToK(new int[] {1,2,3},3)); //Sub array Sum is equal to k  :  2 
 		logger.log(Level.INFO, "Finding Longest Increasing SubArray  {0} ", findingLongestIncreasingSubArray(new int[] {12, 13, 1, 5, 4, 7, 8, 10, 10, 11})); //Finding Longest Increasing SubArray  4 
-		
+		logger.log(Level.INFO, "Candies required for Distribution  {0}  ", candysDistribution(new int[] {1,0,2}));  //Candys required for Distribution  5  
+		logger.log(Level.INFO, "Median of Two Sorted Arrays :  {0}  ", medianOfTwoSortedArrays(new int[] {1,2,6,9,12,15},new int[] {3,5,7,10,13})); // Median of Two Sorted Arrays :  7 
+		logger.log(Level.INFO, "Find given element is present or not in given array :  {0}  ", findGivenElementIsPresentOrNot(new int[] {1,2,6,9,12,15,19,21,25,29,31},29)); // 29 is present  at 9th index
+		logger.log(Level.INFO, "Search in rotated sorted array :  {0}  ", searchInRoatedSortedArray(new int[] {25,29,31,1,2,6,9,12,15,19,21},0,10,9));  //Search in rotated sorted array :  6 
+		logger.log(Level.INFO, "Left  Rotating Array {0}",Arrays.toString(leftrRotateArray(new int[] {1,2,3,4,5,6,7,8,9},3))); //Left  Rotating Array [4, 5, 6, 7, 8, 9, 1, 2, 3]
+		logger.log(Level.INFO, "Right Rotating Array {0}",Arrays.toString(rightRotateArray(new int[] {1,2,3,4,5,6,7,8,9},3))); //Right Rotating Array [7, 8, 9, 1, 2, 3, 4, 5, 6]
+		logger.log(Level.INFO, "Find First and last position of given element in sorted array {0}",Arrays.toString(findFirstAndLastPositionOfElement(new int[] {1,2,3,4,5,6,7,7,7,7,8,9},0,11,7))); //First and Last position of 7 is [6,9]
+		logger.log(Level.INFO, "Spiral Matrix {0}",sprialMatrix(new int[][] {{11,22,33,44},{42,51,62,54},{71,88,19,67},{61,18,91,98}}));  //Spiral Matrix [11, 22, 33, 44, 54, 67, 98, 91, 18, 61, 71, 42, 51, 62, 19, 88]
+		logger.log(Level.INFO, "Rotate Image {0}",Arrays.toString(rotateImage(new int[][] {{11,22,33},{42,51,62},{71,88,19}}))); //Rotate Image  {{71, 42, 11},{88, 51, 22},{19, 62, 33}}
 		
 		
 		logger.log(Level.INFO, "Two Sum Less Than Target  {0}",twoSumLessThanTarget(new int[] {34,23,1,24,75,33,54,8},60)); //Two Sum Less Tthan Target  58
-		logger.log(Level.INFO, "Left  Rotating Array {0}",Arrays.toString(leftrRotateArray(new int[] {1,2,3,4,5,6,7,8,9},3))); //Left  Rotating Array [4, 5, 6, 7, 8, 9, 1, 2, 3]
-		logger.log(Level.INFO, "Right Rotating Array {0}",Arrays.toString(rightRotateArray(new int[] {1,2,3,4,5,6,7,8,9},3))); //Right Rotating Array [7, 8, 9, 1, 2, 3, 4, 5, 6]
 		logger.log(Level.INFO, "Reversed  Array      {0}",Arrays.toString(reverseArray(new int[] {1,2,3,4,5,6,7,8,9})));      //Reversed  Array  [9, 8, 7, 6, 5, 4, 3, 2, 1]
 		logger.log(Level.INFO, "Reverse Array By Frequency {0}",Arrays.toString(reverseArrayByFrequency(new int[] {1,2,3,4,5,6,7,8,9},3))); //Reversed  Array  by frequency 3  [3, 2, 1, 6, 5, 4, 9, 8, 7]
 		
+		*/
 		
 		
-		logger.log(Level.INFO, "Candys required for Distribution  {0} ", candysDistribution(new int[] {1,2,2})); 
 	
-		
+		logger.log(Level.INFO, "Rotate Image {0}",Arrays.toString(rotateImage(new int[][] {{11,22,33},{42,51,62},{71,88,19}}))); 
    
+	}
+	
+	/**
+	 * 
+	 * @param matrix
+	 * @return
+	 */
+	public static Integer searchIn2DMatrix(int[][] matrix,int key) {
+		for(int[] i : matrix) {
+			for(int j:i) {
+				if(j==key)
+					return j;
+			}
+		}
+		return -1;
+	}
+	/**
+	 * 
+	 * @param matrix
+	 * @return
+	 */
+	public static int[][] rotateImage(int[][] matrix){
+		int row=matrix.length;
+		int col=matrix[0].length;
+		for(int i=0;i<row;i++) {
+			for(int j=i+1;j<col;j++) {
+				int t=matrix[i][j];
+				matrix[i][j]=matrix[j][i];
+				matrix[j][i]=t;
+			}
+		}
+		for(int i=0;i<row;i++) {
+			for(int j=0;j<col/2;j++) {
+				int t=matrix[i][j];
+				matrix[i][j]=matrix[i][row-j-1];
+				matrix[i][row-j-1]=t;
+			}
+		}
+		for(int[] a:matrix) {
+			logger.log(Level.INFO,"{0}",Arrays.toString(a));
+		}
+		return matrix;
+	}
+	/**
+	 * 
+	 * @param matrix
+	 * @return
+	 */
+	public static List<Integer> spiralMatrix(int[][] matrix) {
+		List<Integer> result=new ArrayList<>();
+		int rowStart=0;
+		int rowEnd=matrix.length-1;
+		int colStart=0;
+		int colEnd=matrix[0].length-1;
+		while(colStart<=colEnd && rowStart<=rowEnd) {
+			for(int i=colStart;i<=colEnd;i++)
+				result.add(matrix[rowStart][i]);
+			rowStart++;
+			for(int i=rowStart;i<=rowEnd;i++)
+				result.add(matrix[i][colEnd]);
+			colEnd--;
+			if(rowStart<=rowEnd)
+				for(int i=colEnd;i>=colStart;i--)
+					result.add(matrix[rowEnd][i]);
+			rowEnd--;
+			if(colStart<=colEnd)
+				for(int i=rowEnd;i>=rowStart;i--)
+					result.add(matrix[i][colStart]);
+			colStart++;
+		}
+		return result;
+	}
+	
+	/**
+	 * 
+	 * @param array
+	 * @param key
+	 * @return
+	 */
+	public static int[] findFirstAndLastPositionOfElement(int[] array,int left,int right,int key) {
+		if(left>right)
+			return new int[] {-1,-1};
+		int mid=left+(right-left)/2;
+		if(key==array[mid]) {
+			int l=mid;
+			int r=mid;
+			while(array[l]==array[mid])
+				l--;
+			while(array[r]==array[mid])
+				r++;
+			return new int[] {l+1,r-1};
+		}else if(array[mid]<key) {
+			return findFirstAndLastPositionOfElement(array,mid+1,right,key);
+		}else {
+			return findFirstAndLastPositionOfElement(array,left,mid-1,key);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param array
+	 * @param key
+	 * @return
+	 */
+	public static Integer searchInRoatedSortedArray(int[] array,int left ,int right,int key) {
+		if(left>right)
+			return -1;
+
+		int mid=left+(right-left)/2;
+		if(array[mid]==key)
+			return mid;
+		if(array[left]<=array[mid]) {
+			if(array[left]<=key && array[mid]>=key)
+				return searchInRoatedSortedArray(array,left,mid-1,key);
+			else
+				return searchInRoatedSortedArray(array,mid+1,right,key);
+		}else {
+			if(array[mid]<=key && array[right]>=key)
+				return searchInRoatedSortedArray(array,mid+1,right,key);
+			else
+				return searchInRoatedSortedArray(array,left,mid-1,key);
+		}
+	}
+	/**
+	 * 
+	 * @param  array
+	 * @param target
+	 * @return element index
+	 */
+	public static Integer findGivenElementIsPresentOrNot(int[] array,int target) {
+		int left=0;
+		int right=array.length-1;
+		
+		while(left<=right) {
+			int mid=left+(right-left)/2;
+			if(array[mid]==target)
+				return mid;
+			else if(array[mid]<target)
+				left=mid+1;
+			else
+				right=mid-1;
+		}
+		return -1;
+	}
+	
+	/**
+	 * Finding median of given two sorted arrays
+	 * @param firstArray
+	 * @param secondArray
+	 * @return 
+	 */
+	public static Double medianOfTwoSortedArrays(int[] firstArray,int[] secondArray) {
+		Integer firstArrayLength=firstArray.length;
+		Integer secondArrayLength=secondArray.length;
+		double[] resultArray=new double[firstArrayLength+secondArrayLength];
+		
+		Integer resultArrayIndex=0;
+		Integer firstArrayIndex=0;
+		Integer secondArrayIndex=0;
+		
+		while(firstArrayIndex<firstArrayLength && secondArrayIndex< secondArrayLength) {
+			if(firstArray[firstArrayIndex]<secondArray[secondArrayIndex])
+				resultArray[resultArrayIndex++]=firstArray[firstArrayIndex++];
+			else
+				resultArray[resultArrayIndex++]=secondArray[secondArrayIndex++];
+		}
+			
+		while(firstArrayIndex<firstArrayLength) 
+			resultArray[resultArrayIndex++]=firstArray[firstArrayIndex++];
+		
+		while(secondArrayIndex<secondArrayLength) 
+			resultArray[resultArrayIndex++]=secondArray[secondArrayIndex++];
+		
+		double result=0;
+		int mid=resultArray.length/2;
+		
+		if(resultArray.length%2==0) {
+			result = resultArray[mid-1]+resultArray[mid];
+		}else {
+			result = resultArray[mid];
+		}
+		return result;
 	}
 	
 	/**
@@ -546,6 +737,29 @@ public class Array {
 			s=s+cost[i];
 		}
 		return s;
+	}
+	
+	/**
+	 * 
+	 * @param nums
+	 * @return
+	 */
+	public static int sumOfUniqueElements(int[] nums) {
+		
+		Map<Integer,Integer> map=new HashMap<>();
+        for(int i=0;i<nums.length;i++){
+            if(map.containsKey(nums[i]))
+                map.put(nums[i],map.get(nums[i])+1);
+            else
+                map.put(nums[i],1);
+        }
+        int s=0;
+        for(Entry<Integer,Integer> e:map.entrySet()) {
+        	if(e.getValue()==1) {
+        		s=s+e.getKey();
+        	}
+        }
+        return s;
 	}
 	/**
 	 * 
