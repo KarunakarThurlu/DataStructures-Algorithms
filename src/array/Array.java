@@ -507,7 +507,7 @@ public class Array {
 	 * @param list
 	 * @param array
 	 * @param target
-	 * @param i
+	 * @param index
 	 */
 	private static void combinationSum(List<List<Integer>> res, List<Integer> list, int[] array, int target, int index) {
 		if(target==0) {
@@ -578,7 +578,7 @@ public class Array {
 	 * @param res
 	 * @param list
 	 * @param a
-	 * @param i
+	 * @param visited
 	 */
 	private static void permutationsOfGivenArrayElements(List<List<Integer>> res, List<Integer> list, int[] a,boolean[] visited) {
 		if(list.size()==a.length) {
