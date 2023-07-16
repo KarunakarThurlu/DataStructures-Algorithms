@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class StringHandling {
 	/*
@@ -99,16 +101,22 @@ public class StringHandling {
 	 * @param string
 	 * @return map contains each character count
 	 */
-	public static Map<Character, Integer> charCount(String str){
-		Map<Character, Integer> charCount=new HashMap<>();
+	public static Map<Character, Integer> charCount(String str) {
 		
-		for(int i=0;i<str.length();i++) {
-			if(charCount.containsKey(str.charAt(i)))
-				charCount.put(str.charAt(i),charCount.get(str.charAt(i))+1);
+		//Using streams
+		Map<Character, Long> collect = str.chars().mapToObj(c -> (char) c)
+										  .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+		
+		//Using HashMap
+		Map<Character, Integer> charCount = new HashMap<>();
+		for (int i = 0; i < str.length(); i++) {
+			if (charCount.containsKey(str.charAt(i)))
+				charCount.put(str.charAt(i), charCount.get(str.charAt(i)) + 1);
 			else
 				charCount.put(str.charAt(i), 1);
 		}
-		
+
 		return charCount;
 	}
 	
