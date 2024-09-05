@@ -9,7 +9,35 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class BinarySearchTree {
+	
 	/*
+	 * =========================================================
+	 * Binary Tree 
+	 * =========================================================
+	 * 1. BinaryTree is a hierarchical data structure
+	 * 2. In Binary Tree each Node have at most 2 children Nodes.(i.e either 0 OR 1 OR 2)
+	 * 3. These children are usually referred to as the left child and the right child.
+	 * 
+	 * General Structure: It doesn't impose any specific rules on how the values of the nodes should be arranged.
+	 * -------------------
+	 * 
+	 * Usage: expression trees, decision trees, and binary heaps.
+	 * ------
+	 * 
+	 * =========================================================
+	 * Binary Search Tree 
+	 * =========================================================
+	 * A binary tree where the left child node is less than parent node and  right child node is greater than parent node.
+	 * 
+	 * 
+	 * Usage: BSTs are used for efficient searching, insertion, and deletion operations. Because of the ordering property, search operations in a balanced BST can be performed in O(log n) time.
+	 * -----
+	 * 
+	 * 
+	 * -----------------------------------------
+	 * Coding challenges on Binary Search Tree
+	 * -----------------------------------------
+	 * 
 	 * 1  Adding Element into BinarySearchTree
 	 * 2  Adding List of Elements at once into BinarySearchTree
 	 * 3  PreOrder Traversal
@@ -20,8 +48,9 @@ public class BinarySearchTree {
 	 * 8  Deleting specific node in BinarySearchTree
 	 * 9  Left View Of BinarySearchTree
 	 * 10 Right View Of BinarySearchTree
-	 * 11 Valid BinarySearchTree
-	 * 12 Balanced BinarySearchTree  
+	 * 11 Find Height of Binary Search Tree
+	 * 12 Valid BinarySearchTree
+	 * 13 Balanced BinarySearchTree  
 	 * 
 	 * 
 	 * 
@@ -35,57 +64,88 @@ public class BinarySearchTree {
 	private static final Logger logger= Logger.getLogger(BinarySearchTree.class.getName());
  
 	public static void main(String[] args) {
-		var list = Arrays.asList(40, 30, 50,25,35,15,28,45,60,55,54,70);
-		TreeNode<Integer> root=addAll(list);
-		/*logger.log(Level.INFO,"PreOrder Traversal  for  : {0}   is   : {1}",new Object[] {list,PreOrderTraversal(root, new ArrayList<>())});   //INFO: preOrder Traversal  for  : [40, 30, 50, 25, 35, 15, 28, 45, 60, 55, 70]   is   : [40, 30, 25, 15, 28, 35, 50, 45, 60, 55, 70]
-		  logger.log(Level.INFO,"InOrder  Traversal  for  : {0}   is   : {1}",new Object[] {list,InOrderTraversal(root, new ArrayList<>())});    //INFO: InOrder Traversal   for  : [40, 30, 50, 25, 35, 15, 28, 45, 60, 55, 70]   is   : [15, 25, 28, 30, 35, 40, 45, 50, 55, 60, 70]
-		  logger.log(Level.INFO,"PostOrder Traversal for  : {0}   is   : {1}",new Object[] {list,PostOrderTraversal(root, new ArrayList<>())});  //INFO: postOrder Traversal for  : [40, 30, 50, 25, 35, 15, 28, 45, 60, 55, 70]   is   : [15, 25, 28, 30, 35, 45, 50, 55, 60, 70, 40]
-		  logger.log(Level.INFO,"Deleting Elements those are grater than 50   : {0}  ",preOrderTraversal(deleteNodeII(root,50), new ArrayList<>())); //INFO: Deleting Elements those are grater than 50   : [40, 30, 25, 15, 28, 35, 50, 45] 
-		  logger.log(Level.INFO,"Deleting element  50   : {0}  ",preOrderTraversal(deleteNode(root,50), new ArrayList<>()));  //INFO: Deleting element  50   : [40, 30, 25, 15, 28, 35, 55, 45, 60, 70] 
-
-
-		 */
-		logger.log(Level.INFO,"Left view of BinarySearch Tree   : {0}  ",binarySearchTreeLeftSideView(root)); 
-	}
-
-
-	
-
-
-	/**
-	 * 
-	 * @param treeNode
-	 * @return
-	 */
-	static int maxLevel=0;
-	public static List<Integer> binarySearchTreeLeftSideView(TreeNode<Integer> treeNode){
-		return binarySearchTreeLeftSideView(treeNode,new ArrayList<>(),1);
-	}
-	
-	/**
-	 * 
-	 * @param treeNode
-	 * @param list
-	 * @param maxLevel
-	 * @param currentLevel
-	 * @return
-	 */
-	private static List<Integer> binarySearchTreeLeftSideView(TreeNode<Integer> treeNode, List<Integer> list,int currentLevel) {
-		if(treeNode==null)
-			return list;
-		if(maxLevel<currentLevel) {
-			list.add(treeNode.data);
-			maxLevel=currentLevel;
-		}
 		
-		binarySearchTreeLeftSideView(treeNode.left,list,currentLevel+1);
-		binarySearchTreeLeftSideView(treeNode.right,list,currentLevel+1);
+		/*
+		   	     6
+       		   /   \
+      		  4     8
+     		 / \   / \
+    		2   5 7   9
+    				   \
+    				   12
+    				  /  \
+                     11  13
+		 */
+		var list = Arrays.asList(6,4,8,2,5,7,9,12,11,13);
+		TreeNode<Integer> root=addAll(list);
+	  	
+		logger.log(Level.INFO,"PreOrder Traversal   : {0}  ", preOrderTraversal(root, new ArrayList<>()));   
+		logger.log(Level.INFO,"InOrder  Traversal   : {0}  ", inOrderTraversal(root, new ArrayList<>()));    
+		logger.log(Level.INFO,"PostOrder Traversal  : {0}  ", postOrderTraversal(root, new ArrayList<>()));
+		logger.log(Level.INFO,"LevelOrder Traversal : {0}  ", levelOrderTraversal(root));
+		logger.log(Level.INFO,"Left view of BinarySearch Tree   : {0} ",bstLeftSideView(root)); 
+		logger.log(Level.INFO,"Right view of BinarySearch Tree  : {0} ",bstRightSideView(root)); 
+		logger.log(Level.INFO,"Height of BinarySearch Tree      : {0} ",findHeightOfBST(root)); 
+	    logger.log(Level.INFO,"Deleting Elements grater than 11 : {0} ",preOrderTraversal(deleteNodeII(root,11), new ArrayList<>())); 
+		logger.log(Level.INFO,"Deleting element  8  : {0}  ", preOrderTraversal(deleteNode(root,8), new ArrayList<>()));
+	}
+	
+	
+	/**
+	 * 11 Finding Height of BST
+	 * @param rootNode
+	 * @return Integer 
+	 */
+	public static Integer findHeightOfBST(TreeNode<Integer> rootNode) {
+		if(rootNode==null) return 0;
+		Integer leftNodeHeight  = findHeightOfBST(rootNode.left);
+		Integer rightNodeHeight = findHeightOfBST(rootNode.right);
+		return Math.max(leftNodeHeight, rightNodeHeight)+1;
+	}
+
+	/**
+	 * 10  Right View Of BinarySearchTree
+	 * @param rootNode
+	 * @return List<Integer> that contains right view elements
+	 */
+	public static List<Integer> bstRightSideView(TreeNode<Integer> rootNode){
+		List<Integer> list = new ArrayList<>();
+		Queue<TreeNode<Integer>> queue = new LinkedList<>();
+		if(rootNode==null) return list;
+		queue.add(rootNode);
+		while(!queue.isEmpty()) {
+			int size = queue.size();
+			for(int i=0;i<size;i++) {
+				TreeNode<Integer> poll = queue.poll();
+				if(i==size-1) list.add(poll.data);
+				if(poll.left!=null) queue.add(poll.left);
+				if(poll.right!=null) queue.add(poll.right);
+			}
+		}
 		return list;
 	}
-
-
-
-
+	
+	/**
+	 * 9  Left View Of BinarySearchTree
+	 * @param rootNode
+	 * @return List<Integer> that contains left view elements
+	 */
+	public static List<Integer> bstLeftSideView(TreeNode<Integer> rootNode){
+		List<Integer> list = new ArrayList<>();
+		Queue<TreeNode<Integer>> queue = new LinkedList<>();
+		if(rootNode==null) return list;
+		queue.add(rootNode);
+		while(!queue.isEmpty()) {
+			int size = queue.size();
+			for(int i=0;i<size;i++) {
+				TreeNode<Integer> poll = queue.poll();
+				if(i==0) list.add(poll.data);
+				if(poll.left!=null) queue.add(poll.left);
+				if(poll.right!=null) queue.add(poll.right);
+			}
+		}
+		return list;
+	}
 
 	/**
 	 * 8. Deleting specific node in BinarySearchTree
@@ -94,22 +154,22 @@ public class BinarySearchTree {
 	 * @return
 	 */
 	public static TreeNode<Integer> deleteNode(TreeNode<Integer> root,Integer data){
-		if(root==null) {
+		if(root==null) 
 			return root;
-		}
-		if(root.data<data)
+		
+		if(root.data<data) {
 			root.right=deleteNode(root.right,data);
-		else if(root.data>data)
+		} else if(root.data>data) {
 			root.left=deleteNode(root.left,data);
-		else {
-			if(root.left==null)
+		} else {
+			if(root.left==null) {
 				return root.right;
-			else if(root.right==null)
+			} else if(root.right==null) {
 				return root.left;
-			else if(root.left!=null && root.right!=null) {
+		    } else if(root.left!=null && root.right!=null) {
 				root.data=findMinFromRightSubTree(root.right);
 				root.right=deleteNode(root.right, root.data);
-			}else {
+			} else {
 				return null;
 			}
 		}
@@ -146,11 +206,10 @@ public class BinarySearchTree {
 	 * 6. Level Order Traversal of BinarySearch Tree
 	 * @param rootNode
 	 * @return List of levelOrderTraversal elements
- 
  	 */
 	public static List<List<Integer>> levelOrderTraversal(TreeNode<Integer> rootNode){
-		List<List<Integer>> levelOrderTraversal=new ArrayList<>();
-		Queue<TreeNode<Integer>> queue=new LinkedList<>();
+		List<List<Integer>> levelOrderTraversal = new ArrayList<>();
+		Queue<TreeNode<Integer>> queue =new LinkedList<>();
 		queue.offer(rootNode);
 		while(!queue.isEmpty()) {
 			List<Integer> level =new ArrayList<>();
@@ -176,8 +235,8 @@ public class BinarySearchTree {
 	 */
 	public static List<Integer> postOrderTraversal(TreeNode<Integer> root,List<Integer> list){
 		if(root!=null) {
-			inOrderTraversal(root.left,list);
-			inOrderTraversal(root.right,list);
+			postOrderTraversal(root.left,list);
+			postOrderTraversal(root.right,list);
 			list.add(root.data);
 		}
 		return list;
@@ -197,6 +256,7 @@ public class BinarySearchTree {
 		}
 		return list;
 	}
+	
 	/**
 	 * 3. PreOrder Traversal (Root-->Left-->right)
 	 * @param rootNode
@@ -215,7 +275,7 @@ public class BinarySearchTree {
 	/**
 	 * 2. Adding List of Elements at once into BinarySearchTree
 	 * @param list
-	 * @return root
+	 * @return root node
 	 */
 	public static TreeNode<Integer> addAll(List<Integer> list){
 		TreeNode<Integer> root=null;
@@ -225,10 +285,10 @@ public class BinarySearchTree {
 	}
 
 	/**
-	 * 1. Adding Element into BinarySearchTree
+	 * 1  Adding Element into BinarySearchTree
 	 * @param root
 	 * @param data
-	 * @return
+	 * @return root node
 	 */
 	public static TreeNode<Integer> add(TreeNode<Integer> root,Integer data){
 		if(root==null)
