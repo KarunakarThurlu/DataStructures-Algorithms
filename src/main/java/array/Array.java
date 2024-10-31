@@ -12,6 +12,7 @@ public class Array {
 	 * 1. Two Sum Problem
 	 * 2. Two Sum II 
 	 * 3. Merge Sorted Array's
+	 * 4. Move Zero's to Beginning of the array
 	 * 
 	 */
 
@@ -125,5 +126,38 @@ public class Array {
 			mergedArray[k++] = arrayTwo[j++];
 
 		return mergedArray;
+	}
+	
+	/**
+	 * 4. Move Zero's to Beginning : Moves all zeros in the given array to the beginning, preserving the order of non-zero elements.
+	 * 
+	 * <p>This method uses two pointers to iterate through the array from the end. 
+	 * Non-zero elements are moved to the back while zeros accumulate at the start of the array.</p>
+	 * 
+	 * <p><strong>Time Complexity:</strong> O(n), where n is the length of the array, as it requires a single pass through the array.</p>
+	 * <p><strong>Space Complexity:</strong> O(1), as it performs the operation in-place without requiring additional space.</p>
+	 * 
+	 * @param array the input array of integers in which zeros will be moved to the start
+	 * @return the modified array with all zeros at the beginning
+	 * 
+	 * <pre>
+	 * Example:
+	 * Input:  [1, 0, 2, 0, 3]
+	 * Output: [0, 0, 1, 2, 3]
+	 * </pre>
+	 */
+	public static int[] moveZerosToStarting(int[] array) {
+		int startIndex = 0;
+		int endIndex = array.length - 1;
+		int swappingIndex = array.length - 1;
+		while (endIndex >= startIndex) {
+			if (array[endIndex] != 0) {
+				int temp = array[swappingIndex];
+				array[swappingIndex--] = array[endIndex];
+				array[endIndex] = temp;
+			}
+			endIndex--;
+		}
+		return array;
 	}
 }

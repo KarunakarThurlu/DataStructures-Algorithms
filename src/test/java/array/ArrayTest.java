@@ -50,14 +50,14 @@ public class ArrayTest {
 	}
 	
 	@ParameterizedTest
-	@MethodSource("provideMergeSortedArraysCases")
+	@MethodSource("provideMergeSortedArraysTestCases")
 	@DisplayName("Merge Sorted Arrays Test Cases")
 	void testMergeSortedArrays(int[] arrayOne, int[] arrayTwo, int[] expected) {
 		int[] actual = Array.mergeSortedArrays(arrayOne, arrayTwo);
 		assertArrayEquals(expected, actual, "Expected and Actual Arrays should be equal");
 	}
 
-	private static Stream<Arguments> provideMergeSortedArraysCases() {
+	private static Stream<Arguments> provideMergeSortedArraysTestCases() {
 		return Stream.of(
 				Arguments.of(new int[] { 2, 7, 11},new int[] {3,5}, new int[] { 2, 3, 5, 7, 11}),
 				Arguments.of(new int[] { 3, 6}, new int[] {-3}, new int[] { -3, 3, 6 }),
@@ -66,6 +66,26 @@ public class ArrayTest {
 				Arguments.of(new int[] { 0, 2, 7 }, new int[] {}, new int[] { 0, 2, 7 }),
 				Arguments.of(new int[] { 7 }, new int[] {8}, new int[] { 7, 8}),
 				Arguments.of(new int[] { }, new int[] {}, new int[] { })
+			);
+	}
+	
+	@ParameterizedTest
+	@MethodSource("provideMoveZerosToStartingTestCases")
+	@DisplayName("Moving Zero's to starting of the Array Test Cases")
+	void testMoveZerosToStarting(int[] array, int[] expected) {
+		int[] actual = Array.moveZerosToStarting(array);
+		assertArrayEquals(expected, actual, "Expected and Actual Arrays should be equal");
+	}
+
+	private static Stream<Arguments> provideMoveZerosToStartingTestCases() {
+		return Stream.of(
+				Arguments.of(new int[] { 2, 7, 0, 0, 11, 0}, new int[] {0, 0, 0, 2, 7, 11}),
+				Arguments.of(new int[] { 3, 6, 0}, new int[] {0, 3, 6}),
+				Arguments.of(new int[] { -3, 0, -1 }, new int[]{0, -3, -1}),
+				Arguments.of(new int[] { 0, 0, 0}, new int[] {0, 0, 0}),
+				Arguments.of(new int[] { 0, 2, 7 }, new int[] {0, 2, 7}),
+				Arguments.of(new int[] { 7 }, new int[] {7}),
+				Arguments.of(new int[] { }, new int[] {})
 			);
 	}
 }
