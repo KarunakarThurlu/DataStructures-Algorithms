@@ -215,4 +215,124 @@ public class ArrayTest {
 	        Arguments.of(new int[] {5}, 5)                          // single element array
 	    );
 	}
+	
+    @ParameterizedTest
+    @MethodSource("provideFindKthLargestElementTestCases")
+    @DisplayName("Test Find K-th Largest Element")
+    void testFindKthLargestElement(int[] array, int k, int expected) {
+        int actual = Array.findKthLargestElement(array, k);
+        assertEquals(expected, actual, "Expected and actual k-th largest elements should be equal");
+    }
+
+    private static Stream<Arguments> provideFindKthLargestElementTestCases() {
+        return Stream.of(
+            Arguments.of(new int[] {3, 2, 1, 5, 6, 4}, 2, 5),    		// 2nd largest element is 5
+            Arguments.of(new int[] {3, 2, 3, 1, 2, 4, 5, 5, 6}, 4, 4), 	// 4th largest is 4
+            Arguments.of(new int[] {7, 10, 4, 3, 20, 15}, 3, 10), 		// 3rd largest is 10
+            Arguments.of(new int[] {1, 2, 3, 4, 5, 6}, 1, 6),    		// Largest element is 6
+            Arguments.of(new int[] {5, 5, 5, 5, 5}, 3, 5),       		// All elements are 5, so 3rd largest is also 5
+            Arguments.of(new int[] {9, 8, 7, 6, 5, 4, 3, 2, 1}, 5, 5)   // 5th largest is 5
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("provideTestCases")
+    @DisplayName("Test cases for subarraySumEqualsK method")
+    void testSubarraySumEqualsK(int[] array, int k, int expected) {
+        int actual = Array.subArraySumEqualsToK(array, k);
+        assertEquals(expected, actual, "Expected and actual counts of subarrays should match");
+    }
+
+    private static Stream<Arguments> provideTestCases() {
+        return Stream.of(
+                Arguments.of(new int[]{1, 2, 3}, 3, 2), 
+                Arguments.of(new int[]{1, 1, 1}, 2, 2),
+                Arguments.of(new int[]{1, 2, 3, -2, 5}, 5, 2),
+                Arguments.of(new int[]{-1, -1, 1}, 0, 1),
+                Arguments.of(new int[]{1, -1, 1}, 0, 2),
+                Arguments.of(new int[]{3, 4, 7, 2, -3, 1, 4, 2, -3}, 7, 4),
+                Arguments.of(new int[]{0, 0, 0, 0}, 0, 10),
+                Arguments.of(new int[]{-2, -3, 4, -1, -2, 1, 5, -3}, 3, 3)
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("providePeakElementTestCases")
+    @DisplayName("Test Peak Element Finder")
+    void testFindPeakElement(int[] nums, int expected) {
+        int actual = Array.findPeakElement(nums);
+        assertEquals(expected, actual, "Expected and actual peak element index should match");
+    }
+
+    private static Stream<Arguments> providePeakElementTestCases() {
+        return Stream.of(
+                Arguments.of(new int[]{1, 2, 3, 1}, 2),
+                Arguments.of(new int[]{1, 2, 1, 3, 5, 6, 4}, 1),
+                Arguments.of(new int[]{3, 4, 3, 2, 1}, 1),
+                Arguments.of(new int[]{1}, 0),
+                Arguments.of(new int[]{10, 20, 15, 2, 23, 90, 67}, 1)
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("provideTestCasesForLCIS")
+    @DisplayName("Test findLengthOfLCIS with various cases")
+    void testFindLengthOfLCIS(int[] nums, int expected) {
+    	int actual = Array.longestIncreasingSubArray(nums);
+        assertEquals(expected, actual, "Expected and Actual count should match");
+    }
+
+    private static Stream<Arguments> provideTestCasesForLCIS() {
+        return Stream.of(
+            Arguments.of(new int[] {1, 3, 5, 4, 7}, 3),
+            Arguments.of(new int[] {2, 2, 2, 2}, 1),
+            Arguments.of(new int[] {1, 3, 5, 7}, 4),
+            Arguments.of(new int[] {5, 4, 3, 2, 1}, 1),
+            Arguments.of(new int[] {1, 2, 3, 2, 2, 4, 5}, 3),
+            Arguments.of(new int[] {10, 20, 30, 1, 2, 3, 40}, 4)
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("provideTestCasesForCandyDistribution")
+    @DisplayName("Test Candy Distribution with various cases")
+    void testCandyDistribution(int[] array, int expected) {
+    	int actual = Array.candyDistribution(array);
+        assertEquals(expected, actual,"Expected and Actual Candies count should match");
+    }
+
+    private static Stream<Arguments> provideTestCasesForCandyDistribution() {
+        return Stream.of(
+            Arguments.of(new int[]{1, 0, 2}, 5),  		// Expected: [2, 1, 2] -> Total: 5
+            Arguments.of(new int[]{1, 2, 2}, 4),  		// Expected: [1, 2, 1] -> Total: 4
+            Arguments.of(new int[]{1, 3, 2, 2, 1}, 7),  // Expected: [1, 3, 2, 1, 1] -> Total: 7
+            Arguments.of(new int[]{1, 2, 3, 4, 5}, 15), // All increasing sequence: [1, 2, 3, 4, 5] -> Total: 15
+            Arguments.of(new int[]{5, 4, 3, 2, 1}, 15), // All decreasing sequence: [5, 4, 3, 2, 1] -> Total: 15
+            Arguments.of(new int[]{1, 1, 1, 1}, 4), 	// All equal ratings: [1, 1, 1, 1] -> Total: 4
+            Arguments.of(new int[]{1}, 1)  				// Single child: [1] -> Total: 1
+        );
+    }
+    
+    @ParameterizedTest
+    @DisplayName("Test Median of two sorted arrays with various cases")
+    @MethodSource("provideMedianTestCases")
+    void testMedianOfSortedArrays(int[] arrayOne, int[] arrayTwo, double expected) {
+        double result = Array.medianOfSortedArrays(arrayOne, arrayTwo);
+        // Using a tolerance of 0.0001 to account for minor floating-point precision errors 
+        // in the median calculation, allowing the test to pass if the actual result is within 
+        // 0.0001 of the expected value.
+        assertEquals(expected, result, 0.0001, "Expected and actual median should be equal");
+    }
+
+    private static Stream<Arguments> provideMedianTestCases() {
+        return Stream.of(
+            Arguments.of(new int[]{1, 3}, new int[]{2}, 2.0),                // Odd length
+            Arguments.of(new int[]{1, 2}, new int[]{3, 4}, 2.5),             // Even length
+            Arguments.of(new int[]{0, 0}, new int[]{0, 0}, 0.0),             // All zeros
+            Arguments.of(new int[]{}, new int[]{1}, 1.0),                    // One empty array
+            Arguments.of(new int[]{1, 2, 6}, new int[]{3, 4, 5}, 3.5),       // Mixed elements
+            Arguments.of(new int[]{1, 5, 9}, new int[]{2, 6, 10, 15}, 6.0)   // Unbalanced lengths
+        );
+    }
+
 }

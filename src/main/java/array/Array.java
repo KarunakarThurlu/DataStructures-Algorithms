@@ -1,7 +1,10 @@
 package array;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PriorityQueue;
+import static java.lang.Math.max;
 
 public class Array {
 	/*
@@ -19,6 +22,16 @@ public class Array {
 	 * 8. Sliding window maximum
 	 * 9. Max sum sub array
 	 * 10.Max product sub array
+	 * 11.Find K'th largest element in an array
+	 * 12.Sub Array Sum equals to k
+	 * 13.Finding Peak Element
+	 * 14.Longest increasing sub array
+	 * 15.Candy's Distribution
+	 * 16.Median of Two Sorted Array's
+	 * 17.Find given element is present or not in given array
+	 * 18.Search in rotated sorted array
+	 * 19.Permutations of Array
+	 * 20.Combinations of Array
 	 * 
 	 */
 
@@ -393,4 +406,229 @@ public class Array {
 	    }
 	    return result;
 	}
+	
+	/**
+	 * 11. Find k-th largest element in an array : Find the k-th largest element in the given array using a Min-Heap (PriorityQueue).
+	 * This approach maintains a min-heap of size k, ensuring that after processing all elements, the root of the heap contains the k-th largest element.
+	 *
+	 * <p><strong>Time Complexity:</strong> O(n log k), where n is the number of elements in the array. Each element insertion in the heap takes O(log k) time, and only the k largest elements are maintained.</p>
+	 * <p><strong>Space Complexity:</strong> O(k), as only the k largest elements are stored in the heap.</p>
+	 *
+	 * @param array the input array of integers
+	 * @param k the position of the largest element to find (1-based index)
+	 * @return the k-th largest element in the array
+	 *
+	 * <pre>
+	 * Example:
+	 * Input:  array = [3, 2, 1, 5, 6, 4], k = 2
+	 * Output: 5  // The second largest element is 5
+	 *
+	 * Input:  array = [3, 2, 3, 1, 2, 4, 5, 5, 6], k = 4
+	 * Output: 4  // The fourth largest element is 4
+	 * </pre>
+	 */
+	public static int findKthLargestElement(int[] array, int k) {
+		PriorityQueue<Integer> queue = new PriorityQueue<>();
+		int startIndex = 0;
+		int endIndex = array.length - 1;
+		while (startIndex <= endIndex) {
+			queue.offer(array[startIndex++]);
+			if (queue.size() > k) {
+				queue.poll();
+			}
+		}
+		return queue.poll();
+	}
+	
+	/**
+     * 12. Sub Array Sum equals to k : Finds the number of continuous subarrays in the input array `nums` whose sum equals `k`.
+     *
+     * <p><strong>Time Complexity:</strong> O(n), where n is the number of elements in the array, since we iterate through the array once.</p>
+     * <p><strong>Space Complexity:</strong> O(n), for storing cumulative sums in the hash map.</p>
+     *
+     * @param nums the input array of integers
+     * @param k the target sum for subarrays
+     * @return the number of continuous subarrays that sum to `k`
+     */
+	public static int subArraySumEqualsToK(int[] array, int k) {
+		int count = 0;
+		int currentSum = 0;
+
+		Map<Integer, Integer> map = new HashMap<>();
+		map.put(0, 1);
+		int startIndex = 0;
+		int endIndex = array.length - 1;
+
+		while (startIndex <= endIndex) {
+			currentSum = currentSum + array[startIndex++];
+			int targetDifference = currentSum - k;
+			if (map.containsKey(targetDifference)) {
+				count = count + map.get(targetDifference);
+			}
+			map.put(currentSum, map.getOrDefault(currentSum, 0) + 1);
+		}
+
+		return count;
+	}
+	
+	/**
+	 * 13. Finding Peak Element: Finds a peak element in the given array. A peak element is an element that is
+	 * greater than its immediate neighbors. If the array has multiple peaks, this 
+	 * method returns the index of the first peak found while scanning from left to right.
+	 * If no peak is found in the middle, the last element is considered a peak.
+	 * 
+	 * <p><strong>Time Complexity:</strong> O(n), where n is the length of the array.</p>
+	 * <p><strong>Space Complexity:</strong> O(1), as no additional data structures are used.</p>
+	 * 
+	 * @param array the input array of integers
+	 * @return the index of a peak element in the array
+	 * 
+	 * <pre>
+	 * Example:
+	 * Input:  array = [1, 3, 20, 4, 1, 0]
+	 * Output: 2 (index of peak element 20)
+	 * 
+	 * Input:  array = [10, 8, 9]
+	 * Output: 1 (index of peak element 8)
+	 * </pre>
+	 */
+	public static int findPeakElement(int[] array) {
+		for(int i=0;i<array.length-1;i++) {
+			if(array[i]>array[i+1]) {
+				return i;
+			}
+		}
+		return array.length-1;
+	}
+	
+	/**
+	 * 14.Longest increasing sub array: The Longest Continuous Increasing Subsequence is a sequence of consecutive 
+	 * elements in an array where each element is strictly greater than the previous one.
+	 * 
+	 * <p><strong>Time Complexity:</strong> O(n), where n is the length of the array, as we only make a single pass.
+	 * <p><strong>Space Complexity:</strong> O(1), as we use only a few additional variables.
+	 * 
+	 * @param nums The input array of integers
+	 * @return The length of the longest continuous increasing subsequence in the input array
+	 * 
+	 * <pre>
+	 * Example:
+	 * Input:  nums = [1, 3, 5, 4, 7]
+	 * Output: 3
+	 * Explanation: The longest continuous increasing subsequence is [1, 3, 5], with length 3.
+	 * </pre>
+	 */
+	public static int longestIncreasingSubArray(int[] array) {
+		int count = 0;
+		int max = 0;
+		for(int i=0;i<array.length-1;i++) {
+			if(array[i]<array[i+1]) {
+				count=count+1;
+				max=max<count?count:max;
+			}else {
+				count=0;
+			}
+		}
+		return max+1;// Adding 1 to account for the start of the subsequence
+	}
+	
+	/**
+     * 15.Candy's Distribution: Calculates the minimum candies needed to distribute to children such that:
+     * 1. Each child has at least one candy.
+     * 2. A child with a higher rating than their immediate neighbors gets more candies than them.
+     * 
+     * <p>The solution makes two passes over the ratings array:
+     * <ol>
+     * <li>A left-to-right pass to ensure each child with a higher rating than the previous child has more candies.</li>
+     * <li>A right-to-left pass to ensure each child with a higher rating than the next child has more candies.</li>
+     * </ol>
+     * 
+     * <p><strong>Time Complexity:</strong> O(n), where n is the number of children.
+     * <p><strong>Space Complexity:</strong> O(n), due to the additional candies array.
+     * 
+     * @param array an array representing the ratings of each child
+     * @return the minimum number of candies required
+     * 
+     * <pre>
+     * Example:
+     * Input:  [1, 0, 2]
+     * Output: 5
+     * Explanation: [2, 1, 2]
+     * </pre>
+     */
+	public static int candyDistribution(int[] array) {
+		int[] candies = new int[array.length];
+		Arrays.fill(candies, 1);
+
+		for (int i = 1; i < array.length; i++) {
+			if (array[i] > array[i - 1]) {
+				candies[i] = candies[i - 1] + 1;
+			}
+		}
+
+		for (int i = array.length - 2; i >= 0; i--) {
+			if (array[i] > array[i + 1]) {
+				candies[i] = max(candies[i], candies[i + 1] + 1);
+			}
+		}
+		return Arrays.stream(candies).sum();
+	}
+	
+	/**
+	 * 16.Median of Two Sorted Array's: Finds the median of two sorted arrays by merging them and calculating the median 
+	 * based on the combined length.
+	 * 
+	 * <p><strong>Time Complexity:</strong> O(m + n), where m and n are the lengths of 
+	 * the two arrays, as each element is accessed once during the merge.</p>
+	 * <p><strong>Space Complexity:</strong> O(m + n), due to the storage of merged elements 
+	 * in a new array.</p>
+	 * 
+	 * @param arrayOne the first sorted array of integers
+	 * @param arrayTwo the second sorted array of integers
+	 * @return the median of the merged sorted array
+	 * 
+	 * <pre>
+	 * Example:
+	 * Input:  arrayOne = [1, 3], arrayTwo = [2]
+	 * Output: 2.0
+	 * 
+	 * Input:  arrayOne = [1, 2], arrayTwo = [3, 4]
+	 * Output: 2.5
+	 * </pre>
+	 */
+	public static double medianOfSortedArrays(int[] arrayOne, int[] arrayTwo) {
+		int mergedArrayLength = arrayOne.length + arrayTwo.length;
+		int[] mergedArray = new int[mergedArrayLength];
+		int arrayOneIndex = 0;
+		int arrayTwoIndex = 0;
+		int mergingIndex = 0;
+		
+		//Case 1: Both arrays have same length
+		while (arrayOneIndex < arrayOne.length && arrayTwoIndex < arrayTwo.length) {
+			if (arrayOne[arrayOneIndex] < arrayTwo[arrayTwoIndex]) {
+				mergedArray[mergingIndex++] = arrayOne[arrayOneIndex++];
+			} else {
+				mergedArray[mergingIndex++] = arrayTwo[arrayTwoIndex++];
+			}
+		}
+		
+		//Case 2: First Array Length is Greater than second array length
+		while (arrayOneIndex < arrayOne.length) {
+			mergedArray[mergingIndex++] = arrayOne[arrayOneIndex++];
+		}
+		
+		//Case 3: Second array length is Greater than First Array Length
+		while (arrayTwoIndex < arrayTwo.length) {
+			mergedArray[mergingIndex++] = arrayTwo[arrayTwoIndex++];
+		}
+		
+		// Calculate the median
+		int mid = mergedArrayLength / 2;
+		if (mergedArrayLength % 2 == 0) {
+			return (mergedArray[mid-1] + mergedArray[mid])/2.0;
+		} else {
+			return mergedArray[mid];
+		}
+	}
+	
 }
