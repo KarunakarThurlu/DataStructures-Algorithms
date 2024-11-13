@@ -1,10 +1,13 @@
 package array;
 
+import static java.lang.Math.max;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import static java.lang.Math.max;
 
 public class Array {
 	/*
@@ -28,7 +31,7 @@ public class Array {
 	 * 14.Longest increasing sub array
 	 * 15.Candy's Distribution
 	 * 16.Median of Two Sorted Array's
-	 * 17.Find given element is present or not in given array
+	 * 17.Search in  sorted array (Binary Search)
 	 * 18.Search in rotated sorted array
 	 * 19.Permutations of Array
 	 * 20.Combinations of Array
@@ -630,5 +633,161 @@ public class Array {
 			return mergedArray[mid];
 		}
 	}
+	
+    /**
+     * 17. Search in sorted array : Searches for a target integer within a sorted array using binary search.
+     * Returns the index of the target if found; otherwise, returns -1.
+     * 
+     * <p>This method is efficient for sorted arrays as it continuously divides the search space in half
+     * until the target element is located, or until the search space is exhausted.</p>
+     * 
+     * <p><strong>Time Complexity:</strong> O(log n), where n is the length of the array, due to halving the search space with each iteration.</p>
+     * <p><strong>Space Complexity:</strong> O(1), as it only requires a constant amount of extra space for the pointers.</p>
+     * 
+     * @param array the sorted array of integers to search within
+     * @param k the target integer value to search for
+     * @return the index of the target integer `k` if found, otherwise -1
+     * 
+     * <pre>
+     * Example:
+     * Input: array = [1, 2, 3, 4, 5], k = 3
+     * Output: 2
+     * 
+     * Input: array = [1, 2, 3, 4, 5], k = 6
+     * Output: -1
+     * </pre>
+     */
+	public static int searchInSortedArray(int[] array, int target) {
+		int startIndex = 0;
+		int endIndex = array.length - 1;
+		while (startIndex <= endIndex) {
+			int mid = startIndex + (endIndex - startIndex) / 2;
+			if (array[mid] == target) {
+				return mid;
+			} else if (array[mid] > target) {
+				endIndex = mid - 1;
+			} else {
+				startIndex = mid + 1;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+     * 18. Search in rotated sorted array : Searches for a target integer in a rotated sorted array using modified binary search.
+     * Returns the index of the target if found; otherwise, returns -1.
+     * 
+     * <p><strong>Time Complexity:</strong> O(log n), where n is the length of the array, as each step halves the search space.</p>
+     * <p><strong>Space Complexity:</strong> O(1), because no additional space is used.</p>
+     * 
+     * @param array the rotated sorted array of integers
+     * @param target the integer value to search for
+     * @return the index of the target integer if found, otherwise -1
+     * 
+     * <pre>
+     * Example:
+     * Input: array = [4, 5, 6, 7, 0, 1, 2], target = 0
+     * Output: 4
+     * 
+     * Input: array = [4, 5, 6, 7, 0, 1, 2], target = 3
+     * Output: -1
+     * </pre>
+     */
+	public static int searchInRotatedSortedArray(int[] array,int target) {
+		int startIndex = 0;
+		int endIndex = array.length-1;
+		while(startIndex<=endIndex) {
+			int mid = startIndex+(endIndex-startIndex)/2;
+			
+			if(array[mid]==target) {
+				return mid;
+			}
+            
+            if (array[startIndex] <= array[mid]) { // Left half is sorted
+                if (target >= array[startIndex] && target < array[mid]) {
+                    endIndex = mid - 1;
+                } else {
+                	startIndex = mid + 1;
+                }
+            } else { // Right half is sorted
+                if (target > array[mid] && target <= array[endIndex]) {
+                	startIndex = mid + 1;
+                } else {
+                    endIndex = mid - 1;
+                }
+            }
+		}
+		return -1;
+	}
+	
+    /**
+     * 19.Permutations of array : Generates all permutations of an array of integers using backtracking.
+     * 
+     * <p><strong>Time Complexity:</strong> O(n * n!), where n is the number of elements in the array. Generating each permutation takes O(n) time, and there are n! permutations.</p>
+     * <p><strong>Space Complexity:</strong> O(n!), due to the storage of all generated permutations.</p>
+     * 
+     * @param array the array of integers for which to generate all permutations
+     * @return a list of lists, where each inner list is a unique permutation of the input array
+     * 
+     * <pre>
+     * Example:
+     * Input: [1, 2, 3]
+     * Output: [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
+     * </pre>
+     */
+	public static List<List<Integer>> permutationsOfArray(int[] array){
+		List<List<Integer>> result = new ArrayList<>();
+		List<Integer> list=new ArrayList<>();
+		generatePermutations(array, list, result);
+		return result;
+	}
+    private static void generatePermutations(int[] array, List<Integer> current, List<List<Integer>> result) {
+        if (current.size() == array.length) {
+            result.add(new ArrayList<>(current));
+            return;
+        }
+
+        for (int i = 0; i < array.length; i++) {
+            if (current.contains(array[i])) continue;
+            current.add(array[i]);
+            generatePermutations(array, current, result);
+            current.remove(current.size() - 1); // Backtrack
+        }
+    }
+    
+    /**
+     * 20. Combinations of array : Generates all possible combinations of length k from an array of integers.
+     * 
+     * <p><strong>Time Complexity:</strong> O(nCk), where n is the length of the array and k is the combination length. This represents the number of k-combinations for n items.</p>
+     * <p><strong>Space Complexity:</strong> O(k), for the recursion stack depth due to storing intermediate subsets.</p>
+     * 
+     * @param array the array of integers to generate combinations from
+     * @param k the desired combination length
+     * @return a list of lists, where each inner list is a unique combination of k elements from the input array
+     * 
+     * <pre>
+     * Example:
+     * Input: array = [1, 2, 3], k = 2
+     * Output: [[1, 2], [1, 3], [2, 3]]
+     * </pre>
+     */
+    public static List<List<Integer>> combinationsOfArray(int[] array,int k){
+    	List<List<Integer>> result = new ArrayList<>();
+    	List<Integer> list=new ArrayList<>();
+    	generateCombinations(array,k,0,list,result);
+    	return result;
+    }
+    private static void generateCombinations(int[] array, int k, int index, List<Integer> current, List<List<Integer>> result) {
+        if (current.size() == k) { // Combination of length k reached
+            result.add(new ArrayList<>(current));
+            return;
+        }
+
+        for (int i = index; i < array.length; i++) {
+            current.add(array[i]); // Include array[i]
+            generateCombinations(array, k, i + 1, current, result); // Recursive call
+            current.remove(current.size() - 1); // Backtrack by removing last added element
+        }
+    }
 	
 }

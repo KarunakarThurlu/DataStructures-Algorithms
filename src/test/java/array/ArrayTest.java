@@ -3,6 +3,7 @@ package array;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -332,6 +333,92 @@ public class ArrayTest {
             Arguments.of(new int[]{}, new int[]{1}, 1.0),                    // One empty array
             Arguments.of(new int[]{1, 2, 6}, new int[]{3, 4, 5}, 3.5),       // Mixed elements
             Arguments.of(new int[]{1, 5, 9}, new int[]{2, 6, 10, 15}, 6.0)   // Unbalanced lengths
+        );
+    }
+    
+    @ParameterizedTest
+    @DisplayName("Test Search in sorted array with various cases")
+    @MethodSource("provideTestCasesForSearchInSortedArray")
+    void testSearchInSortedArray(int[] array, int k, int expectedIndex) {
+        int actualIndex = Array.searchInSortedArray(array, k);
+        assertEquals(expectedIndex, actualIndex, "Expected index and actual index should be equal");
+    }
+
+    private static Stream<Arguments> provideTestCasesForSearchInSortedArray() {
+        return Stream.of(
+            Arguments.of(new int[]{1, 2, 3, 4, 5}, 3, 2),          // Element in middle
+            Arguments.of(new int[]{1, 2, 3, 4, 5}, 1, 0),          // Element at start
+            Arguments.of(new int[]{1, 2, 3, 4, 5}, 5, 4),          // Element at end
+            Arguments.of(new int[]{1, 2, 3, 4, 5}, 6, -1),         // Element not in array
+            Arguments.of(new int[]{}, 1, -1),                      // Empty array
+            Arguments.of(new int[]{1, 3, 5, 7, 9, 11}, 9, 4),      // Element in second half
+            Arguments.of(new int[]{1, 3, 5, 7, 9, 11}, 4, -1),     // Element missing, between elements
+            Arguments.of(new int[]{10}, 10, 0),                    // Single element found
+            Arguments.of(new int[]{10}, 5, -1)                     // Single element not found
+        );
+    }
+    
+    @ParameterizedTest
+    @DisplayName("Test Search in rotated sorted array with various cases")
+    @MethodSource("provideRotatedArrayTestCases")
+    void testSearchInRotatedSortedArray(int[] array, int target, int expected) {
+        int actualIndex=Array.searchInRotatedSortedArray(array, target);
+        assertEquals(expected, actualIndex, "Expected index and actual index should be equal");
+    }
+
+    private static Stream<Arguments> provideRotatedArrayTestCases() {
+        return Stream.of(
+            Arguments.of(new int[]{4, 5, 6, 7, 0, 1, 2}, 0, 4),    // Target found at index 4
+            Arguments.of(new int[]{4, 5, 6, 7, 0, 1, 2}, 3, -1),   // Target not found
+            Arguments.of(new int[]{1}, 0, -1),                     // Single element, target not present
+            Arguments.of(new int[]{1, 3}, 3, 1),                   // Small array, target found
+            Arguments.of(new int[]{6, 7, 0, 1, 2, 4, 5}, 4, 5),    // Target found in rotated portion
+            Arguments.of(new int[]{6, 7, 0, 1, 2, 4, 5}, 6, 0),    // Target at the beginning
+            Arguments.of(new int[]{6, 7, 0, 1, 2, 4, 5}, 5, 6),    // Target at the end
+            Arguments.of(new int[]{4, 5, 6, 7, 0, 1, 2}, 6, 2),    // Target found in first half
+            Arguments.of(new int[]{4, 5, 6, 7, 0, 1, 2}, 1, 5)     // Target found in second half
+        );
+    }
+    
+    @ParameterizedTest
+    @DisplayName("Test Permutations array with various cases")
+    @MethodSource("providePermutationTestCases")
+    void testPermutationsOfArray(int[] array, List<List<Integer>> expected) {
+        assertEquals(expected, Array.permutationsOfArray(array));
+    }
+
+    private static Stream<Arguments> providePermutationTestCases() {
+        return Stream.of(
+            Arguments.of(new int[]{1}, List.of(List.of(1))),                     // Single element
+            Arguments.of(new int[]{1, 2}, List.of(List.of(1, 2), List.of(2, 1))), // Two elements
+            Arguments.of(new int[]{1, 2, 3},                                     // Three elements
+                List.of(
+                    List.of(1, 2, 3), List.of(1, 3, 2), List.of(2, 1, 3),
+                    List.of(2, 3, 1), List.of(3, 1, 2), List.of(3, 2, 1)
+                )
+            )
+        );
+    }
+    
+    @ParameterizedTest
+    @DisplayName("Test Combinations array with various cases")
+    @MethodSource("provideCombinationTestCases")
+    void testCombinationsOfArray(int[] array, int k, List<List<Integer>> expected) {
+        assertEquals(expected, Array.combinationsOfArray(array, k));
+    }
+
+    private static Stream<Arguments> provideCombinationTestCases() {
+        return Stream.of(
+            Arguments.of(new int[]{1, 2, 3}, 2, 
+                         List.of(List.of(1, 2), List.of(1, 3), List.of(2, 3))),
+            Arguments.of(new int[]{1, 2, 3, 4}, 3, 
+                         List.of(List.of(1, 2, 3), List.of(1, 2, 4), List.of(1, 3, 4), List.of(2, 3, 4))),
+            Arguments.of(new int[]{1, 2, 3}, 1, 
+                         List.of(List.of(1), List.of(2), List.of(3))),
+            Arguments.of(new int[]{1, 2, 3}, 3, 
+                         List.of(List.of(1, 2, 3))),
+            Arguments.of(new int[]{1, 2, 3}, 0, 
+                         List.of(List.of())) // Combination of length 0: only empty set
         );
     }
 
