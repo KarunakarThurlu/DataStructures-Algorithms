@@ -421,5 +421,326 @@ public class ArrayTest {
                          List.of(List.of())) // Combination of length 0: only empty set
         );
     }
+    
+    @ParameterizedTest
+    @DisplayName("Test Rotate array Clock wise with various cases")
+    @MethodSource("provideRotateArrayTestCases")
+    void testRotateArray(int[] input, int k, int[] expected) {
+        assertArrayEquals(expected, Array.rotateArray(input, k));
+    }
 
+    private static Stream<Arguments> provideRotateArrayTestCases() {
+        return Stream.of(
+            Arguments.of(new int[]{1, 2, 3, 4, 5, 6}, 2, new int[]{5, 6, 1, 2, 3, 4}),
+            Arguments.of(new int[]{1, 2, 3}, 4, new int[]{3, 1, 2}), // k > array length
+            Arguments.of(new int[]{1}, 3, new int[]{1}), // Single-element array
+            Arguments.of(new int[]{1, 2, 3, 4, 5}, 0, new int[]{1, 2, 3, 4, 5}), // k = 0
+            Arguments.of(new int[]{10, 20, 30, 40}, 4, new int[]{10, 20, 30, 40}), // k = array length
+            Arguments.of(new int[]{7, 8, 9}, 1, new int[]{9, 7, 8}) // Small k
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("provideFirstAndLastIndexTestCases")
+    @DisplayName("Test Find First and Last Index Finder")
+    void testFindFirstAndLastIndex(int[] nums, int target, int[] expected) {
+        int[] actual = Array.findFirstAndLastIndex(nums, target);
+        assertArrayEquals(expected, actual, "Expected and actual indices should match.");
+    }
+
+    private static Stream<Arguments> provideFirstAndLastIndexTestCases() {
+        return Stream.of(
+                Arguments.of(new int[]{5, 7, 7, 8, 8, 10}, 8, new int[]{3, 4}),        // Target in the middle
+                Arguments.of(new int[]{5, 7, 7, 8, 8, 10}, 6, new int[]{-1, -1}),      // Target not present
+                Arguments.of(new int[]{}, 1, new int[]{-1, -1}),                       // Empty array
+                Arguments.of(new int[]{1}, 1, new int[]{0, 0}),                        // Single element, target matches
+                Arguments.of(new int[]{1}, 2, new int[]{-1, -1}),                      // Single element, target doesn't match
+                Arguments.of(new int[]{2, 2, 2, 2, 2}, 2, new int[]{0, 4}),            // All elements match the target
+                Arguments.of(new int[]{1, 2, 3, 4, 5}, 3, new int[]{2, 2}),            // Target is a single occurrence in the middle
+                Arguments.of(new int[]{1, 1, 1, 2, 2, 2, 3, 3, 3}, 2, new int[]{3, 5}) // Target with multiple occurrences
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("provideSpiralMatrixTestCases")
+    @DisplayName("Test Spiral Matrix Traversal")
+    void testSpiralMatrix(char[][] matrix, List<Character> expected) {
+        List<Character> actual = Array.spiralMatrix(matrix);
+        assertEquals(expected, actual, "Expected and actual spiral traversal results should match.");
+    }
+
+    private static Stream<Arguments> provideSpiralMatrixTestCases() {
+        return Stream.of(
+                Arguments.of(new char[][]{
+                        {'A', 'B', 'C'},
+                        {'H', 'I', 'D'},
+                        {'G', 'F', 'E'}
+                }, List.of('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I')),  // Standard 3x3 matrix
+
+                Arguments.of(new char[][]{
+                        {'1', '2', '3', '4'},
+                        {'5', '6', '7', '8'},
+                        {'9', 'A', 'B', 'C'},
+                        {'D', 'E', 'F', 'G'}
+                }, List.of('1', '2', '3', '4', '8', 'C', 'G', 'F', 'E', 'D', '9', '5', '6', '7', 'B', 'A')), // Larger 4x4 matrix
+
+                Arguments.of(new char[][]{
+                        {'X'}
+                }, List.of('X')),  // Single element matrix
+
+                Arguments.of(new char[][]{
+                        {'A', 'B'},
+                        {'C', 'D'}
+                }, List.of('A', 'B', 'D', 'C')),  // Simple 2x2 matrix
+
+                Arguments.of(new char[][]{
+                        {'A', 'B', 'C'}
+                }, List.of('A', 'B', 'C')),  // Single row matrix
+
+                Arguments.of(new char[][]{
+                        {'A'},
+                        {'B'},
+                        {'C'}
+                }, List.of('A', 'B', 'C'))  // Single column matrix
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("provideRotateImageTestCases")
+    @DisplayName("Test Rotate Image 90 Degrees Clockwise")
+    void testRotateImage(int[][] input, int[][] expected) {
+        int[][] actual = Array.rotateImage(input);
+        assertArrayEquals(expected, actual, "The rotated matrix should match the expected result.");
+    }
+
+    private static Stream<Arguments> provideRotateImageTestCases() {
+        return Stream.of(
+                Arguments.of(new int[][]{
+                        {1, 2, 3},
+                        {4, 5, 6},
+                        {7, 8, 9}
+                }, new int[][]{
+                        {7, 4, 1},
+                        {8, 5, 2},
+                        {9, 6, 3}
+                }), // 3x3 Matrix
+
+                Arguments.of(new int[][]{
+                        {5, 1},
+                        {2, 4}
+                }, new int[][]{
+                        {2, 5},
+                        {4, 1}
+                }), // 2x2 Matrix
+
+                Arguments.of(new int[][]{
+                        {1}
+                }, new int[][]{
+                        {1}
+                }), // 1x1 Matrix (Edge case)
+
+                Arguments.of(new int[][]{
+                        {1, 2, 3, 4},
+                        {5, 6, 7, 8},
+                        {9, 10, 11, 12},
+                        {13, 14, 15, 16}
+                }, new int[][]{
+                        {13, 9, 5, 1},
+                        {14, 10, 6, 2},
+                        {15, 11, 7, 3},
+                        {16, 12, 8, 4}
+                }) // 4x4 Matrix
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("provideSearchIn2DArrayTestCases")
+    @DisplayName("Test Search in 2D Array")
+    void testSearchIn2DArray(int[][] array, int target, boolean expected) {
+        boolean actual = Array.searchIn2DArray(array, target);
+        assertEquals(expected, actual, "Expected and actual results should match.");
+    }
+
+    private static Stream<Arguments> provideSearchIn2DArrayTestCases() {
+        return Stream.of(
+                Arguments.of(new int[][]{
+                        {1, 3, 5},
+                        {7, 9, 11},
+                        {13, 15, 17}
+                }, 9, true),   // Target exists
+
+                Arguments.of(new int[][]{
+                        {1, 3, 5},
+                        {7, 9, 11},
+                        {13, 15, 17}
+                }, 8, false),  // Target does not exist
+
+                Arguments.of(new int[][]{
+                        {1, 3, 5, 7},
+                        {8, 10, 12, 14},
+                        {15, 17, 19, 21}
+                }, 10, true),  // Target is in the middle of the matrix
+
+                Arguments.of(new int[][]{
+                        {1, 2, 3, 4},
+                        {5, 6, 7, 8},
+                        {9, 10, 11, 12}
+                }, 13, false), // Target outside the range of the matrix
+
+                Arguments.of(new int[][]{
+                        {1}
+                }, 1, true),  // Single element matching the target
+
+                Arguments.of(new int[][]{
+                        {1}
+                }, 2, false), // Single element not matching the target
+
+                Arguments.of(new int[][]{
+                        {1, 2, 3},
+                        {4, 5, 6},
+                        {7, 8, 9}
+                }, 7, true)   // Target at the beginning of a row
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("provideSubsetsTestCases")
+    @DisplayName("Test Subsets Generation")
+    void testSubsets(int[] nums, List<List<Integer>> expected) {
+        List<List<Integer>> actual = Array.subsets(nums);
+        assertEquals(expected, actual, "Expected and actual subsets should match.");
+    }
+
+    private static Stream<Arguments> provideSubsetsTestCases() {
+        return Stream.of(
+                Arguments.of(
+                        new int[]{1, 2, 3},
+                        List.of(
+                                List.of(),          // Empty subset
+                                List.of(3),         // Subset with just 1
+                                List.of(2),         // Subset with just 2
+                                List.of(2,3),      // Subset with 1 and 2
+                                List.of(1),         // Subset with just 3
+                                List.of(1, 3),      // Subset with 1 and 3
+                                List.of(1,2),      // Subset with 2 and 3
+                                List.of(1, 2, 3)    // Subset with all elements
+                        )
+                ),
+                Arguments.of(
+                        new int[]{0},
+                        List.of(
+                                List.of(),
+                                List.of(0)
+                        )
+                ),
+                Arguments.of(
+                        new int[]{},
+                        List.of(
+                                List.of() // Only the empty subset
+                        )
+                ),
+                Arguments.of(
+                        new int[]{1, 2},
+                        List.of(
+                                List.of(),
+                                List.of(2),
+                                List.of(1),
+                                List.of(1, 2)
+                        )
+                )
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("providePascalsTriangleTestCases")
+    @DisplayName("Test Pascal's Triangle Generation")
+    void testPascalsTriangle(int numRows, List<List<Integer>> expected) {
+        List<List<Integer>> actual = Array.pascalsTriangle(numRows);
+        assertEquals(expected, actual, "Expected and actual Pascal's Triangle should match.");
+    }
+
+    private static Stream<Arguments> providePascalsTriangleTestCases() {
+        return Stream.of(
+                Arguments.of(1, List.of(
+                        List.of(1)
+                )), // Single row
+                Arguments.of(2, List.of(
+                        List.of(1),
+                        List.of(1, 1)
+                )), // Two rows
+                Arguments.of(3, List.of(
+                        List.of(1),
+                        List.of(1, 1),
+                        List.of(1, 2, 1)
+                )), // Three rows
+                Arguments.of(5, List.of(
+                        List.of(1),
+                        List.of(1, 1),
+                        List.of(1, 2, 1),
+                        List.of(1, 3, 3, 1),
+                        List.of(1, 4, 6, 4, 1)
+                )), // Five rows
+                Arguments.of(0, List.of()), // Zero rows
+                Arguments.of(-1, List.of()) // Negative rows
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("provideMissingNumberTestCases")
+    @DisplayName("Test Missing Number Finder")
+    void testMissingNumber(int[] nums, int expected) {
+        int actual = Array.missingNumber(nums);
+        assertEquals(expected, actual, "Expected and actual missing numbers should match.");
+    }
+
+    private static Stream<Arguments> provideMissingNumberTestCases() {
+        return Stream.of(
+                Arguments.of(new int[]{3, 0, 1}, 2),  // Missing 2 in range [0, 3]
+                Arguments.of(new int[]{0, 1}, 2),    // Missing 2 in range [0, 2]
+                Arguments.of(new int[]{9, 6, 4, 2, 3, 5, 7, 0, 1}, 8), // Missing 8 in range [0, 9]
+                Arguments.of(new int[]{1}, 0),       // Missing 0 in range [0, 1]
+                Arguments.of(new int[]{0}, 1),       // Missing 1 in range [0, 1]
+                Arguments.of(new int[]{}, 0)        // Empty array (edge case), missing 0
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideMajorityElementTestCases")
+    @DisplayName("Test Majority Element Finder")
+    void testMajorityElement(int[] nums, int expected) {
+        int actual = Array.majorityElement(nums);
+        assertEquals(expected, actual, "Expected and actual majority elements should match.");
+    }
+
+    private static Stream<Arguments> provideMajorityElementTestCases() {
+        return Stream.of(
+                Arguments.of(new int[]{3, 2, 3}, 3),                  // Majority element is 3
+                Arguments.of(new int[]{2, 2, 1, 1, 1, 2, 2}, 2),      // Majority element is 2
+                Arguments.of(new int[]{1, 1, 1, 1}, 1),               // All elements are the same
+                Arguments.of(new int[]{1, 2, 3, 1, 1}, 1),            // Majority element is 1
+                Arguments.of(new int[]{1}, 1),                        // Single element, it is the majority
+                Arguments.of(new int[]{}, 0),                         // Empty array, no majority element
+                Arguments.of(new int[]{1, 2, 2, 1, 2}, 2)             // Majority element is 2
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("provideMajorityElementIITestCases")
+    @DisplayName("Test Majority Element II Finder")
+    void testMajorityElementII(int[] nums, List<Integer> expected) {
+        List<Integer> actual = Array.majorityElementII(nums);
+        assertEquals(expected, actual, "Expected and actual majority elements should match.");
+    }
+
+    private static Stream<Arguments> provideMajorityElementIITestCases() {
+        return Stream.of(
+                Arguments.of(new int[]{3, 2, 3}, List.of(3)),                  // Single majority element
+                Arguments.of(new int[]{1}, List.of(1)),                       // Single element array
+                Arguments.of(new int[]{1, 2}, List.of(1, 2)),                 // Both elements are majority
+                Arguments.of(new int[]{3, 3, 4, 4, 4}, List.of(3,4)),           // Majority element is 4
+                Arguments.of(new int[]{}, List.of()),                         // Empty array, no majority element
+                Arguments.of(new int[]{1, 2, 3, 4, 5}, List.of()),            // No element is a majority
+                Arguments.of(new int[]{1, 1, 1, 2, 2, 3, 3, 3}, List.of(1, 3)) // Multiple majority elements
+        );
+    }
 }

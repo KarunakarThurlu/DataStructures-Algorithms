@@ -35,6 +35,16 @@ public class Array {
 	 * 18.Search in rotated sorted array
 	 * 19.Permutations of Array
 	 * 20.Combinations of Array
+	 * 21.Rotate Array
+	 * 22.Find First and last position of given element in sorted array
+	 * 23.Spiral matrix
+	 * 24.Rotate Image
+	 * 25.Search in 2D array
+	 * 26.Subsets
+	 * 27.Pascal Triangle
+	 * 28.Missing number
+	 * 29.Majority element
+	 * 30.Majority element II
 	 * 
 	 */
 
@@ -461,7 +471,6 @@ public class Array {
 		map.put(0, 1);
 		int startIndex = 0;
 		int endIndex = array.length - 1;
-
 		while (startIndex <= endIndex) {
 			currentSum = currentSum + array[startIndex++];
 			int targetDifference = currentSum - k;
@@ -470,7 +479,6 @@ public class Array {
 			}
 			map.put(currentSum, map.getOrDefault(currentSum, 0) + 1);
 		}
-
 		return count;
 	}
 	
@@ -492,7 +500,7 @@ public class Array {
 	 * Output: 2 (index of peak element 20)
 	 * 
 	 * Input:  array = [10, 8, 9]
-	 * Output: 1 (index of peak element 8)
+	 * Output: 0 (index of peak element 10)
 	 * </pre>
 	 */
 	public static int findPeakElement(int[] array) {
@@ -693,29 +701,29 @@ public class Array {
      * Output: -1
      * </pre>
      */
-	public static int searchInRotatedSortedArray(int[] array,int target) {
+	public static int searchInRotatedSortedArray(int[] array, int target) {
 		int startIndex = 0;
-		int endIndex = array.length-1;
-		while(startIndex<=endIndex) {
-			int mid = startIndex+(endIndex-startIndex)/2;
-			
-			if(array[mid]==target) {
+		int endIndex = array.length - 1;
+		while (startIndex <= endIndex) {
+			int mid = startIndex + (endIndex - startIndex) / 2;
+
+			if (array[mid] == target) {
 				return mid;
 			}
-            
-            if (array[startIndex] <= array[mid]) { // Left half is sorted
-                if (target >= array[startIndex] && target < array[mid]) {
-                    endIndex = mid - 1;
-                } else {
-                	startIndex = mid + 1;
-                }
-            } else { // Right half is sorted
-                if (target > array[mid] && target <= array[endIndex]) {
-                	startIndex = mid + 1;
-                } else {
-                    endIndex = mid - 1;
-                }
-            }
+
+			if (array[startIndex] <= array[mid]) { // Left half is sorted
+				if (target >= array[startIndex] && target < array[mid]) {
+					endIndex = mid - 1;
+				} else {
+					startIndex = mid + 1;
+				}
+			} else { // Right half is sorted
+				if (target > array[mid] && target <= array[endIndex]) {
+					startIndex = mid + 1;
+				} else {
+					endIndex = mid - 1;
+				}
+			}
 		}
 		return -1;
 	}
@@ -789,5 +797,429 @@ public class Array {
             current.remove(current.size() - 1); // Backtrack by removing last added element
         }
     }
+    
+    /**
+     * 21. Rotate Array : Rotates an array to the right by k positions.
+     * 
+     * <p><strong>Time Complexity:</strong> O(n), where n is the length of the array, because we iterate through the array elements three times during the reversal process.</p>
+     * <p><strong>Space Complexity:</strong> O(1), as no additional space is used apart from a few variables.</p>
+     * 
+     * @param array the array to rotate
+     * @param k the number of positions to rotate the array
+     * @return the rotated array
+     * 
+     * <pre>
+     * Example:
+     * Input: array = [1, 2, 3, 4, 5, 6], k = 2
+     * Output: [5, 6, 1, 2, 3, 4]
+     * 
+     * Input: array = [1, 2, 3], k = 4
+     * Output: [3, 1, 2] (as k = 4 % 3 = 1)
+     * </pre>
+     */
+    public static int[] rotateArray(int[] array,int k) {
+    	k=k%array.length;//k must be within range of the array length.
+    	swap(array,0,array.length-1);
+    	swap(array,0,k-1);
+    	swap(array,k,array.length-1);
+    	return array;
+    }
+    
+    private static void swap(int[] array,int startIndex,int endIndex) {
+    	while(startIndex<endIndex) {
+    		int temp=array[startIndex];
+    		array[startIndex++]=array[endIndex];
+    		array[endIndex--]=temp;
+    	}
+    }
+    
+    /**
+     * 22.Find First and last position of given element in sorted array: Finds the first and last index of a given target in a sorted array.
+     * 
+     * <p><strong>Time Complexity:</strong> O(n), where n is the length of the array. The solution iterates over the array twice in the worst case.</p>
+     * <p><strong>Space Complexity:</strong> O(1), as no additional space is used apart from a few variables.</p>
+     * 
+     * @param array the sorted array in which to search for the target
+     * @param target the value to find in the array
+     * @return an integer array with two elements: the first and last indices of the target in the array.
+     * If the target is not found, returns [-1, -1].
+     * 
+     * <pre>
+     * Example:
+     * Input: array = [5, 7, 7, 8, 8, 10], target = 8
+     * Output: [3, 4]
+     * 
+     * Input: array = [5, 7, 7, 8, 8, 10], target = 6
+     * Output: [-1, -1]
+     * 
+     * Input: array = [], target = 0
+     * Output: [-1, -1]
+     * </pre>
+     */
+    public static int[] findFirstAndLastIndex(int[] array,int target) {
+    	//Base Cases
+    	if(array.length==0) return new int[] {-1,-1};
+    	if(array.length==1 && array[0]==target) return new int[] {0,0};
+    	if(array.length==1 && array[0]!=target) return new int[] {-1,-1};
+    	
+    	int startIndex = -1;
+    	int endIndex   = -1;
+    	boolean startFound = false;
+    	//Finding firstIndex
+    	for (int i = 0; i < array.length; i++) {
+			if(array[i]==target) {
+				if(!startFound) {
+					startIndex=i;
+					startFound=true;
+					break;
+				}
+			}
+		}
+    	//Finding EndIndex
+		if (startFound) {
+			for (int i = startIndex; i < array.length; i++) {
+				if (array[i] == target) {
+					endIndex = i;
+				}else {
+					break;
+				}
+			}
+		}
+    	return new int[] {startIndex,endIndex};
+    }
+	
+    /**
+     * 23. Spiral Matrix : Traverses a 2D matrix in a spiral order and returns the result as a list of characters.
+     * 
+     * <p>
+     * This method performs a spiral traversal of the input matrix, starting from the top-left
+     * corner and moving right, down, left, and up repeatedly, narrowing the traversal range
+     * at each step.
+     * </p>
+     * 
+     * <p><strong>Time Complexity:</strong> O(m * n), where m is the number of rows and n is  the number of columns, as every element in the matrix is visited exactly once.</p>
+     * <p><strong>Space Complexity:</strong> O(m * n), due to the storage of elements in the result list.</p>
+     * 
+     * @param array a 2D array of characters representing the matrix
+     * @return a list of characters in spiral order
+     * 
+     * <pre>
+     * Example:
+     * Input: array = {
+     *     {'A', 'B', 'C'},
+     *     {'H', 'I', 'D'},
+     *     {'G', 'F', 'E'}
+     * }
+     * Output: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I']
+     * </pre>
+     */
+	public static List<Character> spiralMatrix(char[][] array) {
+		List<Character> result = new ArrayList<>();
+		int rowStart = 0;
+		int rowEnd = array.length - 1;
+		int colStart = 0;
+		int colEnd = array[0].length - 1;
+		while (rowStart <= rowEnd && colStart <= colEnd) {
+			for (int col = colStart; col <= colEnd; col++) {
+				result.add(array[rowStart][col]);
+			}
+			rowStart++;
+			for (int row = rowStart; row <= rowEnd; row++) {
+				result.add(array[row][colEnd]);
+			}
+			colEnd--;
+			if (rowStart <= rowEnd) {
+				for (int col = colEnd; col >= colStart; col--) {
+					result.add(array[rowEnd][col]);
+				}
+			}
+			rowEnd--;
+			if (colStart <= colEnd) {
+				for (int row = rowEnd; row >= rowStart; row--) {
+					result.add(array[row][colStart]);
+				}
+			}
+			colStart++;
+		}
+		return result;
+	}
+	
+	/**
+	 * 24. Rotate Image : Rotates a given n x n 2D matrix 90 degrees clockwise.
+	 * 
+	 * <p>
+	 * The method first transposes the matrix by swapping elements across its diagonal.
+	 * Then, it reverses each row of the transposed matrix to achieve a clockwise rotation.
+	 * </p>
+	 * 
+	 * <p><strong>Time Complexity:</strong> O(n^2), where n is the number of rows/columns in the matrix, as each element is accessed twice during transposition and reversal.</p>
+	 * <p><strong>Space Complexity:</strong> O(1), as the rotation is done in place without 
+	 * requiring additional space.</p>
+	 * 
+	 * @param array a 2D square matrix to be rotated
+	 * @return the rotated 2D square matrix
+	 * 
+	 * <pre>
+	 * Example:
+	 * Input: array = {
+	 *     {1, 2, 3},
+	 *     {4, 5, 6},
+	 *     {7, 8, 9}
+	 * }
+	 * Output: {
+	 *     {7, 4, 1},
+	 *     {8, 5, 2},
+	 *     {9, 6, 3}
+	 * }
+	 * </pre>
+	 */
+
+	public static int[][] rotateImage(int[][] array) {
+		int n=array.length;
+		// Step 1: Transpose the matrix (swap elements across the diagonal)
+		for(int i=0;i<n;i++) {
+			for(int j=i+1;j<n;j++) {
+				int temp=array[i][j];
+				array[i][j]=array[j][i];
+				array[j][i]=temp;
+			}
+		}
+		// Step 2: Reverse each row to complete the rotation
+		for(int i=0;i<n;i++) {
+			for(int j=0;j<n/2;j++) {
+				int temp=array[i][j];
+				array[i][j]=array[i][n-j-1];
+				array[i][n-j-1]=temp;
+			}
+		}
+		return array;
+	}
+	
+	/**
+	 * 25.Search in 2D array : Searches for a target value in a 2D matrix sorted in ascending order
+	 * both row-wise and column-wise.
+	 *
+	 * <p><strong>Time Complexity:</strong> O(m + n), where m is the number of rows
+	 * and n is the number of columns. Each iteration either decreases the column
+	 * index or increases the row index.</p>
+	 * 
+	 * <p><strong>Space Complexity:</strong> O(1), as no additional space is used.</p>
+	 *
+	 * @param array 2D array where each row and column is sorted in ascending order
+	 * @param target the value to search for in the matrix
+	 * @return true if the target exists in the matrix, false otherwise
+	 *
+	 * <pre>
+	 * Example:
+	 * Input: array = [
+	 *    [1, 3, 5],
+	 *    [7, 9, 11],
+	 *    [13, 15, 17]
+	 * ], target = 9
+	 * Output: true
+	 * 
+	 * Input: array = [
+	 *    [1, 3, 5],
+	 *    [7, 9, 11],
+	 *    [13, 15, 17]
+	 * ], target = 8
+	 * Output: false
+	 * </pre>
+	 */
+	public static Boolean searchIn2DArray(int[][] array, int target) {
+		int row = array.length; // Number of rows
+		int col = array[0].length; // Number of columns
+
+		int i = 0; // Start from the top-right corner
+		int j = col - 1;
+
+		while (i < row && j >= 0) {
+			if (array[i][j] == target) {
+				return true;
+			} else if (array[i][j] > target) {
+				j--; // Move left in the current row
+			} else {
+				i++; // Move down in the current column
+			}
+		}
+		return false; // Target not found
+	}
+	
+	/**
+	 * 26. Subsets : Generates all possible subsets (the power set) of a given array of integers.
+	 *
+	 * <p><strong>Time Complexity:</strong> O(2^n), where n is the length of the input array. Each element
+	 * can either be included or excluded in a subset, leading to 2^n subsets.</p>
+	 * 
+	 * <p><strong>Space Complexity:</strong> O(2^n * n), as we store all subsets, each of which can have up to n elements.</p>
+	 * 
+	 * @param nums an array of integers for which subsets need to be generated
+	 * @return a list of all possible subsets, where each subset is represented as a list of integers
+	 * 
+	 * <pre>
+	 * Example:
+	 * Input: nums = [1, 2, 3]
+	 * Output: [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]
+	 * 
+	 * Input: nums = [0]
+	 * Output: [[], [0]]
+	 * </pre>
+	 */
+	public static List<List<Integer>> subsets(int[] nums){
+	    List<List<Integer>> result = new ArrayList<>();
+	    generateSubsets(0, nums, new ArrayList<>(), result);
+	    return result;
+	}
+	private static void generateSubsets(int index, int[] nums, List<Integer> current, List<List<Integer>> result) {
+	    if (index == nums.length) {
+	        result.add(new ArrayList<>(current));
+	        return;
+	    }
+
+	    // Exclude the current element
+	    generateSubsets(index + 1, nums, current, result);
+
+	    // Include the current element
+	    current.add(nums[index]);
+	    generateSubsets(index + 1, nums, current, result);
+	    current.remove(current.size() - 1); // Backtrack
+	}
+	
+	/**
+	 * 27.Pascal Triangle :  Generates Pascal's Triangle up to the specified number of rows.
+	 *
+	 * <p><strong>Time Complexity:</strong> O(n^2), where n is the number of rows. For each row, we compute its elements, which requires iterating over the row index.</p>
+	 * <p><strong>Space Complexity:</strong> O(n^2), for storing all rows of Pascal's Triangle in the result list.</p>
+	 * 
+	 * @param numRows the number of rows in Pascal's Triangle
+	 * @return a list of lists representing Pascal's Triangle, where each inner list corresponds to a row
+	 * 
+	 * <pre>
+	 * Example:
+	 * Input: numRows = 5
+	 * Output: [[1], [1, 1], [1, 2, 1], [1, 3, 3, 1], [1, 4, 6, 4, 1]]
+	 * 
+	 * Input: numRows = 1
+	 * Output: [[1]]
+	 * </pre>
+	 */
+	public static List<List<Integer>> pascalsTriangle(int numRows) {
+		if(numRows<=0) {
+			return List.of();
+		}
+		List<List<Integer>> res = new ArrayList<>();
+		res.add(List.of(1));
+		for (int i = 1; i < numRows; i++) {
+			List<Integer> currentList = new ArrayList<>();
+			List<Integer> prevList = res.get(i - 1);
+			currentList.add(1);
+			for (int j = 1; j < i; j++) {
+				currentList.add(prevList.get(j) + prevList.get(j - 1));
+			}
+			currentList.add(1);
+			res.add(currentList);
+		}
+		return res;
+	}
+	
+	/**
+	 * 28.Missing number : Finds the missing number in an array containing n distinct numbers
+	 * taken from the range [0, n].
+	 *
+	 * <p><strong>Time Complexity:</strong> O(n), where n is the length of the array. The algorithm iterates over the array once to compute the sum.</p>
+	 * <p><strong>Space Complexity:</strong> O(1), as it uses only constant extra space.</p>
+	 *
+	 * @param nums the input array containing n numbers from the range [0, n], with one number missing
+	 * @return the missing number
+	 * 
+	 * <pre>
+	 * Example:
+	 * Input: nums = [3, 0, 1]
+	 * Output: 2
+	 * 
+	 * Input: nums = [0, 1]
+	 * Output: 2
+	 * 
+	 * Input: nums = [9,6,4,2,3,5,7,0,1]
+	 * Output: 8
+	 * </pre>
+	 */
+	public static int missingNumber(int[] nums) {
+		int n=nums.length;
+		int firstNnumbersSum = (n*(n+1))/2;
+		int numsSum = 0;
+		for(int i =0;i<n;i++) {
+			numsSum+=nums[i];
+		}
+		return firstNnumbersSum-numsSum;
+	}
+	
+	/**
+	 * 29.Majority element: Finds the majority element in an array, which is the element that appears more than n/2 times,
+	 * where n is the size of the array.
+	 *
+	 * <p><strong>Time Complexity:</strong> O(n), where n is the length of the array, as it iterates over the array  and map operations are O(1) on average.</p>
+	 * <p><strong>Space Complexity:</strong> O(n), due to the storage of elements in the hashmap.</p>
+	 * 
+	 * @param nums the input array of integers
+	 * @return the majority element if it exists, otherwise 0
+	 * 
+	 * <pre>
+	 * Example:
+	 * Input: nums = [3, 2, 3]
+	 * Output: 3
+	 * 
+	 * Input: nums = [2, 2, 1, 1, 1, 2, 2]
+	 * Output: 2
+	 * 
+	 * Input: nums = [1, 1, 1, 1]
+	 * Output: 1
+	 * </pre>
+	 */
+	public static int majorityElement(int[] nums) {
+		Map<Integer,Integer> map = new HashMap<>();
+		for(int i:nums) {
+			map.put(i, map.getOrDefault(i, 0)+1);
+		}
+		int n=nums.length;
+		for(int key:map.keySet()) {
+			if(map.get(key)>n/2) {
+				return key;
+			}
+		}
+		return 0;
+	}
+	
+	/**
+	 * 30.Majority element II: Finds all elements in the array that appear more than ⌊n/3⌋ times, where n is the size of the array.
+	 *
+	 * <p><strong>Time Complexity:</strong> O(n), where n is the length of the array, as it iterates over the array  and map operations are O(1) on average.</p>
+	 * <p><strong>Space Complexity:</strong> O(n), due to the storage of elements and their counts in the hashmap.</p>
+	 * 
+	 * @param nums the input array of integers
+	 * @return a list of elements that appear more than ⌊n/3⌋ times
+	 * 
+	 * <pre>
+	 * Example:
+	 * Input: nums = [3, 2, 3]
+	 * Output: [3]
+	 * 
+	 * Input: nums = [1]
+	 * Output: [1]
+	 * 
+	 * Input: nums = [1, 2]
+	 * Output: [1, 2]
+	 * </pre>
+	 */
+	public static List<Integer> majorityElementII(int[] nums) {
+		List<Integer> list = new ArrayList<>();
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i : nums)
+			map.put(i, map.getOrDefault(i, 0) + 1);
+		for (Integer key : map.keySet())
+			if (map.get(key) > nums.length / 3)
+				list.add(key);
+		return list;
+	}
 	
 }
