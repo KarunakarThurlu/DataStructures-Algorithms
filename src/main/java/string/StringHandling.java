@@ -1,244 +1,269 @@
 package string;
 
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.function.IntFunction;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 public class StringHandling {
 	/*
-	  ==================================
-	   String Handling Problems
-	  ==================================
-	  1. Reverse given string. 
-	  2. Reverse string by frequency. 
-	  3. Find given String is palindrome or not. 
-	  4. Find permutations of string. 
-	  5. Count vowels and consonants in given string. 
-	  6. Check given strings are anagram strings or not
-      7. Count each character repeated how many times in given string. 
-      8. Reverse the order of words in a given string. 
-      9. Find the first non-repeated character in a string 
-	 10. Remove duplicate characters from a string.
-	  
+	 * ================================== 
+	 * String Handling Problems
+	 * ================================== 
+	 * 1. Reverse given string. 
+	 * 2. Reverse given string by frequency 
+	 * 3. Find permutations of string. 
+	 * 4. Count vowels and consonants in given string.
+	 * 5. Replace specific words
+	 * 6. Replace Only Vowels
+	 * 7. Anagram Strings
+	 * 8. Remove Duplicate chars
+	 * 9. First Unique Character
+	 * 10.Longest Substring
+	 * 11.Reverse words in a string
+	 * 12.Remove removeAllConsecutive
+	 * 13.Group anagram strings
+	 * 14.Valid parentheses
+	 * 15.Roman to Integer
 	 */
-	private static final Logger logger = Logger.getLogger(StringHandling.class.getName());
 
-	public static void main(String[] args) {
-		//logger.log(Level.INFO, "Reversed String : {0}", reversingString("KarunakarThurlu"));                  		//Output : ulruhTrakanuraK
-		//logger.log(Level.INFO, "Reversed String By String : {0}", reversingStringByFrequency("Karunakar",3)); 		//Output : raKanurak
-		//logger.log(Level.INFO, "Is Palindrome : {0}", checkPalindromeString("MALAYALAM"));                    		//Output : true
-		//logger.log(Level.INFO, "Permutations of string : {0}", permutationsOfString("ABC"));                  		//Output : [CBA, BCA, CAB, ACB, BAC, ABC]
-		//logger.log(Level.INFO, "Vowels & Consonants Count : {0}", countVowelsAndConsonants("Linux"));         		//Output : {Consonants=3, Vowels=2}
-		//logger.log(Level.INFO, "anagramChecker : {0}", anagramChecker("listen","silent"));         					//Output : true
-		//logger.log(Level.INFO, "CharCount in given String : {0}", charCount("kalam"));         				    	//Output : {a=2, k=1, l=1, m=1}
-		//logger.log(Level.INFO, "ReverseWords in given String : {0}", reverseWords("Welcome to java world"));      	//Output : world java to Welcome
-		//logger.log(Level.INFO, "FirstUniqueCharacter in given String : {0}", firstUniqueCharacter("racecar"));    	//Output : e
-		logger.log(Level.INFO, "RemoveDuplicateChars in given String : {0}", removeDuplicateChars("programming"));	//Output : progamin
-	}
-	
-	/**
-	 * 10. Remove duplicate characters from a string.
-	 * @param str
-	 * @return unique characters string
-	 */
-	public static String removeDuplicateChars(String str) {
-		StringBuilder sb =new StringBuilder();
-		Map<Character, Character> map=new HashMap<>();
-		for(int i=0;i<str.length();i++) {
-			if(!map.containsKey(str.charAt(i))) {
-				sb.append(str.charAt(i));
-				map.put(str.charAt(i),str.charAt(i));
-			}		
-		}
-		return new String(sb);
-	}
-	/**
-	 * 9. Find the first non-repeated character in a string 
-	 * @param str
-	 * @return first unique character of given string
-	 */
-	public static char firstUniqueCharacter(String str) {
-		
-		for(int i=0;i<str.length();i++) {
-			if(str.indexOf(str.charAt(i))==str.lastIndexOf(str.charAt(i))){
-				return str.charAt(i);
-			}
-		}
-		
-		return '0';
-	}
-	
-	/**
-	 * 8. Reverse the order of words in a given string. 
-	 * @param str
-	 * @return Reversed string in the form of words
-	 */
-	public static String reverseWords(String str) {
-		
-		String finalString="";
-		String temp="";
-		for(int i=str.length()-1;i>=0;i--) {
-			if(str.charAt(i)==' ') {
-				finalString=finalString+" "+temp;
-				temp="";
-			}else{
-				temp= str.charAt(i)+temp;
-			}
-		}
-		finalString=finalString+" "+temp;
-		
-		return finalString;
-	}
-	
-	/**
-	 * 7. Count each character repeated how many times in given string. 
-	 * @param string
-	 * @return map contains each character count
-	 */
-	public static Map<Character, Integer> charCount(String str) {
-		
-		//Using streams
-		Map<Character, Long> collect = str.chars().mapToObj(c -> (char) c)
-										  .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-		
-		//Using HashMap
-		Map<Character, Integer> charCount = new HashMap<>();
-		for (int i = 0; i < str.length(); i++) {
-			if (charCount.containsKey(str.charAt(i)))
-				charCount.put(str.charAt(i), charCount.get(str.charAt(i)) + 1);
-			else
-				charCount.put(str.charAt(i), 1);
-		}
-
-		return charCount;
-	}
-	
-	/**
-	 *  6. Check given strings are anagram strings or not
-	 * @param first String
-	 * @param second String
-	 * @return true if first & second strings are anagrams else false
-	 */
-	public static boolean anagramChecker(String first,String second) {
-		//Remove white spaces from given strings if they have
-		first  = first.replaceAll("\\s", "");
-		second = second.replaceAll("\\s", "");
-		
-		//if given string lengths are not equal they not anagram strings
-		if(first.length()!=second.length())
-			return false;
-		
-		char[] firstArray  =  first.toCharArray();
-		char[] secondArray =  second.toCharArray();
-		
-		Arrays.sort(firstArray);
-		Arrays.sort(secondArray);
-		
-		for(int i=0;i<firstArray.length;i++) {
-			if(firstArray[i]!=secondArray[i])
-				return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * 5. Count vowels and consonants in given string.
-	 * @param str
-	 * @return map contains vowels count & consonants count
-	 */
-	public static Map<String, Integer> countVowelsAndConsonants(String str){
-		Map<String, Integer> count=new HashMap<>();
-		
-		count.put("Vowels",0);
-		count.put("Consonants",0);
-		
-		String vowels= "aeiouAEIOU";
-		
-		for(int i=0;i<str.length();i++) {
-			if(vowels.indexOf(str.charAt(i))>=0) {
-				count.put("Vowels", count.get("Vowels")+1);
-			}else {
-				count.put("Consonants", count.get("Consonants")+1);
-			}
-		}
-		return count;
-	}
-	
-	/**
-	 * 4. Find permutations of string. 
-	 * @param string
-	 * @return list of permutations string's of given string
-	 */
-	private static List<String> permutationsOfString(String str) {
-		return getPermutationsOfString(str,"",new ArrayList<>());
-	}
-	private static List<String> getPermutationsOfString(String src, String permutationString,List<String> list) {
-		if(src.isEmpty())
-			list.add(permutationString);
-		for(int i=0;i<src.length();i++) {
-			char currentChar=src.charAt(i);
-			String nextString = src.substring(0, i)+src.substring(i+1, src.length());
-			getPermutationsOfString(nextString,currentChar+permutationString,list);
-		}
-		return	list;
-	}
-
-	/**
-	 * 3. Find given String is palindrome or not. 
-	 * @param str
-	 * @return true if palindrome else false
-	 */
-	private static boolean checkPalindromeString(String str) {
-		int length = str.length();
-		char[] charArray = str.toCharArray();
-		for (int i = 0; i < str.length() / 2; i++) {
-			Character temp = charArray[i];
-			charArray[i] = charArray[length - (i + 1)];
-			charArray[length - (i + 1)] = temp;
-		}
-		return new String(charArray).equals(str);
-	}
-
-
-	/**
-	 * 2. Reverse string by frequency. 
-	 * @param str
-	 * @param frequencey
-	 * @return reversed string by frequency
-	 */
-	private static Object reversingStringByFrequency(String str,int frequencey) {
-		int length = str.length();
-		StringBuilder sb=new StringBuilder();
-		for(int i=0;i<str.length();i=i+frequencey) {
-			int start=i;
-			int end=Math.min(i+frequencey-1, length);
-			String reversedSubString = reversingString(str.substring(start, end+1));
-			sb.append(reversedSubString);
-		}
-		return new String(sb);
-	}
-
-	/**
-	 * 1. Reverse given string.
-	 * @param str
-	 * @return reversed string
-	 */
-	private static String reversingString(String str) {
-		int length = str.length();
-		char[] charArray = str.toCharArray();
-		for (int i = 0; i < str.length() / 2; i++) {
-			Character temp = charArray[i];
-			charArray[i] = charArray[length - (i + 1)];
-			charArray[length - (i + 1)] = temp;
+	static UnaryOperator<String> stringReverse = input -> {
+		char[] charArray = input.toCharArray();
+		int startIndex = 0;
+		int endIndex = input.length() - 1;
+		while (startIndex <= endIndex) {
+			swap(charArray, startIndex++, endIndex--);
 		}
 		return new String(charArray);
+	};
+
+	private static void swap(char[] charArray, int startIndex, int endIndex) {
+		char temp = charArray[startIndex];
+		charArray[startIndex] = charArray[endIndex];
+		charArray[endIndex] = temp;
+	}
+
+	static BiFunction<String, Integer, String> stringReverseByFrequency = (String input, Integer frequency) -> {
+		StringBuilder reversedString = new StringBuilder();
+		int startIndex = 0;
+		int endIndex = input.length() - 1;
+		while (startIndex <= endIndex) {
+			int frequencyStart = startIndex;
+			int frequencyEnd = Math.min(startIndex + frequency - 1, endIndex);
+			String substring = input.substring(frequencyStart, frequencyEnd + 1);
+			String reversedSubString = stringReverse.apply(substring);
+			reversedString.append(reversedSubString);
+			startIndex = startIndex + frequency;
+		}
+		return new String(reversedString);
+	};
+
+	static Function<String, List<String>> permutationsOfString = input -> {
+		List<String> permutations = new ArrayList<>();
+		Integer startIndex = 0;
+		return findPermutations(input.toCharArray(), startIndex, permutations);
+	};
+
+	private static List<String> findPermutations(char[] charArray, Integer startIndex, List<String> permutations) {
+		if (charArray.length == startIndex) {
+			permutations.add(new String(charArray));
+		}
+		for (int i = startIndex; i < charArray.length; i++) {
+			swap(charArray, startIndex, i);
+			findPermutations(charArray, startIndex + 1, permutations);
+			swap(charArray, startIndex, i);
+		}
+		return permutations;
+	}
+
+	static Function<String, Map<String, Integer>> countVowelsAndConsonent = input -> {
+		String vowels = "aeiouAEIOU";
+		Map<String, Integer> map = new HashMap<>();
+		map.put("Vowels", 0);
+		map.put("Consonents", 0);
+		for (int i = 0; i < input.length(); i++) {
+			if (vowels.indexOf(input.charAt(i)) >= 0) {
+				map.put("Vowels", map.get("Vowels") + 1);
+			} else {
+				map.put("Consonents", map.get("Consonents") + 1);
+			}
+		}
+		return map;
+	};
+
+	static Function<String, String> replaceSpecificWords = input -> {
+		return input.replaceAll("plus", "+").replaceAll("minus", "-");
+	};
+
+	static Function<String, String> replaceVowels = input -> {
+		return input.toLowerCase().replace('a', '!').replace('e', '@').replace('i', '#').replace('o', '$').replace('u',
+				'%');
+	};
+
+	static BiFunction<String, String, Boolean> angramStrings = (one, two) -> {
+		// Removing white spaces from given strings
+		String stringOne = one.replaceAll("\\s", "");
+		String stringTwo = two.replaceAll("\\s", "");
+
+		// if lengths are not equal then not anagrams
+		if (stringOne.length() != stringTwo.length()) {
+			return false;
+		}
+		return sortCharsInString(stringOne).equals(sortCharsInString(stringTwo));
+	};
+
+	private static String sortCharsInString(String input) {
+		return input.chars().mapToObj(c -> String.valueOf((char) c)).sorted().collect(Collectors.joining());
+	}
+
+	static Function<String, String> removeDuplicateChars = input -> {
+		StringBuilder result = new StringBuilder();
+		Set<Character> container = new HashSet<>();
+		for (int i = 0; i < input.length(); i++) {
+			if (!container.contains(input.charAt(i))) {
+				container.add(input.charAt(i));
+				result.append(input.charAt(i));
+			}
+		}
+		return new String(result);
+	};
+
+	static Function<String, Character> firstUniqueChar = input -> {
+		for (int i = 0; i < input.length(); i++) {
+			char charAt = input.charAt(i);
+			if (input.indexOf(charAt) == input.lastIndexOf(charAt)) {
+				return charAt;
+			}
+		}
+		return '0';
+	};
+
+	static Function<String, Integer> longestSubString = input -> {
+		Set<Character> set = new HashSet<>();
+		int maxLength = 0;
+		int pointerOne = 0;
+		int pointerTwo = 0;
+		while (pointerOne < input.length() && pointerTwo < input.length()) {
+			if (set.add(input.charAt(pointerTwo))) {
+				pointerTwo++;
+				maxLength = Math.max(maxLength, set.size());
+			} else {
+				set.remove(input.charAt(pointerOne));
+				pointerOne++;
+			}
+		}
+		return maxLength;
+	};
+
+	static UnaryOperator<String> reverseWords = input -> {
+		StringBuilder result = new StringBuilder();
+		String[] words = input.split(" ");
+		for (String word : words) {
+			if (!word.equals(" ")) {
+				result.insert(0, word).insert(0, " ");
+			}
+		}
+		return new String(result).trim();
+	};
+
+	static Function<String, Map<Character, Long>> charCount = input -> {
+		IntFunction<? extends Character> mapper = c -> (char) c;
+		return input.chars().mapToObj(mapper).collect(groupingBy(identity(), counting()));
+	};
+	
+	static UnaryOperator<String> removeConsecutiveChars = input -> {
+		String current = input;
+		String previous;
+		do {
+			previous = current;
+			current = removeConsecutiveCharsUtil(previous);
+		} while (!current.equals(previous));
+		return current;
+	};
+
+	private static String removeConsecutiveCharsUtil(String input) {
+		int i = 0;
+		StringBuilder sb = new StringBuilder();
+		while (i < input.length()) {
+			int j = i;
+			// Skip all consecutive characters
+			while (j < input.length() && input.charAt(i) == input.charAt(j)) {
+				j++;
+			}
+			// If there was no consecutive sequence, keep the character
+			if (j - i == 1) {
+				sb.append(input.charAt(i));
+			}
+			// Move to the next character
+			i = j;
+		}
+		return sb.toString();
 	}
 	
+	public static List<List<String>> groupAnagramStrings(List<String> anagrams){
+		Map<String,List<String>> map = new HashMap<>();
+		for(String s : anagrams) {
+			String string = s.chars().mapToObj(c->(char)c).map(String::valueOf).sorted().collect(Collectors.joining());
+			if(map.containsKey(string)) {
+				map.get(string).add(s);
+			}else {
+				map.put(string, new ArrayList<>());
+				map.get(string).add(s);
+			}
+		}
+		List<List<String>> res=new ArrayList<>();
+		map.entrySet().forEach(e->res.add(e.getValue()));
+		return res;
+	}
+
+	static Function<String, Boolean> validParanthases = input -> {
+		Stack<Character> stack = new Stack<>();
+		if (input.length() % 2 != 0) {
+			return false;
+		} else {
+			for (int i = 0; i < input.length(); i++) {
+				char current = input.charAt(i);
+				if (current == '{' || current == '(' || current == '[') {
+					stack.push(input.charAt(i));
+				} else {
+					if (stack.isEmpty()) {
+						return false;
+					} else {
+						Character open = stack.peek();
+						if ((open == '{' && current == '}') || (open == '[' && current == ']')
+								|| (open == '(' && current == ')')) {
+							stack.pop();
+						}
+					}
+				}
+			}
+		}
+		return stack.isEmpty();
+	};
+	
+	static Function<String, Integer> romanToInteger = input -> {
+		Map<Character, Integer> map = Map.of('M', 1000, 'D', 500, 'C', 100, 'L', 50, 'X', 10, 'V', 5, 'I', 1);
+		Integer res = 0;
+		for (int i = 0; i < input.length(); i++) {
+			char charAt = input.charAt(i);
+			if (i + 1 < input.length() && map.get(input.charAt(i + 1)) > map.get(charAt)) {
+				res = res - map.get(charAt);
+			} else {
+				res = res + map.get(charAt);
+			}
+		}
+		return res;
+	};
 }
