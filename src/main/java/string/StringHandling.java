@@ -194,22 +194,21 @@ public class StringHandling {
 	};
 
 	private static String removeConsecutiveCharsUtil(String input) {
-		int i = 0;
-		StringBuilder sb = new StringBuilder();
-		while (i < input.length()) {
-			int j = i;
-			// Skip all consecutive characters
-			while (j < input.length() && input.charAt(i) == input.charAt(j)) {
-				j++;
+		int length = input.length();
+		Stack<Character> stack = new Stack<>();
+		for (int i = 0; i < length; i++) {
+			Character peek = stack.isEmpty() ? '0' : stack.peek();
+			if (peek == '0') {
+				stack.push(input.charAt(i));
+			} else {
+				if (stack.peek() == input.charAt(i)) {
+					stack.pop();
+				} else {
+					stack.push(input.charAt(i));
+				}
 			}
-			// If there was no consecutive sequence, keep the character
-			if (j - i == 1) {
-				sb.append(input.charAt(i));
-			}
-			// Move to the next character
-			i = j;
 		}
-		return sb.toString();
+		return stack.stream().map(c -> String.valueOf(c)).collect(Collectors.joining(""));
 	}
 	
 	public static List<List<String>> groupAnagramStrings(List<String> anagrams){
