@@ -37,6 +37,10 @@ public class StringHandling {
 	 * 13.Group anagram strings
 	 * 14.Valid parentheses
 	 * 15.Roman to Integer
+	 * 16.String Rotation
+	 * 17.Subsequence Check
+	 * 18.Reverse only vowels
+	 * 19.Minimum number of Changes to make Two Strings are anagrams
 	 */
 
 	static UnaryOperator<String> stringReverse = input -> {
@@ -264,5 +268,70 @@ public class StringHandling {
 			}
 		}
 		return res;
+	};
+	
+	static BiFunction<String, String, Boolean> stringRotation = (strOne, strTwo) -> {
+		 // Length must be the same & should not be empty
+		if (strOne.length() != strTwo.length() || strOne == null)
+			return false;
+		// Concatenate s1 with itself & check if s2 is a substring
+		return (strOne + strOne).contains(strTwo);
+	};
+	
+	static BiFunction<String, String, Boolean> subSequenceCheck = (strOne, strTwo) -> {
+		int strOneIndex = 0, strTwoIndex = 0;
+		while (strOneIndex < strOne.length() && strTwoIndex < strTwo.length()) {
+			if (strOne.charAt(strOneIndex) == strTwo.charAt(strTwoIndex))
+				strTwoIndex++;
+			strOneIndex++;
+		}
+		return strTwoIndex == strTwo.length();
+	};
+	
+	static Function<String,String> reverseVowelsOnly = str -> {
+        String vowels="aeiou";
+        str=str.toLowerCase();
+        char[] ch=str.toLowerCase().toCharArray();
+        int startIndex=0;
+        int endIndex=str.length()-1;
+        while(startIndex<endIndex){
+            while(vowels.indexOf(str.charAt(startIndex))<0 && startIndex<endIndex){
+            	startIndex++;
+            }
+            while(vowels.indexOf(str.charAt(endIndex))<0 && endIndex>0){
+            	endIndex--;
+            }
+            if(startIndex<endIndex){
+                char t=ch[startIndex];
+                ch[startIndex++]=ch[endIndex];
+                ch[endIndex--]=t;
+            }
+        }
+        return new String(ch);
+	};
+	
+	static BiFunction<String, String, Integer> minChangesToMakeAnagrams = (firstString, secondString) -> {
+		// Check if strings have different lengths since anagrams must be same length
+		if (firstString.length() != secondString.length()) {
+			return -1;
+		}
+
+		// Array to store character frequency differences (using ASCII range)
+		int[] charFrequencyDiff = new int[128];
+
+		// Calculate frequency differences between both strings
+		for (int i = 0; i < firstString.length(); i++) {
+			charFrequencyDiff[firstString.charAt(i)]++; // Increment for first string
+			charFrequencyDiff[secondString.charAt(i)]--; // Decrement for second string
+		}
+
+		// Calculate total changes needed by summing positive differences
+		int totalChanges = 0;
+		for (int i = 0; i < 128; i++) {
+			// Sum only positive differences (excess characters in first string)
+			totalChanges += Math.max(0, charFrequencyDiff[i]);
+		}
+
+		return totalChanges; // This equals half the total differences needed
 	};
 }
