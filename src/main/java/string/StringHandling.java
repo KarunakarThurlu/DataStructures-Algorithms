@@ -37,6 +37,10 @@ public class StringHandling {
 	 * 13.Group anagram strings
 	 * 14.Valid parentheses
 	 * 15.Roman to Integer
+	 * 16.String Rotation
+	 * 17.Subsequence Check
+	 * 18.Reverse only vowels
+	 * 19.Minimum number of Changes to make Two Strings are anagrams
 	 */
 
 	static UnaryOperator<String> stringReverse = input -> {
@@ -194,22 +198,21 @@ public class StringHandling {
 	};
 
 	private static String removeConsecutiveCharsUtil(String input) {
-		int i = 0;
-		StringBuilder sb = new StringBuilder();
-		while (i < input.length()) {
-			int j = i;
-			// Skip all consecutive characters
-			while (j < input.length() && input.charAt(i) == input.charAt(j)) {
-				j++;
+		int length = input.length();
+		Stack<Character> stack = new Stack<>();
+		for (int i = 0; i < length; i++) {
+			Character peek = stack.isEmpty() ? '0' : stack.peek();
+			if (peek == '0') {
+				stack.push(input.charAt(i));
+			} else {
+				if (stack.peek() == input.charAt(i)) {
+					stack.pop();
+				} else {
+					stack.push(input.charAt(i));
+				}
 			}
-			// If there was no consecutive sequence, keep the character
-			if (j - i == 1) {
-				sb.append(input.charAt(i));
-			}
-			// Move to the next character
-			i = j;
 		}
-		return sb.toString();
+		return stack.stream().map(c -> String.valueOf(c)).collect(Collectors.joining(""));
 	}
 	
 	public static List<List<String>> groupAnagramStrings(List<String> anagrams){
@@ -265,5 +268,70 @@ public class StringHandling {
 			}
 		}
 		return res;
+	};
+	
+	static BiFunction<String, String, Boolean> stringRotation = (strOne, strTwo) -> {
+		 // Length must be the same & should not be empty
+		if (strOne.length() != strTwo.length() || strOne == null)
+			return false;
+		// Concatenate s1 with itself & check if s2 is a substring
+		return (strOne + strOne).contains(strTwo);
+	};
+	
+	static BiFunction<String, String, Boolean> subSequenceCheck = (strOne, strTwo) -> {
+		int strOneIndex = 0, strTwoIndex = 0;
+		while (strOneIndex < strOne.length() && strTwoIndex < strTwo.length()) {
+			if (strOne.charAt(strOneIndex) == strTwo.charAt(strTwoIndex))
+				strTwoIndex++;
+			strOneIndex++;
+		}
+		return strTwoIndex == strTwo.length();
+	};
+	
+	static Function<String,String> reverseVowelsOnly = str -> {
+        String vowels="aeiou";
+        str=str.toLowerCase();
+        char[] ch=str.toLowerCase().toCharArray();
+        int startIndex=0;
+        int endIndex=str.length()-1;
+        while(startIndex<endIndex){
+            while(vowels.indexOf(str.charAt(startIndex))<0 && startIndex<endIndex){
+            	startIndex++;
+            }
+            while(vowels.indexOf(str.charAt(endIndex))<0 && endIndex>0){
+            	endIndex--;
+            }
+            if(startIndex<endIndex){
+                char t=ch[startIndex];
+                ch[startIndex++]=ch[endIndex];
+                ch[endIndex--]=t;
+            }
+        }
+        return new String(ch);
+	};
+	
+	static BiFunction<String, String, Integer> minChangesToMakeAnagrams = (firstString, secondString) -> {
+		// Check if strings have different lengths since anagrams must be same length
+		if (firstString.length() != secondString.length()) {
+			return -1;
+		}
+
+		// Array to store character frequency differences (using ASCII range)
+		int[] charFrequencyDiff = new int[128];
+
+		// Calculate frequency differences between both strings
+		for (int i = 0; i < firstString.length(); i++) {
+			charFrequencyDiff[firstString.charAt(i)]++; // Increment for first string
+			charFrequencyDiff[secondString.charAt(i)]--; // Decrement for second string
+		}
+
+		// Calculate total changes needed by summing positive differences
+		int totalChanges = 0;
+		for (int i = 0; i < 128; i++) {
+			// Sum only positive differences (excess characters in first string)
+			totalChanges += Math.max(0, charFrequencyDiff[i]);
+		}
+
+		return totalChanges; // This equals half the total differences needed
 	};
 }

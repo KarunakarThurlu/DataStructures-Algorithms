@@ -265,10 +265,43 @@ public class StringHandlingTest {
 	
 	@ParameterizedTest
 	@CsvSource({"XX,20","LIX,59","MCMXCIV,1994"})
-	@DisplayName("Test Valid Paranthases")
+	@DisplayName("Test Roman To Integer")
 	void testRomanToInteger(String input, Integer expected) {
 		Integer  actual = StringHandling.romanToInteger.apply(input);
 		assertEquals(expected,actual);
+	}
+	
+	@ParameterizedTest
+	@CsvSource({ "waterbottle,erbottlewat,true", "hello,lohel,true", "abc,acb,false" })
+	@DisplayName("Test String Rotation")
+	void testStringRotation(String inputOne, String inputTwo, Boolean expected) {
+		Boolean actual = StringHandling.stringRotation.apply(inputOne, inputTwo);
+		assertEquals(expected, actual);
+	}
+	
+	@ParameterizedTest
+	@CsvSource({ "waterbottle, wbt, true", "hello, hlo, true", "abc, acb, false" })
+	@DisplayName("Test Sub Sequence Check")
+	void testSubSequenceCheck(String inputOne, String inputTwo, Boolean expected) {
+		Boolean actual = StringHandling.subSequenceCheck.apply(inputOne, inputTwo);
+		assertEquals(expected, actual);
+	}
+	
+	@ParameterizedTest
+	@CsvSource({ "rador, rodar", "hello, holle", "java, java" })
+	@DisplayName("Test Reverse Vowels Only")
+	void testRevseVowelsOnly(String input, String expected) {
+		String actual = StringHandling.reverseVowelsOnly.apply(input);
+		assertEquals(expected, actual);
+	}
+	
+	@ParameterizedTest
+	@CsvSource({ "eat, ate, 0", "accept, except, 2","buy, bye, 1","leetcode, practice, 5"})
+	@DisplayName("Test Minimum changes to make Two Strings are anagram")
+	void testMinChangesToMakeAnagrams(String inputOne,String inputTwo, String expected) {
+		int expectedValue = Integer.parseInt(expected);
+		Integer actual = StringHandling.minChangesToMakeAnagrams.apply(inputOne,inputTwo);
+		assertEquals(expectedValue, actual);
 	}
 
 
