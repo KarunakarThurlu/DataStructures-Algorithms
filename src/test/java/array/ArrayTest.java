@@ -743,4 +743,41 @@ public class ArrayTest {
                 Arguments.of(new int[]{1, 1, 1, 2, 2, 3, 3, 3}, List.of(1, 3)) // Multiple majority elements
         );
     }
+    
+    @ParameterizedTest
+    @MethodSource("provideNumWith2DigitIs1TestCases")
+    @DisplayName("Test numbers whose 2nd digit is 1")
+    void testNumsWith2DigitIs1(int[] nums, List<Integer> expected) {
+    	List<Integer> actual = Array.numWith2ndDigitIs1(nums);
+    	assertEquals(expected, actual);
+    }
+    private static Stream<Arguments> provideNumWith2DigitIs1TestCases() {
+        return Stream.of(
+                Arguments.of(new int[]{31, 2, 32}, List.of(31)),
+                Arguments.of(new int[]{11}, List.of(11)),          
+                Arguments.of(new int[]{1, 11}, List.of(1,11)),               	
+                Arguments.of(new int[]{39, 31, 41, 48, 42}, List.of(31,41)),    
+                Arguments.of(new int[]{}, List.of()),                       
+                Arguments.of(new int[]{5}, List.of()),          
+                Arguments.of(new int[]{11, 21, 31, 42, 52, 63, 73, 83}, List.of(11, 21, 31))
+        );
+    }
+    
+    @ParameterizedTest
+    @MethodSource("provideremoveDuplicatesInSortedArrayTestCases")
+    @DisplayName("Test Remove Duplicates From SortedArray")
+    void testremoveDuplicatesInSortedArray(int[] nums, int[] expected) {
+    	int[] actual = Array.removeDuplicatesInSortedArray(nums);
+    	assertArrayEquals(expected, actual);
+    }
+    private static Stream<Arguments> provideremoveDuplicatesInSortedArrayTestCases() {
+        return Stream.of(
+                Arguments.of(new int[]{1,1,2,3,4,4,4,4,4,5,6,7,8,8},new int[] {1,2,3,4,5,6,7,8}),
+                Arguments.of(new int[]{11}, new int[] {11}),          
+                Arguments.of(new int[]{1, 11}, new int[] {1,11}),               	
+                Arguments.of(new int[]{1,2,3,4,5,6}, new int[] {1,2,3,4,5,6}),    
+                Arguments.of(new int[]{}, new int[] {}),                       
+                Arguments.of(new int[]{11, 21, 31, 42, 52, 63, 73, 83}, new int[] {11, 21, 31, 42, 52, 63, 73, 83})
+        );
+    }
 }

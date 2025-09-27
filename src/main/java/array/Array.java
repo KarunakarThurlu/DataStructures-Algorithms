@@ -45,7 +45,8 @@ public class Array {
 	 * 28.Missing number
 	 * 29.Majority element
 	 * 30.Majority element II
-	 * 
+	 * 31.Finding numbers whose nth digit is x
+	 * 32.Remove Duplicates from sorted array
 	 */
 
 	/**
@@ -1220,6 +1221,42 @@ public class Array {
 			if (map.get(key) > nums.length / 3)
 				list.add(key);
 		return list;
+	}
+	
+	
+	public static List<Integer> numWith2ndDigitIs1(int[] nums) {
+		List<Integer> list = new ArrayList<>();
+		for (int i = 0; i < nums.length; i++) {
+			int num = nums[i];
+			if (num == 1) {
+				list.add(num);
+			} else {
+				while (num > 0) {
+					if (num != 1 && num < 99 && num % 10 == 1) {
+						list.add(num);
+					}
+					num = num / 10;
+				}
+			}
+		}
+		return list;
+	}
+
+	public static int[] removeDuplicatesInSortedArray(int[] array) {
+		if (array.length <= 0) {
+			return array;
+		}
+		int writeIndex = 1;
+		int readIndex = 1;
+		while (readIndex < array.length) {
+			if (array[readIndex - 1] != array[readIndex]) {
+				array[writeIndex++] = array[readIndex];
+			}
+			readIndex++;
+		}
+		return Arrays.copyOfRange(array, 0, writeIndex);
+		
+		
 	}
 	
 }
