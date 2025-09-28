@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Array {
 	/*
@@ -47,6 +48,8 @@ public class Array {
 	 * 30.Majority element II
 	 * 31.Finding numbers whose nth digit is x
 	 * 32.Remove Duplicates from sorted array
+	 * 33.Frequeny of most frequency element
+	 * 34.Highest Occurring Element in an Array
 	 */
 
 	/**
@@ -1223,7 +1226,31 @@ public class Array {
 		return list;
 	}
 	
-	
+    /**
+     * 31. Finds all numbers in the given array whose second digit (from the right) is 1.
+     * <p>
+     * The method checks each number and determines if the second digit is 1.
+     * Single-digit numbers equal to 1 are also included in the result.
+     * </p>
+     *
+     * <p><strong>Time Complexity:</strong> O(n * d), where n is the number of elements in the array and d is the number of digits per number (in worst case).</p>
+     * <p><strong>Space Complexity:</strong> O(k), where k is the number of numbers that match the condition.</p>
+     *
+     * @param nums the input array of integers
+     * @return a list of integers whose second digit is 1
+     *
+     * <pre>
+     * Example:
+     * Input: nums = [1, 12, 21, 31, 45, 105, 91]
+     * Output: [1, 12, 21, 31, 91]
+     *
+     * Input: nums = [5, 10, 20, 210, 1001]
+     * Output: [10, 210, 1001]
+     *
+     * Input: nums = [3, 4, 5]
+     * Output: []
+     * </pre>
+     */
 	public static List<Integer> numWith2ndDigitIs1(int[] nums) {
 		List<Integer> list = new ArrayList<>();
 		for (int i = 0; i < nums.length; i++) {
@@ -1242,6 +1269,33 @@ public class Array {
 		return list;
 	}
 
+    /**
+     * 32. Removes duplicate elements from a sorted integer array in-place and returns a new array containing only the unique elements while preserving the original order.
+     * <p>
+     * The input array must be sorted in non-decreasing order for this method to work correctly.
+     * It uses two pointers (read and write indices) to overwrite duplicate values.
+     * </p>
+     *
+     * <p><strong>Time Complexity:</strong> O(n), where n is the length of the array,
+     * as each element is visited once.</p>
+     * <p><strong>Space Complexity:</strong> O(n), due to creating a new array with
+     * the unique elements (copying the modified range).</p>
+     *
+     * @param array the input sorted array of integers
+     * @return a new array containing only unique elements from the input
+     *
+     * <pre>
+     * Example:
+     * Input: array = [1, 1, 2]
+     * Output: [1, 2]
+     *
+     * Input: array = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]
+     * Output: [0, 1, 2, 3, 4]
+     *
+     * Input: array = []
+     * Output: []
+     * </pre>
+     */
 	public static int[] removeDuplicatesInSortedArray(int[] array) {
 		if (array.length <= 0) {
 			return array;
@@ -1255,8 +1309,117 @@ public class Array {
 			readIndex++;
 		}
 		return Arrays.copyOfRange(array, 0, writeIndex);
-		
-		
 	}
 	
+    /**
+     * 33. Finds the maximum frequency of any element in the array after performing at most {@code k} increment operations.
+     * <p>
+     * Each increment operation allows increasing any element by 1. The goal is to maximize the frequency
+     * of a particular element. The method sorts the array and uses a sliding window to determine the largest
+     * possible frequency achievable.
+     * </p>
+     *
+     * <p><strong>Time Complexity:</strong> O(n log n), due to sorting the array.
+     * The sliding window traversal runs in O(n).</p>
+     * <p><strong>Space Complexity:</strong> O(1), as it uses only a few extra variables.</p>
+     *
+     * @param array the input array of integers
+     * @param k the maximum number of increment operations allowed
+     * @return the maximum frequency of any element after at most {@code k} operations
+     *
+     * <pre>
+     * Example:
+     * Input: array = [1, 2, 4], k = 5
+     * Output: 3
+     * Explanation: Increment 2 → 4 (2 times), increment 1 → 4 (3 times), making array [4, 4, 4].
+     *
+     * Input: array = [1, 4, 8, 13], k = 5
+     * Output: 2
+     * Explanation: Best we can do is make [4, 4, 8, 13] or [8, 8, 8, 13].
+     *
+     * Input: array = [3, 9, 6], k = 2
+     * Output: 1
+     * Explanation: With only 2 increments, we cannot make two numbers equal.
+     * </pre>
+     */
+	public static int frequencyOfMostFrequentElement(int[] array,int k) {
+		//Step 1 : Sort Array
+		Arrays.sort(array);
+		
+		//Step 2 : Sliding Window
+		int left=0,right=0;
+		long sum=0,res=0;
+		while (right < array.length) {
+			// Add current element (expand the window to the right)
+			sum = sum + array[right];
+			
+	        // Check if the window is valid:
+	        // (array[right] * windowSize) = target sum if we want all elements in window = array[right]
+	        // (sum + k) = max sum achievable with at most k increments
+	        // If we can't reach the target, shrink the window from the left
+			if (sum + k < array[right] * (long) (right - left + 1)) {
+				// Remove leftmost element from sum
+				sum = sum - array[left];
+				
+				// Move left pointer rightward (shrink window)
+				left++;
+			}
+			 // Update result with the maximum valid window size so far
+			res = Math.max(res, (long) right - left + 1);
+			
+			// Move right pointer to expand the window further
+			right++;
+		}
+		// Result is the size of the largest valid window (max frequency achievable)
+		return (int)res;
+	}
+	
+    /**
+     * 34. Finds the element that occurs most frequently in the given array.
+     * <p>
+     * If the array is empty, returns -1. In case of multiple elements with the same highest
+     * frequency, this method returns the one encountered first during iteration of the map.
+     * </p>
+     *
+     * <p><strong>Time Complexity:</strong> O(n), where n is the length of the array,
+     * since each element is processed once and map operations are O(1) on average.</p>
+     * <p><strong>Space Complexity:</strong> O(n), due to storing counts of unique elements in the map.</p>
+     *
+     * @param nums the input array of integers
+     * @return the element with the highest frequency in the array,
+     *         or {@code -1} if the array is empty
+     *
+     * <pre>
+     * Example:
+     * Input: nums = [1, 2, 3, 2, 4, 2]
+     * Output: 2
+     *
+     * Input: nums = [5, 5, 6, 6, 7]
+     * Output: 5   // or 6, depending on map iteration order
+     *
+     * Input: nums = []
+     * Output: -1
+     * </pre>
+     */
+
+	public static int highestOccurringElementInArray(int[] nums) {
+		if (nums.length <= 0) {
+			return -1;
+		}
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i : nums) {
+			if (map.containsKey(i)) {
+				map.compute(i, (k, v) -> v + 1);
+			} else {
+				map.put(i, 1);
+			}
+		}
+		AtomicInteger max = new AtomicInteger(Integer.MIN_VALUE);
+		map.entrySet().stream().forEach(e -> {
+			if (max.get() < e.getValue()) {
+				max.set(e.getKey());
+			}
+		});
+		return max.get();
+	}
 }

@@ -780,4 +780,35 @@ public class ArrayTest {
                 Arguments.of(new int[]{11, 21, 31, 42, 52, 63, 73, 83}, new int[] {11, 21, 31, 42, 52, 63, 73, 83})
         );
     }
+    
+    
+    @ParameterizedTest
+    @MethodSource("provideFrequencyOfMostFrequentElementTestCases")
+    @DisplayName("Test Frequency Of Most Frequent Element")
+	void testFrequencyOfMostFrequentElement(int[] nums, int k, int expected) {
+		int actual = Array.frequencyOfMostFrequentElement(nums, k);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideFrequencyOfMostFrequentElementTestCases() {
+		return Stream.of(Arguments.of(new int[] { 1, 2, 4 }, 5, 3), 
+				Arguments.of(new int[] { 1, 4, 8, 13 }, 5, 2),
+				Arguments.of(new int[] { 2, 6, 9 }, 2, 1));
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideHighestOccurringElementInArrayTestCases")
+    @DisplayName("Test Highest Occurring Element In Array")
+	void testHighestOccurringElementInArray(int[] nums,int expected) {
+		int actual = Array.highestOccurringElementInArray(nums);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideHighestOccurringElementInArrayTestCases() {
+		return Stream.of(Arguments.of(new int[] { 1, 2, 4 }, 1), 
+				Arguments.of(new int[] { 4, 4, 8, 13 }, 4),
+				Arguments.of(new int[] { 2, 6, 9, 6, 6, 7 }, 6), 
+				Arguments.of(new int[] {}, -1),
+				Arguments.of(new int[] { 1, 1, 1, 1, 1, 1 }, 1));
+	}
 }
