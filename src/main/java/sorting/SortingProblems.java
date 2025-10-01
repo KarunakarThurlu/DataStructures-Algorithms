@@ -10,6 +10,7 @@ public class SortingProblems {
 	 * 1. Bubble Sort
 	 * 2. Quick Sort
 	 * 3. Merge Sort
+	 * 4. Selection Sort
 	 */
 	
 	/**
@@ -171,5 +172,69 @@ public class SortingProblems {
 		while(j<rightSubArray.length) {
 			array[k++]=rightSubArray[j++];
 		}
+	}
+	
+	/**
+	 * 4. Selection Sort : Implements the Selection Sort algorithm to sort an array of integers.
+	 * 
+	 * Selection Sort is a comparison-based algorithm that repeatedly selects the
+	 * smallest element from the unsorted portion of the array and swaps it with 
+	 * the first unsorted element. This process continues until the array is sorted.
+	 *
+	 * @param array The array of integers to be sorted.
+	 * @return The sorted array in ascending order.
+	 *
+	 * @throws IllegalArgumentException if the input array is null.
+	 *
+	 * Sample Input:
+	 * <pre>{@code
+	 * Integer[] arr = {29, 10, 14, 37, 13};
+	 * Integer[] sortedArr = selectionSort(arr);
+	 * }</pre>
+	 *
+	 * Sample Output:
+	 * <pre>{@code
+	 * sortedArr = [10, 13, 14, 29, 37];
+	 * }</pre>
+	 *
+	 * Time Complexity:
+	 * - Worst-case: O(n²) (nested loops, regardless of initial order)
+	 * - Best-case: O(n²) (still scans entire unsorted portion each pass)
+	 * - Average-case: O(n²)
+	 *
+	 * Space Complexity:
+	 * - O(1) (in-place sorting, only a few variables used)
+	 *
+	 * Stability:
+	 * - Not stable (relative order of equal elements may change)
+	 */
+	public static Integer[] selectionSort(Integer[] array) {
+		if (array == null)
+			throw new IllegalArgumentException("Input array can't be null");
+		if (array.length <= 1)
+			return array; // Already sorted if size 0 or 1
+		int start = 0;
+		int end = array.length - 1;
+		// Outer loop: iterate through unsorted portion
+		while (start <= end) {
+			int minValueIndex = start;
+			int currentIndex = start + 1;
+
+			// Inner loop: find index of the smallest element
+			while (currentIndex <= end) {
+				if (array[currentIndex] < array[minValueIndex]) {
+					minValueIndex = currentIndex;
+				}
+				currentIndex++;
+			}
+			// Swap if a smaller element was found
+			if (minValueIndex != start) {
+				int temp = array[start];
+				array[start] = array[minValueIndex];
+				array[minValueIndex] = temp;
+			}
+			start++;
+		}
+		return array;
 	}
 }
