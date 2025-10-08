@@ -78,4 +78,26 @@ public class TestSortingProblems {
 				Arguments.of(null, null));
 	}
 	
+	@ParameterizedTest
+	@MethodSource("provideInsertionSortTestcases")
+	@DisplayName("Test Insertion Sort")
+	void testInsertionSort(Integer[] input, Integer[] expected) {
+		if (input == null) {
+			assertThrows(IllegalArgumentException.class, () -> SortingProblems.insertionSort(input));
+		} else {
+			Integer[] actual = SortingProblems.insertionSort(input);
+			assertArrayEquals(expected, actual);
+		}
+	}
+	
+	private static Stream<Arguments> provideInsertionSortTestcases() {
+		return Stream.of(Arguments.of(new Integer[] { 3, 2, 5 }, new Integer[] { 2, 3, 5 }),
+				Arguments.of(new Integer[] { 1, 2, 3 }, new Integer[] { 1, 2, 3 }),
+				Arguments.of(new Integer[] { 9, -9 }, new Integer[] { -9, 9 }),
+				Arguments.of(new Integer[] { 1, 6, 2, 5, 4, 7, 3, 8, 5, 9 }, new Integer[] { 1, 2, 3, 4, 5, 5, 6, 7, 8, 9 }),
+				Arguments.of(new Integer[] {1}, new Integer[] {1}),
+				Arguments.of(new Integer[] {}, new Integer[] {}),
+				Arguments.of(null, null));
+	}
+	
 }

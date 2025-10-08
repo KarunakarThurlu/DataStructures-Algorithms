@@ -11,6 +11,7 @@ public class SortingProblems {
 	 * 2. Quick Sort
 	 * 3. Merge Sort
 	 * 4. Selection Sort
+	 * 5. Insertion Sort
 	 */
 	
 	/**
@@ -235,6 +236,65 @@ public class SortingProblems {
 			}
 			start++;
 		}
+		return array;
+	}
+	
+	
+	/**
+	 * 5. Insertion Sort : Implements the Insertion Sort algorithm to sort an array of integers.
+	 *
+	 * Insertion Sort builds the sorted array one element at a time by inserting 
+	 * each new element into its correct position relative to the already sorted elements.
+	 *
+	 * @param array The array of integers to be sorted.
+	 * @return The sorted array in ascending order.
+	 *
+	 * @throws IllegalArgumentException if the input array is null.
+	 *
+	 * Sample Input:
+	 * <pre>{@code
+	 * Integer[] arr = {5, 2, 9, 1, 5, 6};
+	 * Integer[] sortedArr = insertionSort(arr);
+	 * }</pre>
+	 *
+	 * Sample Output:
+	 * <pre>{@code
+	 * sortedArr = [1, 2, 5, 5, 6, 9];
+	 * }</pre>
+	 *
+	 * Time Complexity:
+	 * - Worst-case: O(n²) (when array is in reverse order)
+	 * - Best-case: O(n) (when array is already sorted)
+	 * - Average-case: O(n²)
+	 *
+	 * Space Complexity:
+	 * - O(1) (in-place sorting)
+	 *
+	 * Stability:
+	 * - Stable (equal elements retain their original order)
+	 */
+	public static Integer[] insertionSort(Integer[] array) {
+		if (array == null) {
+			throw new IllegalArgumentException("Array Can't be null");
+		}
+		if (array.length <= 1) {
+			return array;
+		}
+
+		int start = 0;
+		int end = array.length - 1;
+
+		while (start <= end) {
+			int currentPosition = start;
+			while (currentPosition > 0 && array[currentPosition - 1] > array[currentPosition]) {
+				int temp = array[currentPosition];
+				array[currentPosition] = array[currentPosition - 1];
+				array[currentPosition - 1] = temp;
+				currentPosition--;
+			}
+			start++;
+		}
+
 		return array;
 	}
 }
