@@ -811,4 +811,29 @@ public class ArrayTest {
 				Arguments.of(new int[] {}, -1),
 				Arguments.of(new int[] { 1, 1, 1, 1, 1, 1 }, 1));
 	}
+	
+	
+    @ParameterizedTest
+    @MethodSource("provideTrappingRainWaterTestCases")
+    @DisplayName("Test Trapping Rain Water")
+	void testTrappingRainWater(int[] heights, int expected) {
+		int actual = Array.trappingRainWater(heights);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideTrappingRainWaterTestCases() {
+		return Stream.of(Arguments.of(new int[] { 0,1,0,2,1,0,1,3,2,1,2,1 }, 6), 
+				Arguments.of(new int[] { 4,2,0,3,2,5}, 9));
+	}
+    @ParameterizedTest
+    @MethodSource("provideBestToBuySellStockTestCases")
+    @DisplayName("Test Best To Buy Sell And Stocks")
+	void testbestToBuySellStock(int[] prices,int expected) {
+		int actual = Array.bestToBuySellStock(prices);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideBestToBuySellStockTestCases() {
+		return Stream.of(Arguments.of(new int[] { 7, 1, 5, 3, 6, 4 }, 5), Arguments.of(new int[] { 7, 6, 4, 3, 1 }, 0));
+	}
 }

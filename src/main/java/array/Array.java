@@ -49,7 +49,11 @@ public class Array {
 	 * 31.Finding numbers whose nth digit is x
 	 * 32.Remove Duplicates from sorted array
 	 * 33.Frequeny of most frequency element
-	 * 34.Highest Occurring Element in an Array
+	 * 34.Highest occurring element in an array
+	 * 35.Trapping rain water
+	 * 36.Best Time to buy and sell stock
+	 * 37.Merge Interval
+	 * 38.Insert Interval
 	 */
 
 	/**
@@ -1421,5 +1425,136 @@ public class Array {
 			}
 		});
 		return max.get();
+	}
+	
+	/**
+	 * 35. Trapping Rain Water : Calculates the total amount of rainwater that can be trapped 
+	 * between the bars represented by the given elevation map.
+	 *
+	 * This algorithm uses a two-pointer approach to efficiently find the trapped water 
+	 * by maintaining the maximum heights from both left and right sides.
+	 *
+	 * @param height The array representing the elevation map, where each element's value 
+	 *               corresponds to the height of a bar.
+	 * @return The total amount of water trapped between the bars.
+	 *
+	 * Sample Input:
+	 * <pre>{@code
+	 * int[] height = {0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1};
+	 * int result = trappingRainWater(height);
+	 * }</pre>
+	 *
+	 * Sample Output:
+	 * <pre>{@code
+	 * result = 6;
+	 * }</pre>
+	 *
+	 * Time Complexity:
+	 * - O(n): The array is traversed once using two pointers.
+	 *
+	 * Space Complexity:
+	 * - O(1): Only a constant amount of extra space is used.
+	 *
+	 * Approach:
+	 * - Use two pointers (`left` and `right`) starting from both ends of the array.
+	 * - Maintain two variables, `maxLeftHeight` and `maxRightHeight`, to store the highest bars seen so far.
+	 * - Move the pointer with the smaller height inward:
+	 *   - If `height[left]` is smaller, trapped water depends on `maxLeftHeight`.
+	 *   - If `height[right]` is smaller, trapped water depends on `maxRightHeight`.
+	 * - Accumulate trapped water at each step.
+	 */
+	public static int trappingRainWater(int[] height) {
+		int totalTrappedWater = 0; 		// Total water accumulated
+		int left = 0; 					// Left pointer
+		int right = height.length - 1; 	// Right pointer
+		int maxLeftHeight = 0; 			// Highest bar from the left
+		int maxRightHeight = 0; 		// Highest bar from the right
+
+		// Process bars from both ends toward the center
+		while (left <= right) {
+			if (height[left] <= height[right]) {
+				// If current left bar is lower, trapped water depends on maxLeftHeight
+				if (height[left] < maxLeftHeight) {
+					totalTrappedWater += maxLeftHeight - height[left];
+				} else {
+					maxLeftHeight = height[left];
+				}
+				left++;
+			} else {
+				// If current right bar is lower, trapped water depends on maxRightHeight
+				if (height[right] < maxRightHeight) {
+					totalTrappedWater += maxRightHeight - height[right];
+				} else {
+					maxRightHeight = height[right];
+				}
+				right--;
+			}
+		}
+
+		return totalTrappedWater;
+	}
+	
+	/**
+	 * 36. Best Time to Buy and Sell Stock : Finds the maximum profit that can be achieved 
+	 * by buying and selling a stock exactly once, given the stock prices on different days.
+	 *
+	 * The algorithm iterates through the array while tracking the minimum price so far 
+	 * and calculating the maximum possible profit at each step.
+	 *
+	 * @param prices The array where each element represents the stock price on a given day.
+	 * @return The maximum profit achievable from a single buy and sell transaction.
+	 *         Returns 0 if no profit is possible.
+	 *
+	 * Sample Input:
+	 * <pre>{@code
+	 * int[] prices = {7, 1, 5, 3, 6, 4};
+	 * int result = bestToBuySellStock(prices);
+	 * }</pre>
+	 *
+	 * Sample Output:
+	 * <pre>{@code
+	 * result = 5; // Buy at 1 and sell at 6
+	 * }</pre>
+	 *
+	 * Sample Input 2:
+	 * <pre>{@code
+	 * int[] prices = {7, 6, 4, 3, 1};
+	 * int result = bestToBuySellStock(prices);
+	 * }</pre>
+	 *
+	 * Sample Output 2:
+	 * <pre>{@code
+	 * result = 0; // No profit possible
+	 * }</pre>
+	 *
+	 * Time Complexity:
+	 * - O(n): Single traversal of the price array.
+	 *
+	 * Space Complexity:
+	 * - O(1): Only constant extra variables used.
+	 *
+	 * Approach:
+	 * - Keep track of the minimum price seen so far.
+	 * - For each price, compute the potential profit (current price - minimum price).
+	 * - Update the maximum profit if the current profit is higher.
+	 */
+	public static int bestToBuySellStock(int[] prices) {
+		if (prices == null || prices.length == 0) {
+			throw new IllegalArgumentException("Price array cannot be null or empty");
+		}
+
+		int minPrice = prices[0]; // Minimum stock price seen so far
+		int maxProfit = 0; // Maximum profit achievable
+
+		// Iterate over the prices to find max profit
+		for (int i = 1; i < prices.length; i++) {
+			// Update minimum price if current is lower
+			minPrice = Math.min(minPrice, prices[i]);
+
+			// Calculate profit if sold today, update max profit
+			maxProfit = Math.max(maxProfit, prices[i] - minPrice);
+		}
+
+		return maxProfit;
 	}
 }
