@@ -836,4 +836,36 @@ public class ArrayTest {
 	private static Stream<Arguments> provideBestToBuySellStockTestCases() {
 		return Stream.of(Arguments.of(new int[] { 7, 1, 5, 3, 6, 4 }, 5), Arguments.of(new int[] { 7, 6, 4, 3, 1 }, 0));
 	}
+	
+	@ParameterizedTest
+	@MethodSource("prodeTestInputsForMergeIntervals")
+	@DisplayName("Test Merge Intervals")
+	void testMergeIntervals(int[][] intervals,int[][] expected) {
+		int[][] actual = Array.mergeIntervals(intervals);
+		assertArrayEquals(expected, actual);
+	}
+
+	static Stream<Arguments> prodeTestInputsForMergeIntervals() {
+		return Stream.of(
+				Arguments.of(new int[][] { { 1, 3 }, { 2, 6 }, { 8, 10 }, { 15, 18 } },
+						new int[][] { { 1, 6 }, { 8, 10 }, { 15, 18 } }),
+				Arguments.of(new int[][] { { 1, 4 }, { 4, 5 } }, new int[][] { { 1, 5 } }),
+				Arguments.of(new int[][] { { 4, 7 }, { 1, 4 } }, new int[][] { { 1, 7 } }));
+	}
+	
+	@ParameterizedTest
+	@MethodSource("prodeTestInputsForInsertIntervals")
+	@DisplayName("Test Insert Intervals")
+	void testInsertIntervals(int[][] intervals,int[] newInterval,int[][] expected) {
+		int[][] actual = Array.insertInterval(intervals,newInterval);
+		assertArrayEquals(expected, actual);
+	}
+
+	static Stream<Arguments> prodeTestInputsForInsertIntervals() {
+		return Stream.of(
+				Arguments.of(new int[][] { { 1, 3 }, { 6, 9 } }, new int[] { 2, 5 },
+						new int[][] { { 1, 5 }, { 6, 9 } }),
+				Arguments.of(new int[][] { { 1, 2 }, { 3, 5 }, { 6, 7 }, { 8, 10 }, { 12, 16 } }, new int[] { 4, 8 },
+						new int[][] { { 1, 2 }, { 3, 10 }, { 12, 16 } }));
+	}
 }

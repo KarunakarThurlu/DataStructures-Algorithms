@@ -4,7 +4,9 @@ import static java.lang.Math.max;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -54,6 +56,7 @@ public class Array {
 	 * 36.Best Time to buy and sell stock
 	 * 37.Merge Interval
 	 * 38.Insert Interval
+	 * 39.Finding Second Largest Element In UnSorted Array
 	 */
 
 	/**
@@ -1554,7 +1557,129 @@ public class Array {
 			// Calculate profit if sold today, update max profit
 			maxProfit = Math.max(maxProfit, prices[i] - minPrice);
 		}
-
 		return maxProfit;
 	}
+	
+	/**
+	 * 37. Merges all overlapping intervals into a list of disjoint intervals.
+	 *
+	 * <p>Example:</p>
+	 * <pre>
+	 * Input:  [[1,3],[2,6],[8,10],[15,18]]
+	 * Output: [[1,6],[8,10],[15,18]]
+	 * </pre>
+	 *
+	 * <p>Approach:</p>
+	 * <ul>
+	 *   <li>Sort intervals by start time.</li>
+	 *   <li>Iterate through them, merging overlapping intervals on the go.</li>
+	 *   <li>Use LinkedList to efficiently append or modify the last merged interval.</li>
+	 * </ul>
+	 *
+	 * <p>Time Complexity: O(N log N) due to sorting.</p>
+	 * <p>Space Complexity: O(N) for the merged output.</p>
+	 */
+	public static int[][] mergeIntervals(int[][] intervals) {
+		if (intervals == null || intervals.length == 0)
+			return new int[0][];
+
+		// Step 1: Sort intervals by start time
+		Arrays.sort(intervals, Comparator.comparingInt(a -> a[0]));
+
+		// Step 2: Use LinkedList for easy merging
+		LinkedList<int[]> merged = new LinkedList<>();
+		merged.add(intervals[0]);
+
+		// Step 3: Merge overlapping intervals
+		for (int[] current : intervals) {
+			int[] last = merged.getLast();
+
+			// If overlapping: merge by updating end boundary
+			if (last[1] >= current[0]) {
+				last[1] = Math.max(last[1], current[1]);
+			}
+			// If not overlapping: just add new interval
+			else {
+				merged.add(current);
+			}
+		}
+
+		// Step 4: Convert list to array
+		return merged.toArray(new int[merged.size()][]);}
+	
+	/**
+	 * 38. Insert Interval : Inserts a new interval into a list of non-overlapping intervals 
+	 * and merges overlapping intervals to produce the correct sorted list of intervals.
+	 *
+	 * The algorithm iterates through all existing intervals and merges any that overlap 
+	 * with the new interval, ensuring the final list remains non-overlapping and sorted.
+	 *
+	 * @param intervals   A 2D array where each subarray represents an interval [start, end],
+	 *                    and all intervals are initially sorted and non-overlapping.
+	 * @param newInterval A single interval [start, end] to be inserted and merged.
+	 * @return A new 2D array of merged intervals after inserting the new interval.
+	 *
+	 * Sample Input:
+	 * <pre>{@code
+	 * int[][] intervals = {{1, 3}, {6, 9}};
+	 * int[] newInterval = {2, 5};
+	 * int[][] result = insertInterval(intervals, newInterval);
+	 * }</pre>
+	 *
+	 * Sample Output:
+	 * <pre>{@code
+	 * result = [[1, 5], [6, 9]];
+	 * }</pre>
+	 *
+	 * Sample Input 2:
+	 * <pre>{@code
+	 * int[][] intervals = {{1, 2}, {3, 5}, {6, 7}, {8, 10}, {12, 16}};
+	 * int[] newInterval = {4, 8};
+	 * int[][] result = insertInterval(intervals, newInterval);
+	 * }</pre>
+	 *
+	 * Sample Output 2:
+	 * <pre>{@code
+	 * result = [[1, 2], [3, 10], [12, 16]];
+	 * }</pre>
+	 *
+	 * Time Complexity:
+	 * - O(n): Each interval is visited once.
+	 *
+	 * Space Complexity:
+	 * - O(n): Due to the output list of merged intervals.
+	 *
+	 * Approach:
+	 * - If the new interval comes after the current interval, add the current interval.
+	 * - If it comes before, add the new interval and make the current one the new interval.
+	 * - If they overlap, merge them into a single interval by updating the start and end.
+	 */
+	public static int[][] insertInterval(int[][] intervals, int[] newInterval) {
+		if (intervals == null || newInterval == null) {
+			throw new IllegalArgumentException("Input intervals or new interval cannot be null");
+		}
+
+		LinkedList<int[]> mergedIntervals = new LinkedList<>();
+
+		for (int[] current : intervals) {
+			// Case 1: If the new interval is after the current one (newInterval[0] > current[1]), add the current one.
+			if (newInterval[0] > current[1]) {
+				mergedIntervals.add(current);
+			}
+			// Case 2: If the new interval is before the current one (newInterval[1] < current[0]), add the new one and make the current one the new interval to continue.
+			else if (newInterval[1] < current[0]) {
+				mergedIntervals.add(newInterval);
+				newInterval = current; // Continue with current as new interval
+			}
+			// Case 3: Overlapping intervals → merge
+			else {
+				newInterval[0] = Math.min(current[0], newInterval[0]);
+				newInterval[1] = Math.max(current[1], newInterval[1]);
+			}
+		}
+
+		// Add the last interval
+		mergedIntervals.add(newInterval);
+
+		return mergedIntervals.toArray(new int[mergedIntervals.size()][]);}
 }
