@@ -868,4 +868,38 @@ public class ArrayTest {
 				Arguments.of(new int[][] { { 1, 2 }, { 3, 5 }, { 6, 7 }, { 8, 10 }, { 12, 16 } }, new int[] { 4, 8 },
 						new int[][] { { 1, 2 }, { 3, 10 }, { 12, 16 } }));
 	}
+	
+    @ParameterizedTest
+    @MethodSource("provideFindSecondMaxTestCases")
+    @DisplayName("Test Find Second Max Element In Array")
+	void testFindSecondMax(int[] nums,int expected) {
+		int actual = Array.findSecondMax(nums);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideFindSecondMaxTestCases() {
+		return Stream.of(Arguments.of(new int[] { 1, 2, 4 }, 2), 
+				Arguments.of(new int[] { 4, 4, 8, 13 }, 8),
+				Arguments.of(new int[] { 2, 6, 9, 6, 6, 7 }, 7), 
+				Arguments.of(new int[] {5,5,5,5,5,5}, -1),
+				Arguments.of(new int[] { 9,5,18,12,11,8,12,11 }, 12));
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideFindUnionTestCases")
+    @DisplayName("Test Find Union")
+    void testFindUnion(int[] arr1,int[] arr2, List<Integer> expected) {
+    	List<Integer> actual = Array.findingUnionOfArrays(arr1,arr2);
+    	assertEquals(expected, actual);
+    }
+
+	private static Stream<Arguments> provideFindUnionTestCases() {
+		return Stream.of(
+				Arguments.of(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, new int[] { 2, 3, 4, 4, 5, 11, 12 }, List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)),
+				Arguments.of(new int[] { 1, 1, 2, 2, 2, 4 }, new int[] { 2, 2, 4, 4 }, List.of(1, 2, 4)),
+				Arguments.of(new int[] { 3, 5, 10, 10, 10, 15, 15, 20 }, new int[] { 5, 10, 10, 15, 30 }, List.of(3, 5, 10, 15, 20, 30))
+
+		);
+	}
+    
 }

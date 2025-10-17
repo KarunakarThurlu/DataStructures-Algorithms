@@ -57,6 +57,7 @@ public class Array {
 	 * 37.Merge Interval
 	 * 38.Insert Interval
 	 * 39.Finding Second Largest Element In UnSorted Array
+	 * 40.Finding union of sorted arrays
 	 */
 
 	/**
@@ -1605,7 +1606,8 @@ public class Array {
 		}
 
 		// Step 4: Convert list to array
-		return merged.toArray(new int[merged.size()][]);}
+		return merged.toArray(new int[merged.size()][]);
+	}
 	
 	/**
 	 * 38. Insert Interval : Inserts a new interval into a list of non-overlapping intervals 
@@ -1681,5 +1683,129 @@ public class Array {
 		// Add the last interval
 		mergedIntervals.add(newInterval);
 
-		return mergedIntervals.toArray(new int[mergedIntervals.size()][]);}
+		return mergedIntervals.toArray(new int[mergedIntervals.size()][]);
+	}
+	
+	/**
+	 * 39. Finds the second largest distinct element in an integer array.
+	 *
+	 * <p>Example:</p>
+	 * <pre>
+	 * Input:  [7, 2, 5, 10, 8]
+	 * Output: 8
+	 *
+	 * Input:  [3, 3, 3]
+	 * Output: -1  (No distinct second maximum)
+	 * </pre>
+	 *
+	 * <p>Approach:</p>
+	 * <ul>
+	 *   <li>Traverse the array once while keeping track of the largest and second-largest distinct numbers.</li>
+	 *   <li>Update second largest whenever a new maximum is found or a value lies between max and second max.</li>
+	 * </ul>
+	 *
+	 * <p>Time Complexity: O(N)</p>
+	 * <p>Space Complexity: O(1)</p>
+	 *
+	 * @param nums the input array of integers
+	 * @return the second largest distinct integer, or -1 if no such value exists
+	 * @throws IllegalArgumentException if the array is null or empty
+	 */
+	public static Integer findSecondMax(int[] nums) {
+		Integer max = nums[0];
+		Integer secondMax = -1;
+		for (int i = 1; i < nums.length; i++) {
+			if (nums[i] > max) {
+				secondMax = max;
+				max = nums[i];
+			}
+			if (nums[i] > secondMax && nums[i] < max) {
+				secondMax = nums[i];
+			}
+		}
+		if(secondMax==max) {
+			return -1;
+		}
+		return secondMax;
+	}
+	
+	/**
+	 * 40. Finds the union of two sorted integer arrays and returns a list of unique elements in ascending order.
+	 *
+	 * <p>The union of two arrays contains all distinct elements that appear in either array.</p>
+	 *
+	 * <p>Example:</p>
+	 * <pre>
+	 * Input:
+	 *   arr1 = [1, 2, 2, 3, 4]
+	 *   arr2 = [2, 3, 5, 5]
+	 * Output:
+	 *   [1, 2, 3, 4, 5]
+	 * </pre>
+	 *
+	 * <p>Approach:</p>
+	 * <ul>
+	 *   <li>Uses two-pointer technique to traverse both sorted arrays simultaneously.</li>
+	 *   <li>Skips duplicates within each array.</li>
+	 *   <li>Adds the smaller element to the result list, or both if equal.</li>
+	 * </ul>
+	 *
+	 * <p>Time Complexity: O(n + m) — where n and m are lengths of the input arrays.</p>
+	 * <p>Space Complexity: O(n + m) — for storing the resulting union list.</p>
+	 *
+	 * @param firstArray the first sorted integer array
+	 * @param secondArray the second sorted integer array
+	 * @return a list of unique integers representing the union of both arrays
+	 * @throws IllegalArgumentException if either array is null
+	 */
+	public static List<Integer> findingUnionOfArrays(int[] firstArray, int[] secondArray) {
+	    if (firstArray == null || secondArray == null) {
+	        throw new IllegalArgumentException("Input arrays cannot be null");
+	    }
+
+	    List<Integer> unionList = new ArrayList<>();
+	    int i = 0, j = 0;
+
+	    // Traverse both arrays using two-pointer technique
+	    while (i < firstArray.length && j < secondArray.length) {
+	        // Skip duplicates in both arrays
+	        if (i > 0 && firstArray[i] == firstArray[i - 1]) {
+	            i++;
+	            continue;
+	        }
+	        if (j > 0 && secondArray[j] == secondArray[j - 1]) {
+	            j++;
+	            continue;
+	        }
+
+	        // Compare and add smaller element, or advance both pointers if equal
+	        if (firstArray[i] < secondArray[j]) {
+	            unionList.add(firstArray[i++]);
+	        } else if (firstArray[i] > secondArray[j]) {
+	            unionList.add(secondArray[j++]);
+	        } else {
+	            unionList.add(firstArray[i]);
+	            i++;
+	            j++;
+	        }
+	    }
+
+	    // Process remaining elements in first array
+	    while (i < firstArray.length) {
+	        if (i == 0 || firstArray[i] != firstArray[i - 1]) {
+	            unionList.add(firstArray[i]);
+	        }
+	        i++;
+	    }
+
+	    // Process remaining elements in second array
+	    while (j < secondArray.length) {
+	        if (j == 0 || secondArray[j] != secondArray[j - 1]) {
+	            unionList.add(secondArray[j]);
+	        }
+	        j++;
+	    }
+
+	    return unionList;
+	}
 }
