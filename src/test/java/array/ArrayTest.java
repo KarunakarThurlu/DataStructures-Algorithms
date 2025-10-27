@@ -863,10 +863,8 @@ public class ArrayTest {
 
 	static Stream<Arguments> prodeTestInputsForInsertIntervals() {
 		return Stream.of(
-				Arguments.of(new int[][] { { 1, 3 }, { 6, 9 } }, new int[] { 2, 5 },
-						new int[][] { { 1, 5 }, { 6, 9 } }),
-				Arguments.of(new int[][] { { 1, 2 }, { 3, 5 }, { 6, 7 }, { 8, 10 }, { 12, 16 } }, new int[] { 4, 8 },
-						new int[][] { { 1, 2 }, { 3, 10 }, { 12, 16 } }));
+				Arguments.of(new int[][] { { 1, 3 }, { 6, 9 } }, new int[] { 2, 5 }, new int[][] { { 1, 5 }, { 6, 9 } }),
+				Arguments.of(new int[][] { { 1, 2 }, { 3, 5 }, { 6, 7 }, { 8, 10 }, { 12, 16 } }, new int[] { 4, 8 }, new int[][] { { 1, 2 }, { 3, 10 }, { 12, 16 } }));
 	}
 	
     @ParameterizedTest
@@ -878,11 +876,11 @@ public class ArrayTest {
 	}
 
 	private static Stream<Arguments> provideFindSecondMaxTestCases() {
-		return Stream.of(Arguments.of(new int[] { 1, 2, 4 }, 2), 
+		return Stream.of(Arguments.of(new int[] { 1, 2, 4 }, 2),
 				Arguments.of(new int[] { 4, 4, 8, 13 }, 8),
-				Arguments.of(new int[] { 2, 6, 9, 6, 6, 7 }, 7), 
-				Arguments.of(new int[] {5,5,5,5,5,5}, -1),
-				Arguments.of(new int[] { 9,5,18,12,11,8,12,11 }, 12));
+				Arguments.of(new int[] { 2, 6, 9, 6, 6, 7 }, 7),
+				Arguments.of(new int[] { 5, 5, 5, 5, 5, 5 }, -1),
+				Arguments.of(new int[] { 9, 5, 18, 12, 11, 8, 12, 11 }, 12));
 	}
 	
     @ParameterizedTest
@@ -898,8 +896,69 @@ public class ArrayTest {
 				Arguments.of(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, new int[] { 2, 3, 4, 4, 5, 11, 12 }, List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)),
 				Arguments.of(new int[] { 1, 1, 2, 2, 2, 4 }, new int[] { 2, 2, 4, 4 }, List.of(1, 2, 4)),
 				Arguments.of(new int[] { 3, 5, 10, 10, 10, 15, 15, 20 }, new int[] { 5, 10, 10, 15, 30 }, List.of(3, 5, 10, 15, 20, 30))
-
 		);
 	}
+	
+    @ParameterizedTest
+    @MethodSource("provideSingleNumberTestCases")
+    @DisplayName("Test single number in array")
+	void testSingleNumber(int[] nums,int expected) {
+		int actual = Array.singleNumber(nums);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideSingleNumberTestCases() {
+		return Stream.of(Arguments.of(new int[] { 1, 2, 2 }, 1), 
+				Arguments.of(new int[] { 4, 4, 8, 13, 8, 13, 7 }, 7),
+				Arguments.of(new int[] { 2, 6, 9, 6, 6, 7, 7, 9, 6 }, 2),
+				Arguments.of(new int[] { -1, 5, 5, 5, 5, 5, 5 }, -1), 
+				Arguments.of(new int[] { 1, 1, 5 }, 5));
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideMinimumJumpsTestCases")
+    @DisplayName("Test minimum jumps to reach array end")
+	void testMinJumps(int[] nums,int expected) {
+		int actual = Array.minJumps(nums);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideMinimumJumpsTestCases() {
+		return Stream.of(Arguments.of(new int[] { 1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9 }, 3), 
+				Arguments.of(new int[] { 1, 4, 3, 2, 6, 7 }, 2),
+				Arguments.of(new int[] { 2, 6, 9, 6, 6, 7 ,7,9}, 2), 
+				Arguments.of(new int[] {0, 10, 20}, -1)
+				);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideMaxLengthSubArrayTestCases")
+    @DisplayName("Test Max Length Sub array")
+	void testMaxLengthSubArry(int[] nums,int target,int expected) {
+		int actual = Array.maxLengthSubarray(nums,target);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideMaxLengthSubArrayTestCases() {
+		return Stream.of(Arguments.of(new int[] { 10, 5, 2, 7, 1, -10 }, 15, 6),
+				Arguments.of(new int[] { -5, 8, -14, 2, 4, 12 }, -5, 5),
+				Arguments.of(new int[] { 10, -10, 20, 30 }, 5, 0));
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideCheckSortedRoatatedTestCases")
+    @DisplayName("Test array is sorted and roatated")
+	void testArraysSortedRoatated(int[] nums,boolean expected) {
+		boolean actual = Array.checkArrayIsSortedRoatated(nums);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideCheckSortedRoatatedTestCases() {
+		return Stream.of(Arguments.of(new int[] { 8,9,1,2,3,4,5,6,7 },true),
+				Arguments.of(new int[] {8,1,2,3,6,4,7}, false),
+				Arguments.of(new int[] {1,2,3,6,8,7}, false),
+				Arguments.of(new int[] { 1,2,3 }, true));
+	}
+	
     
 }

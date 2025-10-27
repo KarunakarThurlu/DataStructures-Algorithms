@@ -58,6 +58,11 @@ public class Array {
 	 * 38.Insert Interval
 	 * 39.Finding Second Largest Element In UnSorted Array
 	 * 40.Finding union of sorted arrays
+	 * 41.Max consecutive ones
+	 * 42.Single element
+	 * 43.Minimum jumps to reach end
+	 * 44.Longest Subarray with Sum K
+	 * 45.Check array is sorted and roatated
 	 */
 
 	/**
@@ -1807,5 +1812,239 @@ public class Array {
 	    }
 
 	    return unionList;
+	}
+	
+	/**
+	 * 41. Finds the length of the longest consecutive sequence of 1s in a binary array.
+	 *
+	 * <p>This method scans the array and counts consecutive 1s. 
+	 * Whenever a 0 is encountered, the counter resets to zero.
+	 * The maximum streak of 1s encountered during traversal is returned.</p>
+	 *
+	 * <p>Example:</p>
+	 * <pre>
+	 * Input:  [1, 1, 0, 1, 1, 1]
+	 * Output: 3
+	 * Explanation: The longest consecutive run of 1s is of length 3.
+	 * </pre>
+	 *
+	 * <p>Time Complexity: O(n) — single pass through the array.</p>
+	 * <p>Space Complexity: O(1) — only uses constant extra variables.</p>
+	 *
+	 * @param nums an integer array consisting of 0s and 1s
+	 * @return the maximum number of consecutive 1s
+	 * @throws IllegalArgumentException if the input array is null
+	 */
+	public static int maxConsicutiveOnes(int[] nums) {
+		if (nums == null) {
+			throw new IllegalArgumentException("Input array cannot be null");
+		}
+
+		int currentCount = 0; // Tracks current streak of consecutive 1s
+		int maxCount = 0; // Stores the maximum streak found so far
+
+		for (int num : nums) {
+			if (num == 1) {
+				currentCount++; // Continue current streak
+				maxCount = Math.max(maxCount, currentCount); // Update max if needed
+			} else {
+				currentCount = 0; // Reset streak when 0 encountered
+			}
+		}
+		return maxCount;
+	}
+	
+	/**
+	 * 42. Finds the unique element in an array where every other element appears exactly twice.
+	 *
+	 * <p>This method uses a {@link java.util.HashSet} to track elements:
+	 * - If a number is seen for the first time, it is added to the set.
+	 * - If it appears again, it is removed.
+	 * After processing all numbers, the remaining element in the set is the single (non-duplicate) number.</p>
+	 *
+	 * <p>Example:</p>
+	 * <pre>
+	 * Input:  [4, 1, 2, 1, 2]
+	 * Output: 4
+	 * Explanation: Every element appears twice except for 4, which appears once.
+	 * </pre>
+	 *
+	 * <p>Time Complexity: O(n) — iterates once through the array.</p>
+	 * <p>Space Complexity: O(n) — uses a set to store unique elements.</p>
+	 *
+	 * @param nums an array of integers where exactly one element appears once and all others appear twice
+	 * @return the single non-duplicate number
+	 * @throws IllegalArgumentException if the input array is null or empty
+	 */
+	public static Integer singleNumber(int[] nums) {
+		int result = 0;
+		for (int n : nums) {
+			result ^= n; // XOR cancels out duplicate numbers
+		}
+		return result;
+	}
+	
+	/**
+	 * 43. Finds the minimum number of jumps required to reach the end of the array.
+	 *
+	 * <p>Each element in the array represents the maximum number of steps
+	 * that can be jumped forward from that element. If the end cannot be reached,
+	 * the method returns -1.</p>
+	 *
+	 * <p>Example:</p>
+	 * <pre>
+	 * Input:  arr = [2, 3, 1, 1, 4]
+	 * Output: 2
+	 * Explanation: Jump 1 step to index 1, then 3 steps to the end.
+	 * </pre>
+	 *
+	 * <p>Approach:</p>
+	 * <ul>
+	 *   <li>Keep track of the farthest index reachable (`maxReach`).</li>
+	 *   <li>Use `steps` to count how many steps remain in the current jump.</li>
+	 *   <li>Each time `steps` becomes 0, increase `jumps` and reset steps based on `maxReach`.</li>
+	 * </ul>
+	 *
+	 * <p>Time Complexity: O(n) — single traversal of the array.</p>
+	 * <p>Space Complexity: O(1) — constant extra space.</p>
+	 *
+	 * @param arr an integer array where each element denotes max jump length
+	 * @return the minimum number of jumps to reach the end, or -1 if not possible
+	 */
+	public static int minJumps(int[] arr) {
+		int n = arr.length;
+		if (n <= 1) {
+			return 0; // Already at the end
+		}
+		if (arr[0] == 0) {
+			return -1; // Can't move anywhere
+		}
+
+		int jumps = 1; 			// At least one jump needed to start
+		int maxReach = arr[0]; 	// The farthest we can reach so far
+		int steps = arr[0]; 	// Steps left in the current jump
+
+		for (int i = 1; i < n; i++) {
+			
+			// If we've reached the end
+			if (i == n - 1) {
+				return jumps;
+			}
+
+			// Update maxReach if we can go farther from here
+			maxReach = Math.max(maxReach, i + arr[i]);
+
+			// Consume a step
+			steps--;
+
+			// If no steps left, we must jump
+			if (steps == 0) {
+				jumps++;
+
+				// If the current index is beyond maxReach, end not reachable
+				if (i >= maxReach) {
+					return -1;
+				}
+
+				// Reinitialize steps for the new jump
+				steps = maxReach - i;
+			}
+		}
+
+		return -1; // If we exit loop without reaching end
+	}
+	
+	/**
+	 * 44. Finds the length of the longest subarray whose sum equals the given target {@code k}.
+	 *
+	 * <p>This method uses a prefix-sum and HashMap approach to efficiently track cumulative sums
+	 * and their earliest occurrence indices. For each element, it checks whether a previous prefix sum
+	 * exists such that the difference between the current sum and that prefix equals {@code k}.
+	 * If found, it calculates the subarray length and updates the maximum length accordingly.</p>
+	 *
+	 * <p>Example:</p>
+	 * <pre>
+	 * Input:  nums = [10, 5, 2, 7, 1, 9], k = 15
+	 * Output: 4
+	 * Explanation: The subarray [5, 2, 7, 1] sums to 15 and has length 4.
+	 * </pre>
+	 *
+	 * <p>Time Complexity: O(n) — each element is processed once.</p>
+	 * <p>Space Complexity: O(n) — stores prefix sums in a HashMap.</p>
+	 *
+	 * @param nums an integer array that may contain positive, negative, or zero values
+	 * @param k the target sum to find among subarrays
+	 * @return the maximum length of a subarray whose sum equals {@code k};
+	 *         returns 0 if no such subarray exists
+	 * @throws IllegalArgumentException if the input array is null
+	 */
+	public static int maxLengthSubarray(int[] nums, int k) {
+		HashMap<Integer, Integer> map = new HashMap<>();
+		int maxLength = 0, sum = 0;
+		for (int i = 0; i < nums.length; i++) {
+			// calculate the prefix sum till index i:
+			sum = sum + nums[i];
+
+			// Store the first occurrence of a prefix sum only
+			map.putIfAbsent(sum, i);
+
+			// if the sum = k, update the maxLen:
+			if (sum == k) {
+				maxLength = i + 1;
+			}
+
+			// calculate the sum of remaining part i.e. x-k:
+			int remaining = sum - k;
+
+			// If there exists a previous prefix sum (sum - k), it means the subarray between that index + 1 and i sums to k.
+			if (map.containsKey(remaining)) {
+				int length = i - map.get(remaining);
+				maxLength = Math.max(maxLength, length);
+			}
+
+		}
+		return maxLength;
+	}
+	
+	
+	/**
+	 * 45. Checks whether the given array is sorted in ascending order and then rotated.
+	 *
+	 * <p>An array is considered sorted and rotated if it can be obtained
+	 * by rotating a sorted (ascending) array some number of times.
+	 * 
+	 * For example:
+	 * <pre>
+	 * [3, 4, 5, 1, 2] → true  (rotation of [1, 2, 3, 4, 5])
+	 * [1, 2, 3, 4, 5] → true  (no rotation, still sorted)
+	 * [2, 1, 3, 4, 5] → false (not a valid rotation of a sorted array)
+	 * </pre>
+	 *
+	 * <p>Logic:</p>
+	 * - Traverse the array and count how many times the current element
+	 *   is greater than the next element (considering circular rotation).
+	 * - If this happens more than once, the array is not sorted and rotated.
+	 *
+	 * <p>Time Complexity:</p> O(n) — single pass through the array.
+	 * <p>Space Complexity:</p> O(1) — uses only a few variables.
+	 *
+	 * @param arr the input integer array
+	 * @return {@code true} if the array is sorted and rotated; {@code false} otherwise
+	 * @throws IllegalArgumentException if the array is null or empty
+	 */
+	public static boolean checkArrayIsSortedRoatated(int[] arr) {
+		int breakCount = 0; // Counts the number of places where the ascending order breaks
+		int n = arr.length;
+
+		for (int i = 0; i < n; i++) {
+			// Compare each element with its next (circularly using modulo)
+			// If current > next, it's a "break" in sorted order
+			if (arr[i] > arr[(i + 1) % n]) {
+				breakCount++;
+			}
+		}
+
+		// Valid rotated sorted array has at most one such break
+		return breakCount <= 1;
 	}
 }
