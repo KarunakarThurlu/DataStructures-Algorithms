@@ -63,6 +63,8 @@ public class Array {
 	 * 43.Minimum jumps to reach end
 	 * 44.Longest Subarray with Sum K
 	 * 45.Check array is sorted and roatated
+	 * 46.Jump game can we reach at end of array or not
+	 * 47.Sort the array that contains 0's, 1's and 2's only
 	 */
 
 	/**
@@ -1885,73 +1887,55 @@ public class Array {
 	}
 	
 	/**
-	 * 43. Finds the minimum number of jumps required to reach the end of the array.
+	 * 43. Minimum jumps to reach end
 	 *
-	 * <p>Each element in the array represents the maximum number of steps
-	 * that can be jumped forward from that element. If the end cannot be reached,
-	 * the method returns -1.</p>
+	 * <p>Each element in the array represents your maximum jump length at that position.
+	 * The goal is to determine the fewest jumps needed to reach the last index starting from index 0.</p>
+	 *
+	 * <p>Algorithm (Greedy approach):</p>
+	 * <ul>
+	 *   <li>Traverse the array while keeping track of the farthest position you can reach (`maxReach`).</li>
+	 *   <li>Use `currentPos` to mark the end of the current jump's range.</li>
+	 *   <li>When you reach the end of this range (i.e., `i == currentPos`), it means you must jump — increment `jumps` and update `currentPos` to `maxReach`.</li>
+	 * </ul>
 	 *
 	 * <p>Example:</p>
 	 * <pre>
-	 * Input:  arr = [2, 3, 1, 1, 4]
+	 * Input:  [2, 3, 1, 1, 4]
 	 * Output: 2
-	 * Explanation: Jump 1 step to index 1, then 3 steps to the end.
+	 * Explanation: Jump from index 0 → 1 (reach index 1), then index 1 → 4 (reach the end).
+	 *
+	 * Input:  [2, 1]
+	 * Output: 1
 	 * </pre>
 	 *
-	 * <p>Approach:</p>
-	 * <ul>
-	 *   <li>Keep track of the farthest index reachable (`maxReach`).</li>
-	 *   <li>Use `steps` to count how many steps remain in the current jump.</li>
-	 *   <li>Each time `steps` becomes 0, increase `jumps` and reset steps based on `maxReach`.</li>
-	 * </ul>
+	 * <p>Time Complexity:</p> O(n) — single traversal of the array.  
+	 * <p>Space Complexity:</p> O(1) — only uses constant extra variables.</p>
 	 *
-	 * <p>Time Complexity: O(n) — single traversal of the array.</p>
-	 * <p>Space Complexity: O(1) — constant extra space.</p>
-	 *
-	 * @param arr an integer array where each element denotes max jump length
-	 * @return the minimum number of jumps to reach the end, or -1 if not possible
+	 * @param nums an integer array where each element represents the maximum jump length from that position
+	 * @return the minimum number of jumps required to reach the last index
 	 */
-	public static int minJumps(int[] arr) {
-		int n = arr.length;
-		if (n <= 1) {
-			return 0; // Already at the end
-		}
-		if (arr[0] == 0) {
-			return -1; // Can't move anywhere
+	public static int minJumps(int[] nums) {
+		if (nums.length == 1) {
+			return 0; // Already at the last index
 		}
 
-		int jumps = 1; 			// At least one jump needed to start
-		int maxReach = arr[0]; 	// The farthest we can reach so far
-		int steps = arr[0]; 	// Steps left in the current jump
+		int jumps = 0; 		// Counts the number of jumps made
+		int maxReach = 0; 	// The farthest index reachable so far
+		int currentPos = 0; // The end of the current jump range
+		int n = nums.length;
 
-		for (int i = 1; i < n; i++) {
-			
-			// If we've reached the end
-			if (i == n - 1) {
-				return jumps;
-			}
+		for (int i = 0; i < n - 1; i++) {
+			// Update the farthest we can reach from current position
+			maxReach = max(maxReach, i + nums[i]);
 
-			// Update maxReach if we can go farther from here
-			maxReach = Math.max(maxReach, i + arr[i]);
-
-			// Consume a step
-			steps--;
-
-			// If no steps left, we must jump
-			if (steps == 0) {
-				jumps++;
-
-				// If the current index is beyond maxReach, end not reachable
-				if (i >= maxReach) {
-					return -1;
-				}
-
-				// Reinitialize steps for the new jump
-				steps = maxReach - i;
+			// If we reach the end of the range of the current jump
+			if (i == currentPos) {
+				jumps++; // We need to make another jump
+				currentPos = maxReach; // Update the new range end
 			}
 		}
-
-		return -1; // If we exit loop without reaching end
+		return jumps;
 	}
 	
 	/**
@@ -1976,7 +1960,6 @@ public class Array {
 	 * @param k the target sum to find among subarrays
 	 * @return the maximum length of a subarray whose sum equals {@code k};
 	 *         returns 0 if no such subarray exists
-	 * @throws IllegalArgumentException if the input array is null
 	 */
 	public static int maxLengthSubarray(int[] nums, int k) {
 		HashMap<Integer, Integer> map = new HashMap<>();
@@ -2006,7 +1989,6 @@ public class Array {
 		return maxLength;
 	}
 	
-	
 	/**
 	 * 45. Checks whether the given array is sorted in ascending order and then rotated.
 	 *
@@ -2030,7 +2012,6 @@ public class Array {
 	 *
 	 * @param arr the input integer array
 	 * @return {@code true} if the array is sorted and rotated; {@code false} otherwise
-	 * @throws IllegalArgumentException if the array is null or empty
 	 */
 	public static boolean checkArrayIsSortedRoatated(int[] arr) {
 		int breakCount = 0; // Counts the number of places where the ascending order breaks
@@ -2046,5 +2027,102 @@ public class Array {
 
 		// Valid rotated sorted array has at most one such break
 		return breakCount <= 1;
+	}
+	
+	/**
+	 * 46. Jump game can we reach at end of array or not
+	 *
+	 * <p>Each element in the array represents the maximum jump length at that position.
+	 * The goal is to check whether you can start at index 0 and reach the last index.</p>
+	 *
+	 * <p>Algorithm:</p>
+	 * - Iterate through the array while maintaining the farthest index you can reach (`maxReach`).
+	 * - If at any point the current index `i` exceeds `maxReach`, it means you cannot move further — return false.
+	 * - Update `maxReach` as the maximum of its current value and `i + nums[i]` (the new reach from this index).
+	 * - If you finish the loop, you can reach the end — return true.
+	 *
+	 * <p>Example:</p>
+	 * <pre>
+	 * Input:  [2, 3, 1, 1, 4]
+	 * Output: true
+	 * Explanation: Jump 1 step to index 1, then 3 steps to the end.
+	 *
+	 * Input:  [3, 2, 1, 0, 4]
+	 * Output: false
+	 * Explanation: You will get stuck at index 3.
+	 * </pre>
+	 *
+	 * <p>Time Complexity:</p> O(n) — single traversal of the array.
+	 * <p>Space Complexity:</p> O(1) — only uses a few extra variables.
+	 *
+	 * @param nums an integer array where each element represents the maximum jump length
+	 * @return {@code true} if it is possible to reach the last index; {@code false} otherwise
+	 */
+	public static boolean jumpGame(int[] nums) {
+		int maxReach = 0; // The farthest index we can reach so far
+		int n = nums.length;
+
+		for (int i = 0; i < n; i++) {
+			// If the current index is beyond our maximum reachable index, we can't move forward
+			if (maxReach < i) {
+				return false;
+			}
+
+			// Update the farthest reachable index from the current position
+			maxReach = Math.max(maxReach, i + nums[i]);
+		}
+
+		// If we finished the loop, we can reach the last index
+		return true;
+	}
+	
+	/**
+	 * 47. Sorts an array containing only 0s, 1s, and 2s in ascending order (0s → 1s → 2s).
+	 * 
+	 * <p>This method uses a simple two-pass approach:
+	 * <ul>
+	 *   <li>In the first pass, it moves all 0s to the beginning of the array.</li>
+	 *   <li>In the second pass, it moves all 1s next to the 0s.</li>
+	 *   <li>The remaining elements (2s) are already in the correct position.</li>
+	 * </ul>
+	 * 
+	 * <p>Although this solution runs in O(n) time, it performs two passes through the array
+	 * (less optimal than the single-pass Dutch National Flag algorithm). However, it is simple
+	 * and easy to understand.
+	 *
+	 * @param nums an integer array containing only 0s, 1s, and 2s
+	 * @return the same array sorted in-place
+	 *
+	 * <p><b>Example:</b>
+	 * <pre>
+	 * Input:  [0, 2, 1, 2, 0, 1]
+	 * Output: [0, 0, 1, 1, 2, 2]
+	 * </pre>
+	 */
+	public static int[] sort012s(int[] nums) {
+		int low = 0; // Boundary for 0s
+		int mid = 0; // Current element
+		int high = nums.length - 1; // Boundary for 2s
+
+		while (mid <= high) {
+			if (nums[mid] == 0) {
+				// Swap current element with boundary of 0s
+				int temp = nums[low];
+				nums[low] = nums[mid];
+				nums[mid] = temp;
+				low++;
+				mid++;
+			} else if (nums[mid] == 1) {
+				// Move mid pointer
+				mid++;
+			} else {
+				// Swap current element with boundary of 2s
+				int temp = nums[mid];
+				nums[mid] = nums[high];
+				nums[high] = temp;
+				high--;
+			}
+		}
+		return nums;
 	}
 }

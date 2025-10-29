@@ -924,10 +924,26 @@ public class ArrayTest {
 	}
 
 	private static Stream<Arguments> provideMinimumJumpsTestCases() {
-		return Stream.of(Arguments.of(new int[] { 1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9 }, 3), 
-				Arguments.of(new int[] { 1, 4, 3, 2, 6, 7 }, 2),
+		return Stream.of(Arguments.of(new int[] { 2,3,1,1,4 }, 2), 
+				Arguments.of(new int[] {2,3,0,1,4 }, 2),
 				Arguments.of(new int[] { 2, 6, 9, 6, 6, 7 ,7,9}, 2), 
-				Arguments.of(new int[] {0, 10, 20}, -1)
+				Arguments.of(new int[] {2, 10, 20}, 1)
+				);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideJumpGameTestCases")
+    @DisplayName("Test jump to reach array end")
+	void testJumpGame(int[] nums,Boolean expected) {
+		Boolean actual = Array.jumpGame(nums);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideJumpGameTestCases() {
+		return Stream.of(Arguments.of(new int[] { 2,3,1,1,4 }, true), 
+				Arguments.of(new int[] {3,2,1,0,4 }, false),
+				Arguments.of(new int[] { 2, 6, 9, 6, 6, 7 ,7,9}, true), 
+				Arguments.of(new int[] {2, 1, 0}, true)
 				);
 	}
 	
@@ -958,6 +974,23 @@ public class ArrayTest {
 				Arguments.of(new int[] {8,1,2,3,6,4,7}, false),
 				Arguments.of(new int[] {1,2,3,6,8,7}, false),
 				Arguments.of(new int[] { 1,2,3 }, true));
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideSort012TestCases")
+    @DisplayName("Test sort array that contains 0's, 1's and 2's ")
+	void testSort012s(int[] nums, int[] expected) {
+		int[] actual = Array.sort012s(nums);
+		assertArrayEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideSort012TestCases() {
+		return Stream.of(Arguments.of(new int[] { 1, 1, 2, 0, 1, 1 }, new int[] { 0, 1, 1, 1, 1, 2 }),
+				Arguments.of(new int[] { 1, 1, 1, 1, 1 }, new int[] { 1, 1, 1, 1, 1 }),
+				Arguments.of(new int[] { 1, 1, 2 }, new int[] { 1, 1, 2 }),
+				Arguments.of(new int[] { 1, 2, 0 }, new int[] { 0, 1, 2 }),
+				Arguments.of(new int[] { 0, 0, 0 }, new int[] { 0, 0, 0 }),
+				Arguments.of(new int[] { 1 }, new int[] { 1 }));
 	}
 	
     
