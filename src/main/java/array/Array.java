@@ -65,6 +65,9 @@ public class Array {
 	 * 45.Check array is sorted and roatated
 	 * 46.Jump game can we reach at end of array or not
 	 * 47.Sort the array that contains 0's, 1's and 2's only
+	 * 48.Colorful rope
+	 * 49.Coin change
+	 * 50.Next Permutation
 	 */
 
 	/**
@@ -2125,4 +2128,183 @@ public class Array {
 		}
 		return nums;
 	}
+	
+	/**
+	 * 48. Colorful rope
+	 * Calculates the minimum total time required to remove balloons from a rope so that 
+	 * no two adjacent balloons have the same color.
+	 * 
+	 * <p>Each balloon has a color and a time value representing how long it takes to remove it. 
+	 * If two adjacent balloons have the same color, one of them must be removed to make all 
+	 * adjacent balloons distinct. The goal is to minimize the total time spent removing balloons.</p>
+	 * 
+	 * <p>The algorithm iterates once through the string. For every consecutive pair of 
+	 * same-colored balloons, it removes the one with the smaller removal time and carries 
+	 * forward the larger time to ensure the next comparison uses the correct reference.</p>
+	 * 
+	 * <p><b>Example:</b></p>
+	 * <pre>
+	 * Input:
+	 *   colors = "aabaa"
+	 *   time   = [1, 2, 3, 4, 1]
+	 *
+	 * Output: 2
+	 *
+	 * Explanation:
+	 *   - Between the first two 'a's → remove the first (min(1,2) = 1)
+	 *   - Between the last two 'a's  → remove the last  (min(4,1) = 1)
+	 *   Total = 1 + 1 = 2
+	 * </pre>
+	 * 
+	 * <p><b>Time Complexity:</b> O(n) — single linear pass through the string.</p>
+	 * <p><b>Space Complexity:</b> O(1) — operates in place using the input array.</p>
+	 * 
+	 * @param colors a string representing balloon colors
+	 * @param time an array of integers where time[i] is the time to remove the i-th balloon
+	 * @return the minimum total time needed to remove balloons such that no two adjacent balloons have the same color
+	 */
+	public static int colorfulRope(String colors, int[] time) {
+		int minTime = 0;
+
+	    // Start from the second balloon to compare each with its previous one
+	    for (int i = 1; i < colors.length(); i++) {
+
+	        // If two adjacent balloons have the same color, one must be removed
+	        if (colors.charAt(i) == colors.charAt(i - 1)) {
+
+	            // Remove the one with smaller removal time (to minimize total cost)
+	            minTime += Math.min(time[i], time[i - 1]);
+
+	            // Keep the larger removal time as the "surviving" balloon's cost so it can be compared with the next balloon if needed
+	            time[i] = Math.max(time[i], time[i - 1]);
+	        }
+	    }
+	    return minTime;
+	}
+	
+	/**
+	 * 49. Solves the Coin Change problem using Dynamic Programming (Bottom-Up approach).
+	 *
+	 * <p>This method computes the minimum number of coins required to make up a given `amount`
+	 * using the provided denominations in the `coins` array. If it's impossible to form
+	 * the target amount using any combination of the given coins, the method returns -1.</p>
+	 *
+	 * <p>Example:</p>
+	 * <pre>
+	 * Input:
+	 *   coins = [1, 2, 5]
+	 *   amount = 11
+	 *
+	 * Output:
+	 *   3
+	 *
+	 * Explanation:
+	 *   The minimum number of coins to make 11 is 3 (5 + 5 + 1).
+	 * </pre>
+	 *
+	 * <p>Dynamic Programming Recurrence Relation:</p>
+	 * <pre>
+	 * dp[i] = min(1 + dp[i - coin]) for each coin <= i
+	 * dp[0] = 0
+	 * </pre>
+	 *
+	 * <p>Time Complexity: O(n * m)</p>
+	 * where:
+	 * - n = target amount
+	 * - m = number of coin denominations
+	 *
+	 * <p>Space Complexity: O(n)</p>
+	 * — uses a 1D DP array of size `amount + 1`.</p>
+	 *
+	 * @param coins an array of available coin denominations
+	 * @param amount the target amount to form
+	 * @return the minimum number of coins required, or -1 if impossible
+	 */
+	public static int coinChange(int[] coins, int amount) {
+		int[] minCoins = new int[amount + 1];
+		Arrays.fill(minCoins, amount + 1); // initialize with large number (acts as infinity)
+		minCoins[0] = 0; // base case
+
+		// Build up solutions for all amounts up to target
+		for (int i = 1; i <= amount; i++) {
+			for (int coin : coins) {
+				if (i - coin >= 0) {
+					minCoins[i] = Math.min(minCoins[i], 1 + minCoins[i - coin]);
+				}
+			}
+		}
+		return minCoins[amount] != amount + 1 ? minCoins[amount] : -1;
+	}
+	
+	
+	/**
+	 * 50. Next permutation
+	 * Rearranges the given array of integers into the lexicographically next greater permutation.
+	 * <p>
+	 * If no such permutation exists (i.e., the array is in descending order),
+	 * it rearranges the numbers into the lowest possible order (ascending).
+	 * <p>
+	 * This method modifies the input array in place and also returns it for convenience.
+	 * <p>
+	 * <b>Example 1:</b><br>
+	 * Input:  [1, 2, 3]<br>
+	 * Output: [1, 3, 2]
+	 * <p>
+	 * <b>Example 2:</b><br>
+	 * Input:  [3, 2, 1]<br>
+	 * Output: [1, 2, 3]
+	 * <p>
+	 * <b>Example 3:</b><br>
+	 * Input:  [1, 1, 5]<br>
+	 * Output: [1, 5, 1]
+	 * <p>
+	 * <b>Algorithm Steps:</b>
+	 * <ol>
+	 *   <li>Find the first index <code>pivot</code> from right to left where <code>nums[pivot] &lt; nums[pivot + 1]</code>.</li>
+	 *   <li>If no pivot is found, reverse the entire array (already the highest permutation).</li>
+	 *   <li>Otherwise, find the smallest element on the right side of the pivot that is greater than <code>nums[pivot]</code>.</li>
+	 *   <li>Swap the pivot and that element.</li>
+	 *   <li>Reverse the subarray to the right of the pivot to get the smallest possible order.</li>
+	 * </ol>
+	 *
+	 * @param nums an array of integers representing the current permutation
+	 * @return the modified array representing the next lexicographical permutation
+	 */
+	public static int[] nextPermutation(int[] nums) {
+	    int n = nums.length;
+	    int pivotIndex = -1;
+
+	    // Step 1: Find pivot
+	    for (int i = n - 2; i >= 0; i--) {
+	        if (nums[i] < nums[i + 1]) {
+	            pivotIndex = i;
+	            break;
+	        }
+	    }
+
+	    // Step 2: Reverse if already descending
+	    if (pivotIndex == -1) {
+	       return reverseArray(nums);
+	    }
+
+	    // Step 3: Find rightmost successor and swap
+	    for (int i = n - 1; i > pivotIndex; i--) {
+	        if (nums[i] > nums[pivotIndex]) {
+	        	swap(nums, pivotIndex, i);
+	            break;
+	        }
+	    }
+
+	    // Step 4: Reverse the suffix
+	    reverse(nums, pivotIndex + 1);
+	    return nums;
+	}
+
+	private static void reverse(int[] nums, int start) {
+		int end = nums.length - 1;
+		while (start < end) {
+			swap(nums, start++, end--);
+		}
+	}
+	
 }

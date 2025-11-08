@@ -773,7 +773,8 @@ public class ArrayTest {
     private static Stream<Arguments> provideremoveDuplicatesInSortedArrayTestCases() {
         return Stream.of(
                 Arguments.of(new int[]{1,1,2,3,4,4,4,4,4,5,6,7,8,8},new int[] {1,2,3,4,5,6,7,8}),
-                Arguments.of(new int[]{11}, new int[] {11}),          
+                Arguments.of(new int[]{11}, new int[] {11}),
+                Arguments.of(new int[]{2,2,2,2,2,2,2,2}, new int[] {2}), 
                 Arguments.of(new int[]{1, 11}, new int[] {1,11}),               	
                 Arguments.of(new int[]{1,2,3,4,5,6}, new int[] {1,2,3,4,5,6}),    
                 Arguments.of(new int[]{}, new int[] {}),                       
@@ -993,5 +994,48 @@ public class ArrayTest {
 				Arguments.of(new int[] { 1 }, new int[] { 1 }));
 	}
 	
+    @ParameterizedTest
+    @MethodSource("provideColorfulRopeTestCases")
+    @DisplayName("Test colorful rope")
+	void testColorfulRope(String colors, int[] time,int expectedTime) {
+		int actual = Array.colorfulRope(colors,time);
+		assertEquals(expectedTime, actual);
+	}
+
+	private static Stream<Arguments> provideColorfulRopeTestCases() {
+		return Stream.of(Arguments.of("abaac", new int[] { 1, 2, 3, 4, 5 }, 3),
+				Arguments.of("abc", new int[] { 1, 2, 3 }, 0), 
+				Arguments.of("aabaa", new int[] { 1, 2, 3, 4, 1 }, 2),
+				Arguments.of("aaaaa", new int[] { 1, 2,3,4,5 }, 10));
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideCoinChangeTestCases")
+    @DisplayName("Test Coin Change")
+	void testCoinChange(int[] coins, int amount, int expectedTime) {
+		int actual = Array.coinChange(coins, amount);
+		assertEquals(expectedTime, actual);
+	}
+
+	private static Stream<Arguments> provideCoinChangeTestCases() {
+		return Stream.of(Arguments.of(new int[] { 1, 2, 5 },26, 6),
+				Arguments.of(new int[] { 1, 2, 5, 10 }, 1,1), 
+				Arguments.of(new int[] { 1, 2, 5, 10, 50 }, 78, 6),
+				Arguments.of(new int[] { 1,2,5,10 }, 20,2));
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideNextPermutationTestCases")
+    @DisplayName("Test Next Permutation ")
+	void testNextPermutation(int[] nums, int[] expected) {
+		int[] actual = Array.nextPermutation(nums);
+		assertArrayEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideNextPermutationTestCases() {
+		return Stream.of(Arguments.of(new int[] { 1, 2, 3 }, new int[] { 1, 3, 2 }),
+				Arguments.of(new int[] { 3, 2, 1 }, new int[] { 1, 2, 3 }),
+				Arguments.of(new int[] { 1, 1, 5 }, new int[] { 1, 5, 1 }));
+	}
     
 }
