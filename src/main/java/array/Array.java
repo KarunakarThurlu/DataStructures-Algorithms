@@ -4,6 +4,7 @@ import static java.lang.Math.max;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -50,7 +51,7 @@ public class Array {
 	 * 30.Majority element II
 	 * 31.Finding numbers whose nth digit is x
 	 * 32.Remove Duplicates from sorted array
-	 * 33.Frequeny of most frequency element
+	 * 33.Frequency of most frequency element
 	 * 34.Highest occurring element in an array
 	 * 35.Trapping rain water
 	 * 36.Best Time to buy and sell stock
@@ -62,12 +63,18 @@ public class Array {
 	 * 42.Single element
 	 * 43.Minimum jumps to reach end
 	 * 44.Longest Subarray with Sum K
-	 * 45.Check array is sorted and roatated
+	 * 45.Check array is sorted and rotated
 	 * 46.Jump game can we reach at end of array or not
 	 * 47.Sort the array that contains 0's, 1's and 2's only
 	 * 48.Colorful rope
 	 * 49.Coin change
 	 * 50.Next Permutation
+	 * 51.Leaders in an array
+	 * 52.Longest consecutive sequence
+	 * 53.Set matrix zeros
+	 * 54.Three sum
+	 * 55.Largest sub array sum with 0 
+	 * 56.Count number of sub array's with given sum
 	 */
 
 	/**
@@ -420,26 +427,26 @@ public class Array {
 	    // Edge case: single element array
 	    if (array.length == 1) return array[0]; 
 
-	    int maxProduct = array[0];
-	    int minProduct = array[0];
-	    int result = array[0];
+	    int maxEndingHere  = array[0];
+	    int minEndingHere  = array[0];
+	    int maxSoFar = array[0];
 
 	    for (int i = 1; i < array.length; i++) {
 	    	// Swap when the current number is negative
 	        if (array[i] < 0) {
-	            int temp = maxProduct;
-	            maxProduct = minProduct;
-	            minProduct = temp;
+	            int temp = maxEndingHere;
+	            maxEndingHere = minEndingHere;
+	            minEndingHere = temp;
 	        }
 
 	        // Update maxProduct and minProduct
-	        maxProduct = Math.max(array[i], maxProduct * array[i]);
-	        minProduct = Math.min(array[i], minProduct * array[i]);
+	        maxEndingHere = Math.max(array[i], maxEndingHere * array[i]);
+	        minEndingHere = Math.min(array[i], minEndingHere * array[i]);
 
 	        // Update the overall result
-	        result = Math.max(result, maxProduct);
+	        maxSoFar = Math.max(maxSoFar, maxEndingHere);
 	    }
-	    return result;
+	    return maxSoFar;
 	}
 	
 	/**
@@ -2236,7 +2243,6 @@ public class Array {
 		return minCoins[amount] != amount + 1 ? minCoins[amount] : -1;
 	}
 	
-	
 	/**
 	 * 50. Next permutation
 	 * Rearranges the given array of integers into the lexicographically next greater permutation.
@@ -2306,5 +2312,321 @@ public class Array {
 			swap(nums, start++, end--);
 		}
 	}
+	
+	/**
+	 * 51. Finds all the "leaders" in the given array.
+	 * <p>
+	 * A leader is an element that is greater than or equal to all the elements to its right.
+	 * The rightmost element of the array is always considered a leader.
+	 * <p>
+	 * The method traverses the array from right to left, keeps track of the current maximum (leader),
+	 * and adds any number that is greater than or equal to this maximum.
+	 * <p>
+	 * Finally, the list of leaders is reversed to maintain the original left-to-right order of appearance.
+	 * <p>
+	 * <b>Example 1:</b><br>
+	 * Input:  [16, 17, 4, 3, 5, 2]<br>
+	 * Output: [17, 5, 2]
+	 * <p>
+	 * <b>Example 2:</b><br>
+	 * Input:  [10, 9, 8, 7]<br>
+	 * Output: [10, 9, 8, 7]
+	 *
+	 * @param nums the input array of integers
+	 * @return a list of leader elements in the array (in the same order as they appear)
+	 */
+	public static List<Integer> findLeaders(int[] nums) {
+	    List<Integer> leaders = new ArrayList<>();
+
+	    int n = nums.length;
+	    // Step 1: Initialize the last element as the rightmost leader
+	    int leader = nums[n - 1];
+	    leaders.add(leader);
+
+	    // Step 2: Traverse the array from right to left
+	    for (int i = n - 2; i >= 0; i--) {
+	        // If current element is greater than or equal to the current leader
+	        if (nums[i] >= leader) {
+	            leader = nums[i];
+	            leaders.add(leader);
+	        }
+	    }
+
+	    // Step 3: Reverse the list to restore left-to-right order of leaders
+	    Collections.reverse(leaders);
+	    return leaders;
+	}
+	
+	/**
+	 * 52. Finds the length of the longest consecutive sequence in an unsorted integer array.
+	 * <p>
+	 * A consecutive sequence is defined as a set of integers where each number
+	 * is exactly one greater than the previous number.
+	 * <p>
+	 * The algorithm sorts the array first to bring consecutive elements together,
+	 * then performs a single linear scan to count the maximum streak of consecutive numbers.
+	 * Duplicate elements are skipped to avoid breaking valid sequences.
+	 * <p>
+	 * <b>Example 1:</b><br>
+	 * Input:  [100, 4, 200, 1, 3, 2]<br>
+	 * Output: 4<br>
+	 * Explanation: The longest consecutive sequence is [1, 2, 3, 4].
+	 * <p>
+	 * <b>Example 2:</b><br>
+	 * Input:  [0, 3, 7, 2, 5, 8, 4, 6, 0, 1]<br>
+	 * Output: 9<br>
+	 * Explanation: The sequence is [0, 1, 2, 3, 4, 5, 6, 7, 8].
+	 * <p>
+	 * <b>Time Complexity:</b> O(n log n) — due to sorting.<br>
+	 * <b>Space Complexity:</b> O(1) — in-place sort and constant extra variables.
+	 *
+	 * @param nums the input array of integers (unsorted, may contain duplicates)
+	 * @return the length of the longest consecutive sequence
+	 */
+	public static int longestConsecutiveSequence(int[] nums) {
+	    int n = nums.length;
+	    if (n == 0) {
+	        return 0;
+	    }
+
+	    // Step 1: Sort the array to bring consecutive numbers together
+	    Arrays.sort(nums);
+
+	    int count = 1;     // Current consecutive streak
+	    int maxCount = 1;  // Longest streak found so far
+
+	    // Step 2: Traverse the sorted array
+	    for (int i = 1; i < n; i++) {
+	        if (nums[i] != nums[i - 1]) { // Skip duplicates
+	            if (nums[i] - nums[i - 1] == 1) {
+	                // Consecutive number found → extend streak
+	                count++;
+	            } else {
+	                // Non-consecutive number → reset streak
+	                count = 1;
+	            }
+	            // Track the maximum streak
+	            maxCount = Math.max(maxCount, count);
+	        }
+	    }
+
+	    return maxCount;
+	}
+	
+	/**
+	 * 53. Sets entire rows and columns to zero in a matrix if any element in them is zero.
+	 *
+	 * <p>This method performs the classic "Set Matrix Zeroes" operation.  
+	 * If matrix[i][j] == 0, then the entire row i and column j will be converted to zeros.
+	 *
+	 * <p>Approach:
+	 * <ul>
+	 *   <li>First pass: Identify all rows and columns that contain at least one zero.</li>
+	 *   <li>Second pass: Set matrix cells to zero if they belong to a marked row or column.</li>
+	 * </ul>
+	 *
+	 * <p>Time Complexity: O(m × n)  
+	 * Space Complexity: O(m + n)
+	 *
+	 * @param matrix The input 2D matrix of integers.
+	 * @return The modified matrix where rows/columns containing a zero are entirely set to zero.
+	 */
+	public static int[][] setMatrixZeroes(int[][] matrix){
+	    int rows = matrix.length;
+	    int cols = matrix[0].length;
+
+	    // Tracks which rows need to be zeroed
+	    boolean[] zeroRows = new boolean[rows];
+
+	    // Tracks which columns need to be zeroed
+	    boolean[] zeroCols = new boolean[cols];
+
+	    // First pass → Identify rows and columns that contain a zero
+	    for (int r = 0; r < rows; r++) {
+	        for (int c = 0; c < cols; c++) {
+	            if (matrix[r][c] == 0) {
+	                zeroRows[r] = true; // mark entire row
+	                zeroCols[c] = true; // mark entire column
+	            }
+	        }
+	    }
+
+	    // Second pass → Set cells to zero based on marked rows/columns
+	    for (int r = 0; r < rows; r++) {
+	        for (int c = 0; c < cols; c++) {
+	            if (zeroRows[r] || zeroCols[c]) {
+	                matrix[r][c] = 0;
+	            }
+	        }
+	    }
+
+	    return matrix;
+	}
+	
+	/**
+	 * 54. Finds all unique triplets in the array whose sum is equal to zero.
+	 *
+	 * <p>This method solves the classic "3Sum" problem using sorting and the two-pointer technique.
+	 * After sorting the array, each element is considered as a potential first number of the triplet.
+	 * Two pointers (left and right) are then used to find pairs that sum with the first number to zero.</p>
+	 *
+	 * <p>To avoid duplicate triplets:</p>
+	 * <ul>
+	 *   <li>Skip duplicate values for the first index.</li>
+	 *   <li>After finding a valid triplet, skip duplicates for left and right pointers.</li>
+	 * </ul>
+	 *
+	 * <p>Time Complexity: O(n²) — sorting + nested two-pointer search</p>
+	 * <p>Space Complexity: O(1) — ignoring output list</p>
+	 *
+	 * @param nums the input integer array
+	 * @return a list of unique triplets where the sum of each triplet is zero
+	 */
+	public static List<List<Integer>> threeSum(int[] nums) {
+		List<List<Integer>> result = new ArrayList<>();
+
+		// Sort the array to enable two-pointer search
+		Arrays.sort(nums);
+
+		// Iterate each number as the first element of the triplet
+		for (int i = 0; i < nums.length; i++) {
+
+			// Skip duplicate values to avoid repeated triplets
+			if (i > 0 && nums[i] == nums[i - 1]) {
+				continue;
+			}
+
+			int left = i + 1; // Second pointer
+			int right = nums.length - 1; // Third pointer
+
+			// Two-pointer search for pairs that sum to -nums[i]
+			while (left < right) {
+				int sum = nums[i] + nums[left] + nums[right];
+
+				if (sum < 0) {
+					left++; // Need a larger value
+				} else if (sum > 0) {
+					right--; // Need a smaller value
+				} else {
+					// Valid triplet found
+					result.add(List.of(nums[i], nums[left], nums[right]));
+
+					left++;
+					right--;
+
+					// Skip duplicate second values
+					while (left < right && nums[left] == nums[left - 1]) {
+						left++;
+					}
+
+					// Skip duplicate third values
+					while (left < right && nums[right] == nums[right + 1]) {
+						right--;
+					}
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 55. Finds the length of the largest contiguous subarray whose sum is zero.
+	 *
+	 * <p>The method uses prefix-sum + HashMap technique:</p>
+	 * <ul>
+	 *   <li>Maintain a running prefix sum.</li>
+	 *   <li>If the prefix sum becomes zero at index <code>i</code>,
+	 *       then the subarray from index 0 to i has sum 0.</li>
+	 *   <li>If the same prefix sum has appeared before at index <code>j</code>,
+	 *       then the subarray from <code>j+1</code> to <code>i</code> must sum to 0
+	 *       (because the prefix sum cancel out).</li>
+	 *   <li>We always store the first occurrence of a prefix sum
+	 *       to ensure the subarray is the longest.</li>
+	 * </ul>
+	 *
+	 * <p>Time Complexity: O(n) — Single pass through the array</p>
+	 * <p>Space Complexity: O(n) — HashMap to store prefix sums</p>
+	 *
+	 * @param nums the input array of integers
+	 * @return the length of the largest subarray with sum equal to zero
+	 */
+	public static int largestSumSubArray(int[] nums) {
+		int maxLength = 0;
+		// Stores: prefixSum → first index where it occurred
+		Map<Integer, Integer> prefixIndexMap = new HashMap<>();
+		int prefixSum = 0;
+		for (int i = 0; i < nums.length; i++) {
+			prefixSum += nums[i];
+			// Case 1: If prefix sum becomes zero, subarray [0..i] is valid
+			if (prefixSum == 0) {
+				maxLength = i + 1;
+			}
+			// Case 2: If this prefix sum was seen before
+			else if (prefixIndexMap.containsKey(prefixSum)) {
+				int prevIndex = prefixIndexMap.get(prefixSum);
+				// Subarray between previous index + 1 and current index has sum = 0
+				maxLength = Math.max(maxLength, i - prevIndex);
+			}
+			// Case 3: Store prefix sum's first occurrence only
+			else {
+				prefixIndexMap.put(prefixSum, i);
+			}
+		}
+		return maxLength;
+	}
+	
+	/**
+	 * 56. Counts the number of contiguous subarrays whose sum equals k.
+	 *
+	 * <p>This method uses the Prefix-Sum + HashMap technique:</p>
+	 * <ul>
+	 *     <li>Maintain a running prefix sum while scanning the array.</li>
+	 *     <li>If at any index we have: prefixSum - k previously seen at index j,
+	 *         then the subarray (j+1 ... i) has sum = k.</li>
+	 *     <li>The HashMap stores the frequency of each prefix sum encountered.</li>
+	 *     <li>Initialize map with (0 → 1) to count subarrays starting from index 0.</li>
+	 * </ul>
+	 *
+	 * <p>Example:</p>
+	 * <pre>
+	 * Input:  nums = [1, 1, 1], k = 2
+	 * Output: 2
+	 * Explanation:
+	 * Subarrays with sum 2 → [1,1] at (0,1) and (1,2)
+	 * </pre>
+	 *
+	 * <p>Time Complexity: O(n)</p>
+	 * <p>Space Complexity: O(n)</p>
+	 *
+	 * @param nums The input integer array
+	 * @param k The target sum
+	 * @return The number of subarrays whose sum equals k
+	 */
+	public static int countSubArraysWithSumK(int[] nums,int k) {
+	    // Map: prefixSum → frequency of how many times it has appeared
+	    Map<Integer, Integer> prefixFreq = new HashMap<>();
+	    prefixFreq.put(0, 1); // Important: prefix sum 0 appears once initially
+
+	    int prefixSum = 0;
+	    int count = 0;
+
+	    for (int num : nums) {
+
+	        prefixSum += num;
+
+	        // Check if prefixSum - k has appeared before
+	        // If yes, then subarrays ending here with sum k exist
+	        if (prefixFreq.containsKey(prefixSum - k)) {
+	            count += prefixFreq.get(prefixSum - k);
+	        }
+
+	        // Record the prefix sum occurrence
+	        prefixFreq.put(prefixSum, prefixFreq.getOrDefault(prefixSum, 0) + 1);
+	    }
+
+	    return count;
+	}
+	
+
 	
 }

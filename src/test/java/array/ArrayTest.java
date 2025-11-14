@@ -1,9 +1,11 @@
 package array;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -1037,5 +1039,98 @@ public class ArrayTest {
 				Arguments.of(new int[] { 3, 2, 1 }, new int[] { 1, 2, 3 }),
 				Arguments.of(new int[] { 1, 1, 5 }, new int[] { 1, 5, 1 }));
 	}
+	
+    @ParameterizedTest
+    @MethodSource("provideFindLeadersTestCases")
+    @DisplayName("Test Find Leaders")
+	void testFindLeaders(int[] nums, List<Integer> expected) {
+		List<Integer> actual = Array.findLeaders(nums);
+		assertEquals(expected.size(), actual.size());
+		IntStream.range(0, expected.size()).forEach(i -> assertEquals(expected.get(i), actual.get(i)));
+	}
+
+	private static Stream<Arguments> provideFindLeadersTestCases() {
+		return Stream.of(Arguments.of(new int[] { 16, 17, 4, 3, 5, 2 }, List.of(17, 5, 2)),
+				Arguments.of(new int[] { 10, 4, 2, 4, 1 }, List.of(10, 4, 4, 1)),
+				Arguments.of(new int[] { 5, 10, 20, 40 }, List.of(40)),
+				Arguments.of(new int[] { 30, 10, 10, 5 }, List.of(30, 10, 10, 5)));
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideLongestSequenceTestCases")
+    @DisplayName("Test longest consecutive sequence")
+	void testLongestConsecutiveSequence(int[] coins, int expected) {
+		int actual = Array.longestConsecutiveSequence(coins);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideLongestSequenceTestCases() {
+		return Stream.of(Arguments.of(new int[] { 100,4,200,1,3,2}, 4),
+				Arguments.of(new int[] { 0,3,7,2,5,8,4,6,0,1}, 9), 
+				Arguments.of(new int[] { 1,0,1,2 }, 3),
+				Arguments.of(new int[] { 1,2,5,10 }, 2));
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideSetMatrixZerosTestCases")
+    @DisplayName("Test Set Matrix Zeros")
+	void testSetMatrixZeros(int[][] matrix, int[][] expected) {
+		int[][] actual = Array.setMatrixZeroes(matrix);
+		for(int i=0;i<expected.length;i++) {
+			assertArrayEquals(actual[i],expected[i]);
+		}
+	}
+
+	private static Stream<Arguments> provideSetMatrixZerosTestCases() {
+		return Stream.of(Arguments.of(new int[][] { {1,1,1},{1,0,1},{1,1,1}}, new int[][] {{1,0,1},{0,0,0},{1,0,1}}),
+				Arguments.of(new int[][] {{0,1,2,0},{3,4,5,2},{1,3,1,5}}, new int[][] {{0,0,0,0},{0,4,5,0},{0,3,1,0}}) 
+				);
+	}
     
+    @ParameterizedTest
+    @MethodSource("provide3SumTestCases")
+    @DisplayName("Test 3Sum")
+	void test3Sum(int[] nums, List<List<Integer>> expected) {
+    	List<List<Integer>> actual = Array.threeSum(nums);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provide3SumTestCases() {
+		return Stream
+				.of(Arguments.of(new int[] { -1, 0, 1, 2, -1, -4 }, List.of(List.of(-1, -1, 2), List.of(-1, 0, 1))),
+						Arguments.of(new int[] { 1, 1, 1, 0, 3, -2, }, List.of(List.of(-2, 1, 1))),
+						Arguments.of(new int[] { 1, 1, 1, 0, -1, -2, 3, -2, }, List.of(List.of(-2, -1, 3),List.of(-2, 1,1),List.of(-1, 0, 1))),
+						Arguments.of(new int[] { 0, 1, 1 }, List.of()),
+						Arguments.of(new int[] { 1, 1, 0, 3, -2, }, List.of(List.of(-2, 1, 1))),
+						Arguments.of(new int[] { 0, 0, 0 }, List.of(List.of(0, 0, 0))));
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideLargestSumSubArrayTestCases")
+    @DisplayName("Test largest sum subarray with 0 sum ")
+	void testLargestSumSubArray(int[] nums, int expected) {
+		int actual = Array.largestSumSubArray(nums);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideLargestSumSubArrayTestCases() {
+		return Stream.of(Arguments.of(new int[] {15, -2, 2, -8, 1, 7, 10, 23 }, 5),
+				Arguments.of(new int[] { 2, 10, 4 }, 0),
+				Arguments.of(new int[] { 0, 1, 5 }, 1));
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideCountSubArraysSumWithKTestCases")
+    @DisplayName("Test largest sum subarray with 0 sum ")
+	void testCountSubArraysWithSumK(int[] nums,int k, int expected) {
+		int actual = Array.countSubArraysWithSumK(nums,k);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideCountSubArraysSumWithKTestCases() {
+		return Stream.of(Arguments.of(new int[] {3,4,7,2,-3,1,4,2}, 7, 4),
+				Arguments.of(new int[] {1,-1,0}, 0,3),
+				Arguments.of(new int[] {1,1,1}, 2,2),
+				Arguments.of(new int[] { 1,2,3 }, 3,2));
+	}
 }
