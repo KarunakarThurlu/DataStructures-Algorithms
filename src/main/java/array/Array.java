@@ -75,6 +75,16 @@ public class Array {
 	 * 54.Three sum
 	 * 55.Largest sub array sum with 0 
 	 * 56.Count number of sub array's with given sum
+	 * 57.Rotate the matrix by 90 degrees
+	 * 58.Search insert position
+	 * 59.Find floor and ceil value of target
+	 * 60.First and last position of target in sorted array
+	 * 61.Count occurrences of a number in a sorted array with duplicates
+	 * 62.Search in Rotated Sorted Array I
+	 * 63.Search in Rotated Sorted Array II
+	 * 64.Find minimum in Rotated Sorted Array
+	 * 65.Find out how many times has an array been rotated
+	 * 66.Single element in a Sorted Array
 	 */
 
 	/**
@@ -2509,10 +2519,7 @@ public class Array {
 					right--; // Need a smaller value
 				} else {
 					// Valid triplet found
-					result.add(List.of(nums[i], nums[left], nums[right]));
-
-					left++;
-					right--;
+					result.add(List.of(nums[i], nums[left++], nums[right--]));
 
 					// Skip duplicate second values
 					while (left < right && nums[left] == nums[left - 1]) {
@@ -2625,6 +2632,303 @@ public class Array {
 	    }
 
 	    return count;
+	}
+	
+	/**
+	 * 57 Rotate Image
+	 *
+	 * <p>Given an n x n 2D matrix representing an image, rotate the image by 90 degrees clockwise.
+	 * The rotation must be performed in-place, meaning the input matrix must be modified directly
+	 * without allocating another matrix.
+	 *
+	 * <p><b>Input:</b>
+	 * matrix = [
+	 *   [1, 2, 3],
+	 *   [4, 5, 6],
+	 *   [7, 8, 9]
+	 * ]
+	 *
+	 * <p><b>Output (after rotation):</b>
+	 * matrix = [
+	 *   [7, 4, 1],
+	 *   [8, 5, 2],
+	 *   [9, 6, 3]
+	 * ]
+	 *
+	 * <p>The rotation is achieved in two steps:
+	 * <ul>
+	 *   <li><b>Transpose:</b> Convert rows into columns.</li>
+	 *   <li><b>Reverse each row:</b> Produces the final 90° clockwise rotation.</li>
+	 * </ul>
+	 *
+	 * <p><b>Time Complexity:</b> O(n²)<br>
+	 * <b>Space Complexity:</b> O(1) — in-place</p>
+	 *
+	 * @param matrix the n x n matrix to be rotated in-place
+	 */
+	public static int[][] rotateMatrix90Degrees(int[][] nums) {
+		int n = nums.length;
+		// Step1 : Transpose the matrix
+		for (int row = 0; row < n; row++) {
+			for (int col = row + 1; col < n; col++) {
+				int temp = nums[row][col];
+				nums[row][col] = nums[col][row];
+				nums[col][row] = temp;
+			}
+		}
+		// Step2 : Reverse each row
+		for (int row = 0; row < n; row++) {
+			for (int col = 0; col < n / 2; col++) {
+				int temp = nums[row][n - col - 1];
+				nums[row][n - col - 1] = nums[row][col];
+				nums[row][col] = temp;
+			}
+		}
+		return nums;
+	}
+	
+	/**
+	 * 58. Search insert position
+	 * Returns the index where the target should be inserted in a sorted array.
+	 * 
+	 * <p>
+	 * If the target exists in the array, its existing index is returned.  
+	 * If it does not exist, the index where it should be inserted to maintain
+	 * sorted order is returned.
+	 * </p>
+	 *
+	 * <p><b>Example:</b><br>
+	 * nums = [1,3,5,6], target = 5  →  returns 2<br>
+	 * nums = [1,3,5,6], target = 2  →  returns 1<br>
+	 * nums = [1,3,5,6], target = 7  →  returns 4
+	 * </p>
+	 *
+	 * <p><b>Time Complexity:</b> O(n) — Linear scan.</p>
+	 *
+	 * @param nums    A sorted integer array (ascending order)
+	 * @param target  The value to search or insert
+	 * @return The index of the target or its insertion position
+	 */
+	public static int searchInsertPosition(int[] nums, int target) {
+		// Scan until you find an element >= target
+		for (int index = 0; index < nums.length; index++) {
+			if (nums[index] >= target) {
+				return index;
+			}
+		}
+		// If not found, the target should be inserted at the end
+		return nums.length;
+	}
+	
+	/**
+	 * 59. Find floor and ceil value
+	 * Finds the floor and ceil values of the given target in a sorted array.
+	 *
+	 * <p>
+	 * Floor = largest value ≤ target  
+	 * Ceil  = smallest value ≥ target
+	 * </p>
+	 *
+	 * <p>
+	 * If the target is smaller than the smallest element → floor = target, ceil = nums[0].  
+	 * If the target is larger than the largest element → floor = nums[n-1], ceil = target.
+	 * </p>
+	 *
+	 * @param nums    A sorted array of integers (ascending order)
+	 * @param target  The value for which floor and ceil are to be found
+	 * @return A list of size 2: [floor, ceil]
+	 */
+	public static List<Integer> getFloorAndCeil(int[] nums, int target) {
+	    int n = nums.length;
+	    // Case 1: target is smaller than smallest element
+	    if (target < nums[0]) {
+	        return List.of(target, nums[0]);
+	    }
+	    // Case 2: target is larger than largest element
+	    if (target > nums[n - 1]) {
+	        return List.of(nums[n - 1], target);
+	    }
+	    // Iterate to locate floor and ceil
+	    for (int i = 0; i < n; i++) {
+	        // Exact match → floor and ceil are target
+	        if (nums[i] == target) {
+	            return List.of(nums[i], nums[i]);
+	        }
+	        // First element greater than target → previous is floor, current is ceil
+	        if (nums[i] > target) {
+	            return List.of(nums[i - 1], nums[i]);
+	        }
+	    }
+	    // This line won't be reached logically, kept for safety
+	    return List.of(nums[n - 1], target);
+	}
+	
+	/**
+	 * 60. First and last position of element in sorted array
+	 * 
+	 * Finds the starting and ending position of a given target in a sorted array.
+	 * If the target is not found, returns [-1, -1].
+	 *
+	 * <p>This solution performs a binary search to locate an occurrence of the target,
+	 * then expands left and right to find the full range of the target values.</p>
+	 *
+	 * @param nums   Sorted integer array (may contain duplicates)
+	 * @param target The value to search for
+	 * @return An array of size 2: [firstPosition, lastPosition]
+	 */
+	public static int[] firstAndLastPostion(int[] nums, int target) {
+		int[] result = new int[] { -1, -1 };
+		// Edge case: empty array
+		if (nums.length == 0) {
+			return result;
+		}
+		int left = 0;
+		int right = nums.length - 1;
+		// Standard binary search
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (nums[mid] == target) {
+				// Expand left from mid
+				int start = mid;
+				while (start > 0 && nums[start - 1] == target) {
+					start--;
+				}
+				// Expand right from mid
+				int end = mid;
+				while (end < nums.length - 1 && nums[end + 1] == target) {
+					end++;
+				}
+
+				result[0] = start;
+				result[1] = end;
+				return result;
+			}
+			// Move search boundaries
+			if (nums[mid] < target) {
+				left = mid + 1;
+			} else {
+				right = mid - 1;
+			}
+		}
+		// Target not found
+		return result;
+	}
+	
+	/**
+	 * 61. Counts how many times a target value appears in a sorted array.
+	 *
+	 * <p>
+	 * This method performs a binary search to find any occurrence of the target.
+	 * Once found, it expands left and right from the matched index to count all
+	 * duplicates. Useful when the array is sorted and contains repeated values.
+	 * </p>
+	 *
+	 * <p><b>Example:</b><br>
+	 * nums = [1, 2, 2, 2, 3], target = 2 → returns 3<br>
+	 * nums = [5, 7, 7, 8, 8, 10], target = 8 → returns 2<br>
+	 * nums = [1, 3, 5], target = 4 → returns 0
+	 * </p>
+	 *
+	 * <p><b>Time Complexity:</b> O(log n + k), where k is number of duplicates near mid</p>
+	 *
+	 * @param nums    A sorted integer array
+	 * @param target  The value whose occurrence count is needed
+	 * @return Count of occurrences of target (0 if not found)
+	 */
+	public static int countOccurrences(int[] nums, int target) {
+		// Edge case: empty array
+		if (nums.length == 0) {
+			return 0;
+		}
+		int count = 0;
+		int left = 0;
+		int right = nums.length - 1;
+		// Standard binary search
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (nums[mid] == target) {
+				// Expand left from mid
+				int start = mid;
+				count = 1;
+				while (start > 0 && nums[start - 1] == target) {
+					count++;
+					start--;
+				}
+				// Expand right from mid
+				int end = mid;
+				while (end < nums.length - 1 && nums[end + 1] == target) {
+					count++;
+					end++;
+				}
+				return count;
+			}
+			// Move search boundaries
+			if (nums[mid] < target) {
+				left = mid + 1;
+			} else {
+				right = mid - 1;
+			}
+		}
+		// Target not found
+		return count;
+	}
+	
+	/**
+	 * 62. Search in Rotated Sorted Array
+	 * 
+	 * Searches for a target value in a rotated sorted array and returns its index.
+	 *
+	 * <p>A rotated sorted array is an array that was originally sorted in ascending
+	 * order but then rotated at some pivot. Example: [4,5,6,7,0,1,2].
+	 * This method uses modified binary search to determine whether the
+	 * target lies in the left-sorted or right-sorted portion.</p>
+	 *
+	 * <p><b>Example:</b><br>
+	 * nums = [4,5,6,7,0,1,2], target = 0 → returns 4<br>
+	 * nums = [4,5,6,7,0,1,2], target = 3 → returns -1
+	 * </p>
+	 *
+	 * <p><b>Time Complexity:</b> O(log n)<br>
+	 * <b>Space Complexity:</b> O(1)</p>
+	 *
+	 * @param nums    A rotated sorted integer array
+	 * @param target  The value to search for
+	 * @return The index of target if found, otherwise -1
+	 */
+	public static int searchInRoatedSortedArray(int[] nums, int target) {
+	    int left = 0;
+	    int right = nums.length - 1;
+	    while (left <= right) {
+	        int mid = left + (right - left) / 2;
+
+	        // Found target
+	        if (nums[mid] == target) {
+	            return mid;
+	        }
+
+	        // Check if left half is sorted
+	        if (nums[left] <= nums[mid]) {
+
+	            // Target lies within the sorted left half
+	            if (nums[left] <= target && target < nums[mid]) {
+	                right = mid - 1;
+	            } else { // Target is in right half
+	                left = mid + 1;
+	            }
+
+	        } else {
+	            // Right half is sorted
+
+	            // Target lies within the sorted right half
+	            if (nums[mid] < target && target <= nums[right]) {
+	                left = mid + 1;
+	            } else { // Target is in left half
+	                right = mid - 1;
+	            }
+	        }
+	    }
+	    // Target does not exist
+	    return -1;
 	}
 	
 

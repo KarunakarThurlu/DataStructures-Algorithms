@@ -1133,4 +1133,116 @@ public class ArrayTest {
 				Arguments.of(new int[] {1,1,1}, 2,2),
 				Arguments.of(new int[] { 1,2,3 }, 3,2));
 	}
+	
+    @ParameterizedTest
+    @MethodSource("provideRotateMatrix90DegreesTestCases")
+    @DisplayName("Test rotate matrix 90 degrees")
+	void testRotateMatrix90Degrees(int[][] matrix, int[][] expected) {
+		int[][] actual = Array.rotateMatrix90Degrees(matrix);
+		for (int i = 0; i < expected.length; i++) {
+			assertArrayEquals(actual[i], expected[i]);
+		}
+	}
+
+	private static Stream<Arguments> provideRotateMatrix90DegreesTestCases() {
+		return Stream.of(
+				Arguments.of(new int[][] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } }, new int[][] { { 7, 4, 1 }, { 8, 5, 2 }, { 9, 6, 3 } }),
+				Arguments.of(new int[][] { { 5, 1, 9, 11 }, { 2, 4, 8, 10 }, { 13, 3, 6, 7 }, { 15, 14, 12, 16 } }, new int[][] { { 15, 13, 2, 5 }, { 14, 3, 4, 1 }, { 12, 6, 8, 9 }, { 16, 7, 10, 11 } })
+				);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideSearchInsertPositionTestCases")
+    @DisplayName("Test search insert position ")
+	void testSearchInsertPosition(int[] nums,int target, int expected) {
+		int actual = Array.searchInsertPosition(nums,target);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideSearchInsertPositionTestCases() {
+		return Stream.of(Arguments.of(new int[] { 1, 3, 5, 6 }, 7, 4), 
+				Arguments.of(new int[] { 1, 3, 5, 6 }, 2, 1),
+				Arguments.of(new int[] { 1, 2, 5, 6 }, 5, 2)
+			);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideGetFloorAndCeilTestCases")
+    @DisplayName("Test floor and ceil of target number")
+	void testgetFloorAndCeil(int[] nums,int target, List<Integer> expected) {
+		List<Integer> actual = Array.getFloorAndCeil(nums,target);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideGetFloorAndCeilTestCases() {
+		return Stream.of(
+				Arguments.of(new int[] { 1, 3, 5, 6 }, 7, List.of(6, 7)),
+				Arguments.of(new int[] { 1, 3, 5, 6 }, 2, List.of(1, 3)),
+				Arguments.of(new int[] { 4, 6, 7, 8 }, 2, List.of(2, 4)),
+				Arguments.of(new int[] { 4, 6, 7, 8 }, 9, List.of(8, 9)),
+				Arguments.of(new int[] { 4, 6, 7, 9 }, 8, List.of(7, 9)),
+				Arguments.of(new int[] { 2, 3, 5, 6 }, 5, List.of(5, 5))
+			);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideFirstAndLastPostionTestCases")
+    @DisplayName("Test first and last postion of an element")
+	void testFirstAndLastPostion(int[] nums,int target, int[] expected) {
+		int[] actual = Array.firstAndLastPostion(nums,target);
+		assertArrayEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideFirstAndLastPostionTestCases() {
+		return Stream.of(Arguments.of(new int[] { 5, 7, 7, 8, 8, 10 }, 8, new int[] { 3, 4 }),
+				Arguments.of(new int[] { 5, 7, 7, 8, 8, 10 }, 6, new int[] { -1, -1 }),
+				Arguments.of(new int[] { 1, 2, 5, 6, 7, 8, 9, 9 }, 9, new int[] { 6, 7 }),
+				Arguments.of(new int[] { 1, 1 }, 1, new int[] { 0, 1 }),
+				Arguments.of(new int[] { }, 1, new int[] { -1, -1 }),
+				Arguments.of(new int[] { 1 ,3 }, 1, new int[] { 0, 0 }),
+				Arguments.of(new int[] { 5 }, 5, new int[] { 0, 0 }),
+				Arguments.of(new int[] { 1 }, 6, new int[] { -1, -1 }),
+				Arguments.of(new int[] { 1, 1, 5 }, 1, new int[] { 0, 1 })
+			);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideCountOccurrencesTestCases")
+    @DisplayName("Test count occurrences of element in sorted array")
+	void testCountOccurrences(int[] nums,int target, int expected) {
+		int actual = Array.countOccurrences(nums,target);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideCountOccurrencesTestCases() {
+		return Stream.of(Arguments.of(new int[] { 5, 7, 7, 8, 8, 10 }, 8,2),
+				Arguments.of(new int[] { 5, 7, 7, 8, 8, 10 }, 6, 0),
+				Arguments.of(new int[] { 1, 2, 5, 6, 7, 8,9, 9, 9 }, 9, 3),
+				Arguments.of(new int[] { 1, 1 }, 1,2),
+				Arguments.of(new int[] { }, 1, 0),
+				Arguments.of(new int[] { 1 ,3 }, 1, 1),
+				Arguments.of(new int[] { 5 }, 5, 1),
+				Arguments.of(new int[] { 1 }, 6, 0),
+				Arguments.of(new int[] { 1, 1, 5 }, 1,2)
+			);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideSearchInRoatedSortedArrayTestCases")
+    @DisplayName("Test search in roated sorted array ")
+	void testSearchInRoatedSortedArray(int[] nums,int target, int expected) {
+		int actual = Array.searchInRoatedSortedArray(nums,target);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideSearchInRoatedSortedArrayTestCases() {
+		return Stream.of(
+				Arguments.of(new int[] { 1, 3, 5, 6 }, 7, -1), 
+				Arguments.of(new int[] { 1, 3, 5, 6 }, 6, 3),
+				Arguments.of(new int[] { 4, 5, 6, 7, 0, 1, 2 }, 5, 1),
+				Arguments.of(new int[] { 4, 5, 6, 7, 0, 1, 2 }, 3, -1), 
+				Arguments.of(new int[] { 1, 2, 5, 6 }, 1, 0)
+			);
+	}
+	
 }
