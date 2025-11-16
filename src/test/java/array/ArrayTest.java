@@ -1245,4 +1245,76 @@ public class ArrayTest {
 			);
 	}
 	
+    @ParameterizedTest
+    @MethodSource("provideSearchInRoatedSortedIIArrayTestCases")
+    @DisplayName("Test search in roated sorted array II ")
+	void testSearchInRoatedSortedArrayII(int[] nums,int target, Boolean expected) {
+		Boolean actual = Array.searchInRoatedSortedArrayII(nums,target);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideSearchInRoatedSortedIIArrayTestCases() {
+		return Stream.of(
+				Arguments.of(new int[] { 1, 3, 5, 6 }, 7, false), 
+				Arguments.of(new int[] { 1, 3, 5, 6 }, 6, true),
+				Arguments.of(new int[] { 2,5,6,0,0,1,2 }, 0, true),
+				Arguments.of(new int[] { 2,5,6,0,0,1,2 }, 3, false), 
+				Arguments.of(new int[] { 1, 2, 5, 6 }, 1, true)
+			);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideMinInRoatedSortedArrayTestCases")
+    @DisplayName("Test Minimum in roated sorted array ")
+	void testMinInRoatedSortedArray(int[] nums,int expected) {
+		int actual = Array.findMinimumInRoatedSortedArray(nums);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideMinInRoatedSortedArrayTestCases() {
+		return Stream.of(
+				Arguments.of(new int[] { 1, 3, 5, 6 },1), 
+				Arguments.of(new int[] { 1, 3, 5, 6 }, 1),
+				Arguments.of(new int[] { 4, 5, 6, 7, 0, 1, 2 },0),
+				Arguments.of(new int[] { 1, 2, 4, 5, 6, 7, 0, },0), 
+				Arguments.of(new int[] { 1, 2, 5, 6 }, 1)
+			);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideRoatationCountTestCases")
+    @DisplayName("Test count roatations ")
+	void testRoatationCount(int[] nums,int expected) {
+		int actual = Array.roatationCount(nums);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideRoatationCountTestCases() {
+		return Stream.of(
+				Arguments.of(new int[] { 1, 3, 5, 6 },0), 
+				Arguments.of(new int[] { 8, 1, 3, 5, 6, 7 }, 1),
+				Arguments.of(new int[] { 4, 5, 6, 7, 0, 1, 2 },4),
+				Arguments.of(new int[] { 1, 2, 4, 5, 6, 7 },0), 
+				Arguments.of(new int[] { 7, 6, 5, 2, 1}, 4)
+			);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideFindSingleInSortedArrayTestCases")
+    @DisplayName("Test find single in sorted array")
+	void testFindSingleInSortedArray(int[] nums,int expected) {
+		int actual = Array.findSingleInSortedArray(nums);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideFindSingleInSortedArrayTestCases() {
+		return Stream.of(
+				Arguments.of(new int[] { 1,1,2,3,3,4,4,8,8},2), 
+				Arguments.of(new int[] { 3,3,7,7,10,11,11}, 10),
+				Arguments.of(new int[] { 1,2,2,3,3,4,4,8,8 },1),
+				Arguments.of(new int[] { 1,1,2,2,3,3,4,4,8 },8), 
+				Arguments.of(new int[] { 1,1,2,2,3,3,4,4,7,8,8}, 7)
+			);
+	}
+	
 }

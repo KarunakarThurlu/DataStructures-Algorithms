@@ -2931,6 +2931,190 @@ public class Array {
 	    return -1;
 	}
 	
+	/**
+	 * 63. Search in Rotated Sorted Array II
+	 * Searches for a target value in a rotated sorted array that may contain duplicates.
+	 * This is the solution for LeetCode Problem 81 — Search in Rotated Sorted Array II.
+	 *
+	 * <p>The array is assumed to be originally sorted in ascending order, then rotated
+	 * at some pivot. Because duplicates are allowed, the algorithm may degrade to O(n)
+	 * time in the worst case. However, it still maintains O(log n) behavior when
+	 * duplicates do not interfere.</p>
+	 *
+	 * <p>Algorithm overview:</p>
+	 * <ul>
+	 *   <li>Use modified binary search.</li>
+	 *   <li>If nums[left] == nums[mid], increment left to skip duplicates.</li>
+	 *   <li>Determine which half is sorted and decide direction.</li>
+	 * </ul>
+	 *
+	 * @param nums   the rotated sorted array (may contain duplicates)
+	 * @param target the value to search for
+	 * @return true if target exists in the array; false otherwise
+	 */
+	public static boolean searchInRoatedSortedArrayII(int[] nums, int target) {
+	    int left = 0, right = nums.length - 1;
+
+	    while (left <= right) {
+	        int mid = (left + right) / 2;
+
+	        if (nums[mid] == target) return true;
+
+	        // Handle duplicates
+	        if (nums[left] == nums[mid]) {
+	            left++;
+	            continue;
+	        }
+
+	        // Left half is sorted
+	        if (nums[left] < nums[mid]) {
+	            if (nums[left] <= target && target < nums[mid]) {
+	                right = mid - 1;
+	            } else {
+	                left = mid + 1;
+	            }
+	        }
+	        // Right half is sorted
+	        else {
+	            if (nums[mid] < target && target <= nums[right]) {
+	                left = mid + 1;
+	            } else {
+	                right = mid - 1;
+	            }
+	        }
+	    }
+	    return false;
+	}
+	
+	/**
+	 * 64. Find Minimum in Rotated Sorted Array
+	 * Finds the minimum element in a rotated sorted array with no duplicate values.
+	 * <p>
+	 * This is the solution for LeetCode Problem 153 — "Find Minimum in Rotated Sorted Array".
+	 * The array was originally sorted in ascending order and then rotated at an unknown pivot.
+	 * The minimum element is always located at the pivot point.
+	 *
+	 * <h3>Algorithm</h3>
+	 * The method uses modified binary search:
+	 * <ul>
+	 *   <li>If nums[mid] < nums[right], the minimum lies in the left half (including mid).</li>
+	 *   <li>Otherwise, the minimum lies in the right half (excluding mid).</li>
+	 * </ul>
+	 *
+	 * <h3>Time Complexity</h3>
+	 * O(log n) — binary search  
+	 *
+	 * <h3>Space Complexity</h3>
+	 * O(1) — constant extra space
+	 *
+	 * @param nums the rotated sorted array (must contain no duplicates)
+	 * @return the minimum value in the array
+	 */
+	public static int findMinimumInRoatedSortedArray(int[] nums) {
+	    int left = 0;
+	    int right = nums.length - 1;
+
+	    while (left < right) {
+	        int mid = left + (right - left) / 2;
+	        if (nums[mid] < nums[right]) {
+	            right = mid; // Minimum is at mid or to the left
+	        } else {
+	            left = mid + 1; // Minimum is to the right of mid
+	        }
+	    }
+	    return nums[left]; // left == right → minimum element
+	}
+	
+	/**
+	 * 65. Rotation count of an array
+	 * Computes the rotation count of a rotated sorted array (without duplicates).
+	 * <p>
+	 * A sorted array is rotated at some pivot unknown beforehand.
+	 * The rotation count is the index of the minimum element.
+	 * Example:
+	 *   nums = [4,5,6,7,0,1,2]
+	 *   Minimum = 0 at index 4 → rotation count = 4
+	 *
+	 * <h3>Algorithm</h3>
+	 * Uses binary search:
+	 * <ul>
+	 *   <li>If nums[mid] < nums[right], the minimum is in the left half.</li>
+	 *   <li>Otherwise, minimum is in the right half.</li>
+	 * </ul>
+	 *
+	 * <h3>Time Complexity</h3>
+	 * O(log n)
+	 *
+	 * @param nums the rotated sorted array (no duplicates)
+	 * @return rotation count (index of minimum element)
+	 */
+	public static int roatationCount(int[] nums) {
+		int left = 0;
+		int right = nums.length - 1;
+
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+
+			// Minimum element lies in the left half (including mid)
+			if (nums[mid] < nums[right]) {
+				right = mid;
+			}
+			// Minimum lies in the right half (excluding mid)
+			else {
+				left = mid + 1;
+			}
+		}
+		return left; // Index of the minimum element ⇒ rotation count
+	}
+	
+	/**
+	 * 66. Single element in sorted array
+	 * Finds the single non-duplicate element in a sorted array where every other element
+	 * appears exactly twice. The array is guaranteed to have one unique element.
+	 *
+	 * <p>This method uses a binary search approach with O(log n) time complexity.
+	 * Key idea:
+	 * <ul>
+	 *   <li>The duplicate elements always appear in pairs.</li>
+	 *   <li>Before the unique element, pairs start at even indices.</li>
+	 *   <li>After the unique element, pairs start at odd indices.</li>
+	 * </ul>
+	 *
+	 * <h3>Algorithm</h3>
+	 * <ol>
+	 *   <li>Perform binary search on index space.</li>
+	 *   <li>If mid is odd, adjust it to make mid even (pair boundary).</li>
+	 *   <li>If nums[mid] == nums[mid + 1], the unique element is in the right half.</li>
+	 *   <li>Otherwise, it lies in the left half (including mid).</li>
+	 * </ol>
+	 *
+	 * @param nums a sorted integer array where every element appears twice except one
+	 * @return the single non-duplicate element
+	 */
+	public static int findSingleInSortedArray(int[] nums) {
+	    int left = 0;
+	    int right = nums.length - 1;
+	    while (left < right) {
+	        int mid = left + (right - left) / 2;
+	        // Ensure mid is even (start of a pair)
+	        if (mid % 2 == 1) {
+	            mid--;
+	        }
+	        // If mid and mid+1 are equal, the unique element is farther right
+	        if (nums[mid] == nums[mid + 1]) {
+	            left = mid + 2;
+	        } 
+	        // Otherwise the unique element is at mid or to the left of mid
+	        else {
+	            right = mid;
+	        }
+	    }
+	    // left == right, pointing to the unique element
+	    return nums[left];
+	}
+	
+	
+	
 
 	
 }
