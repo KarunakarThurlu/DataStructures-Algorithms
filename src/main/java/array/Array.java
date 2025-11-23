@@ -85,6 +85,9 @@ public class Array {
 	 * 64.Find minimum in Rotated Sorted Array
 	 * 65.Find out how many times has an array been rotated
 	 * 66.Single element in a Sorted Array
+	 * 67.Find square root of a number in log n
+	 * 68.Koko eating bananas
+	 * 69.Minimum number of days to make m buckets
 	 */
 
 	/**
@@ -3113,6 +3116,170 @@ public class Array {
 	    return nums[left];
 	}
 	
+	/**
+	 * 67. Find square root of a number in log n
+	 * Computes the integer square root (floor value) of a given non-negative integer n.
+	 * The result is the largest integer x such that x*x <= n.
+	 *
+	 * <p>This method uses binary search in the range [1, n/2] for n > 1,
+	 * which guarantees O(log n) time complexity.</p>
+	 *
+	 * <h3>Edge Cases:</h3>
+	 * <ul>
+	 *   <li>If n = 0 → return 0</li>
+	 *   <li>If n = 1 → return 1</li>
+	 * </ul>
+	 *
+	 * @param n the number for which the integer square root is to be computed
+	 * @return the integer square root (floor value)
+	 */
+	public static int findSquareRoot(int n) {
+	    // Handle trivial small cases
+	    if (n < 2) {
+	        return n;
+	    }
+	    int sqrt = -1;
+	    int left = 1;
+	    int right = n / 2; // sqrt(n) cannot be larger than n/2 for n > 1
+
+	    while (left <= right) {
+	        int mid = left + (right - left) / 2;
+
+	        long square = (long) mid * mid; // avoid overflow for large n
+
+	        if (square == n) {
+	            return mid; // perfect square case
+	        }
+	        if (square < n) {
+	            sqrt = mid;   // mid is a valid floor candidate
+	            left = mid + 1;
+	        } else {
+	            right = mid - 1;
+	        }
+	    }
+	    return sqrt;
+	}
+	
+	/**
+	 * 68. Finds the minimum eating speed K such that Koko can finish all banana piles within the given number of hours using Binary Search on the answer. 
+	 * 
+	 * Approach:
+	 * - The minimum possible speed = 1 
+	 * - The maximum possible speed = max(piles) 
+	 * - Use binary search on K and check if Koko can finish with that speed.
+	 * 
+	 * Algorithm: 
+	 * - Minimum possible K = 1 
+	 * - Maximum possible K = max(piles) 
+	 * - Binary search for the smallest K where Koko can finish in <= h hours.
+	 *
+	 * Time Complexity: O(n * log(maxPile)) - log(maxPile) for the binary search
+	 * range of speeds - O(n) for checking total hours needed for a given speed
+	 *
+	 * Space Complexity: O(1) - Uses only constant extra space
+	 *
+	 * @param piles the array representing banana piles.
+	 * @param hours the maximum allowed hours.
+	 * @return the minimum integer eating speed K.
+	 */
+	public static int kokoEatingBananas(int[] piles, int hours) {
+		int left = 1; // Minimum possible speed
+		int right = Arrays.stream(piles).max().getAsInt(); // Maximum possible speed
+		int result = right; // Store the best possible result
+		// Binary search on eating speed
+		while (left <= right) {
+			int mid = left + (right - left) / 2; // Current speed guess
+			if (canFinish(piles, hours, mid)) {
+				// If Koko can finish at speed mid, try a smaller speed
+				result = mid;
+				right = mid - 1;
+			} else {
+				// Otherwise increase speed
+				left = mid + 1;
+			}
+		}
+		return result;
+	}
+
+	public static boolean canFinish(int[] piles, int h, int k) {
+		long totalHours = 0;
+		for (int pile : piles) {
+			// Add the required hours = ceil(pile / k)
+			totalHours += pile / k;
+			if (pile % k != 0) {
+				totalHours++;
+			}
+			// Optional optimization: stop early if exceeding limit
+			if (totalHours > h)
+				return false;
+		}
+		return totalHours <= h;
+	}
+	
+	/**
+	 * 69. Determines the minimum number of days required to make `m` bouquets,
+	 * where each bouquet needs `k` adjacent flowers. Each flower blooms on the
+	 * day given in the `bloomDay` array.
+	 *
+	 * <p><b>Approach:</b><br>
+	 * We apply **Binary Search on Days**:
+	 * <ul>
+	 *   <li>Search range = [min(bloomDay), max(bloomDay)]</li>
+	 *   <li>For a given mid = day, check if we can make at least m bouquets.</li>
+	 *   <li>To check feasibility, count how many adjacent groups of size k
+	 *       exist where bloomDay <= mid.</li>
+	 * </ul>
+	 *
+	 * If bouquets can be made → try earlier days (high = mid - 1)  
+	 * If not → try later days (low = mid + 1)
+	 *
+	 * <p><b>Time Complexity:</b>  
+	 * O(n log maxDay)  
+	 * where n = bloomDay.length, maxDay = maximum bloom value
+	 *
+	 * <p><b>Space Complexity:</b>  
+	 * O(1)
+	 *
+	 * @param bloomDay array where bloomDay[i] = day i-th flower blooms
+	 * @param m number of bouquets needed
+	 * @param k number of adjacent flowers required per bouquet
+	 * @return minimum day to make m bouquets, else -1
+	 */
+	public static int minimumDaysToMakeMbuckets(int[] bloomDay, int m, int k) {
+	    int n = bloomDay.length;
+	    // If total flowers needed exceed available flowers → impossible
+	    if ((long) m * k > n)
+	        return -1;
+	    int low = Arrays.stream(bloomDay).min().orElseThrow();
+	    int high = Arrays.stream(bloomDay).max().orElseThrow();
+	    // Binary Search on number of days
+	    while (low <= high) {
+	        int mid = low + (high - low) / 2;
+
+	        if (canMakeBouquets(bloomDay, mid, k, m)) {
+	            high = mid - 1; // try earlier day
+	        } else {
+	            low = mid + 1; // need more days
+	        }
+	    }
+	    return low;
+	}
+	private static boolean canMakeBouquets(int[] bloomDay, int dayLimit, int k, int m) {
+	    int consecutive = 0;   // count of consecutive flowers available
+	    int bouquets = 0;      // total bouquets formed
+	    for (int day : bloomDay) {
+	        if (day <= dayLimit) {
+	            consecutive++; // this flower has bloomed by 'dayLimit'
+	        } else {
+	            // break in adjacency → convert consecutive to bouquets
+	            bouquets += (consecutive / k);
+	            consecutive = 0;
+	        }
+	    }
+	    // Add remaining segment
+	    bouquets += (consecutive / k);
+	    return bouquets >= m;
+	}
 	
 	
 

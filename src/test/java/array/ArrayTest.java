@@ -1,6 +1,5 @@
 package array;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -1315,6 +1314,53 @@ public class ArrayTest {
 				Arguments.of(new int[] { 1,1,2,2,3,3,4,4,8 },8), 
 				Arguments.of(new int[] { 1,1,2,2,3,3,4,4,7,8,8}, 7)
 			);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideFindSquareRootTestCases")
+    @DisplayName("Test Finding Square Root")
+	void testFindSquareRoot(int num,int expected) {
+		int actual = Array.findSquareRoot(num);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideFindSquareRootTestCases() {
+		return Stream.of(
+				Arguments.of(36,6), 
+				Arguments.of(50, 7),
+				Arguments.of(100,10),
+				Arguments.of(144,12), 
+				Arguments.of(12, 3)
+			);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideKokoEatingBananasTestCases")
+    @DisplayName("Test koko eating bananas")
+	void testKokoEatingBananas(int[] piles,int hours,int minimumHours) {
+		int actual = Array.kokoEatingBananas(piles,hours);
+		assertEquals(minimumHours, actual);
+	}
+
+	private static Stream<Arguments> provideKokoEatingBananasTestCases() {
+		return Stream.of(Arguments.of(new int[] { 3, 6, 7, 11 }, 8, 4),
+				Arguments.of(new int[] { 30, 11, 23, 4, 20 }, 5, 30),
+				Arguments.of(new int[] { 30, 11, 23, 4, 20 }, 6, 23)
+			);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideMinimumDaysToMakeMbucketsTestCases")
+    @DisplayName("Test Minimum Days To Make Mbuckets")
+	void testMinimumDaysToMakeMbuckets(int[] bloomDay,int m, int k,int expected) {
+		int actual = Array.minimumDaysToMakeMbuckets(bloomDay,m,k);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideMinimumDaysToMakeMbucketsTestCases() {
+		return Stream.of(Arguments.of(new int[] { 1, 10, 3, 10, 2 }, 3, 1, 3),
+				Arguments.of(new int[] { 1, 10, 3, 10, 2 }, 3, 2, -1),
+				Arguments.of(new int[] { 7, 7, 7, 7, 12, 7, 7 }, 2, 3, 12));
 	}
 	
 }
