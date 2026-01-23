@@ -303,6 +303,14 @@ public class StringHandlingTest {
 		Integer actual = StringHandling.minChangesToMakeAnagrams.apply(inputOne,inputTwo);
 		assertEquals(expectedValue, actual);
 	}
+	
+	@ParameterizedTest
+	@CsvSource({ "aabcad, bcad", "accept, cept","buy, buy","leetcode, etcod","aab,ab"})
+	@DisplayName("Test Laongest SubString WithOut Repeating Chars")
+	void testLongestSubStringWithOutRepeatingChars(String inputOne, String expected) {
+		String actual = StringHandling.longestSubStringWithOutRepeatingChars.apply(inputOne);
+		assertEquals(actual, expected);
+	}
 
 
 }

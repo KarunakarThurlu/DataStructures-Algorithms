@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 
 public class StringHandling {
 	/*
-	 * ================================== 
+	 * ==================================
 	 * String Handling Problems
-	 * ================================== 
-	 * 1. Reverse given string. 
-	 * 2. Reverse given string by frequency 
-	 * 3. Find permutations of string. 
+	 * ==================================
+	 * 1. Reverse given string.
+	 * 2. Reverse given string by frequency
+	 * 3. Find permutations of string.
 	 * 4. Count vowels and consonants in given string.
 	 * 5. Replace specific words
 	 * 6. Replace Only Vowels
@@ -41,6 +41,7 @@ public class StringHandling {
 	 * 17.Subsequence Check
 	 * 18.Reverse only vowels
 	 * 19.Minimum number of Changes to make Two Strings are anagrams
+	 * 20.Longest SubString Without Repeating Characters
 	 */
 
 	static UnaryOperator<String> stringReverse = input -> {
@@ -186,7 +187,7 @@ public class StringHandling {
 		IntFunction<? extends Character> mapper = c -> (char) c;
 		return input.chars().mapToObj(mapper).collect(groupingBy(identity(), counting()));
 	};
-	
+
 	static UnaryOperator<String> removeConsecutiveChars = input -> {
 		String current = input;
 		String previous;
@@ -214,20 +215,21 @@ public class StringHandling {
 		}
 		return stack.stream().map(c -> String.valueOf(c)).collect(Collectors.joining(""));
 	}
-	
-	public static List<List<String>> groupAnagramStrings(List<String> anagrams){
-		Map<String,List<String>> map = new HashMap<>();
-		for(String s : anagrams) {
-			String string = s.chars().mapToObj(c->(char)c).map(String::valueOf).sorted().collect(Collectors.joining());
-			if(map.containsKey(string)) {
+
+	public static List<List<String>> groupAnagramStrings(List<String> anagrams) {
+		Map<String, List<String>> map = new HashMap<>();
+		for (String s : anagrams) {
+			String string = s.chars().mapToObj(c -> (char) c).map(String::valueOf).sorted()
+					.collect(Collectors.joining());
+			if (map.containsKey(string)) {
 				map.get(string).add(s);
-			}else {
+			} else {
 				map.put(string, new ArrayList<>());
 				map.get(string).add(s);
 			}
 		}
-		List<List<String>> res=new ArrayList<>();
-		map.entrySet().forEach(e->res.add(e.getValue()));
+		List<List<String>> res = new ArrayList<>();
+		map.entrySet().forEach(e -> res.add(e.getValue()));
 		return res;
 	}
 
@@ -255,7 +257,7 @@ public class StringHandling {
 		}
 		return stack.isEmpty();
 	};
-	
+
 	static Function<String, Integer> romanToInteger = input -> {
 		Map<Character, Integer> map = Map.of('M', 1000, 'D', 500, 'C', 100, 'L', 50, 'X', 10, 'V', 5, 'I', 1);
 		Integer res = 0;
@@ -270,68 +272,82 @@ public class StringHandling {
 		return res;
 	};
 	
-	static BiFunction<String, String, Boolean> stringRotation = (strOne, strTwo) -> {
-		 // Length must be the same & should not be empty
-		if (strOne.length() != strTwo.length() || strOne == null)
-			return false;
+	static BiFunction<String, String, Boolean> stringRotation = (one, two) -> {
 		// Concatenate s1 with itself & check if s2 is a substring
-		return (strOne + strOne).contains(strTwo);
-	};
-	
-	static BiFunction<String, String, Boolean> subSequenceCheck = (strOne, strTwo) -> {
-		int strOneIndex = 0, strTwoIndex = 0;
-		while (strOneIndex < strOne.length() && strTwoIndex < strTwo.length()) {
-			if (strOne.charAt(strOneIndex) == strTwo.charAt(strTwoIndex))
-				strTwoIndex++;
-			strOneIndex++;
+		if (one.length() != two.length() || one == null) {
+			return false;
 		}
-		return strTwoIndex == strTwo.length();
+		// Concatenate s1 with itself & check if s2 is a substring
+		return one.concat(one).contains(two);
 	};
 	
-	static Function<String,String> reverseVowelsOnly = str -> {
-        String vowels="aeiou";
-        str=str.toLowerCase();
-        char[] ch=str.toLowerCase().toCharArray();
-        int startIndex=0;
-        int endIndex=str.length()-1;
-        while(startIndex<endIndex){
-            while(vowels.indexOf(str.charAt(startIndex))<0 && startIndex<endIndex){
-            	startIndex++;
-            }
-            while(vowels.indexOf(str.charAt(endIndex))<0 && endIndex>0){
-            	endIndex--;
-            }
-            if(startIndex<endIndex){
-                char t=ch[startIndex];
-                ch[startIndex++]=ch[endIndex];
-                ch[endIndex--]=t;
-            }
-        }
-        return new String(ch);
+	static BiFunction<String, String, Boolean> subSequenceCheck = (one, two) -> {
+		int oneIndex = 0, twoIndex = 0;
+		while (oneIndex < one.length() && twoIndex < two.length()) {
+			if (one.charAt(oneIndex) == two.charAt(twoIndex)) {
+				twoIndex++;
+			}
+			oneIndex++;
+		}
+		return oneIndex == twoIndex;
 	};
 	
-	static BiFunction<String, String, Integer> minChangesToMakeAnagrams = (firstString, secondString) -> {
-		// Check if strings have different lengths since anagrams must be same length
-		if (firstString.length() != secondString.length()) {
+	static Function<String, String> reverseVowelsOnly = str -> {
+		char[] charArray = str.toLowerCase().toCharArray();
+		String vowels = "aeiou";
+		int start = 0, end = str.length() - 1;
+		while (start < end) {
+			while (vowels.indexOf(str.charAt(start)) < 0) {
+				start++;
+			}
+			while (vowels.indexOf(str.charAt(end)) < 0) {
+				end--;
+			}
+			if (start < end) {
+				char temp = charArray[end];
+				charArray[end--] = charArray[start];
+				charArray[start++] = temp;
+			}
+		}
+		return String.valueOf(charArray);
+	};
+	
+	static BiFunction<String, String, Integer> minChangesToMakeAnagrams = (one, two) -> {
+		if (one.length() != two.length()) {
 			return -1;
 		}
-
-		// Array to store character frequency differences (using ASCII range)
-		int[] charFrequencyDiff = new int[128];
-
-		// Calculate frequency differences between both strings
-		for (int i = 0; i < firstString.length(); i++) {
-			charFrequencyDiff[firstString.charAt(i)]++; // Increment for first string
-			charFrequencyDiff[secondString.charAt(i)]--; // Decrement for second string
+		int[] count = new int[128];
+		for (int i = 0; i < one.length(); i++) {
+			count[one.charAt(i)]++;
+			count[two.charAt(i)]--;
 		}
-
-		// Calculate total changes needed by summing positive differences
-		int totalChanges = 0;
-		for (int i = 0; i < 128; i++) {
-			// Sum only positive differences (excess characters in first string)
-			totalChanges += Math.max(0, charFrequencyDiff[i]);
+		int total = 0;
+		for (int i = 0; i < count.length; i++) {
+			total = total + Math.max(0, count[i]);
 		}
-
-		return totalChanges; // This equals half the total differences needed
+		return total;
 	};
+	
+	
+	static Function<String, String> longestSubStringWithOutRepeatingChars = str -> {
+		Set<Character> seen = new HashSet<>();
+		int maxLength = 0;
+		int start = 0;
+		int end = 0;
+		int uniqueCharsStringStartIndex = 0;
+		while (end < str.length()) {
+			if (seen.add(str.charAt(end))) {
+				if (end - start+1 > maxLength) {
+					maxLength = end - start+1;
+					uniqueCharsStringStartIndex = start;
+				}
+				end++;
+			} else {
+				seen.remove(str.charAt(start));
+				start++;
+			}
+		}
+		return str.substring(uniqueCharsStringStartIndex, uniqueCharsStringStartIndex + maxLength);
+	};
+	
 }
