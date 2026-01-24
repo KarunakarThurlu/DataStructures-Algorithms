@@ -311,6 +311,14 @@ public class StringHandlingTest {
 		String actual = StringHandling.longestSubStringWithOutRepeatingChars.apply(inputOne);
 		assertEquals(actual, expected);
 	}
+	
+	@ParameterizedTest
+	@CsvSource({ "aaebacad, aca", "acceptp, ptp", "buyubef, buyub", "leetcode, ee", "aab,aa"})
+	@DisplayName("Test Longest Palindrome SubString")
+	void testLongestPalindromeSubString(String inputOne, String expected) {
+		String actual = StringHandling.longestPalindromicSubString.apply(inputOne);
+		assertEquals(actual, expected);
+	}
 
 
 }

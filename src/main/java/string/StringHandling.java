@@ -42,8 +42,33 @@ public class StringHandling {
 	 * 18.Reverse only vowels
 	 * 19.Minimum number of Changes to make Two Strings are anagrams
 	 * 20.Longest SubString Without Repeating Characters
+	 * 21.Longest palindromic substring
 	 */
-
+	
+	static UnaryOperator<String> longestPalindromicSubString = str -> {
+		int palindromeStart = 0;
+		int palindromeEnd = 0;
+		for (int center = 0; center < str.length(); center++) {
+			int oddPalindromeLength = expandAroundCenter(str, center, center);
+			int evenPalindromeLength = expandAroundCenter(str, center, center + 1);
+			int maxLength = Math.max(oddPalindromeLength, evenPalindromeLength);
+			int currentLength = palindromeEnd - palindromeStart;
+			if (maxLength > currentLength) {
+				palindromeStart = center - (maxLength - 1) / 2; 
+				palindromeEnd = center + (maxLength) / 2;
+			}
+		}
+		return str.substring(palindromeStart, palindromeEnd + 1);
+	};
+	
+	private static int expandAroundCenter(String str, int left, int right) {
+		while (left >= 0 && right < str.length() && str.charAt(left) == str.charAt(right)) {
+			left--;
+			right++;
+		}
+		return right - left - 1;
+	}
+	
 	static UnaryOperator<String> stringReverse = input -> {
 		char[] charArray = input.toCharArray();
 		int startIndex = 0;
