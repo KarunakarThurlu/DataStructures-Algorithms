@@ -1363,4 +1363,62 @@ public class ArrayTest {
 				Arguments.of(new int[] { 7, 7, 7, 7, 12, 7, 7 }, 2, 3, 12));
 	}
 	
+    @ParameterizedTest
+    @MethodSource("provideSearchIn2DArrayIITestCases")
+    @DisplayName("Test Search in 2D Array II")
+    void testSearchIn2DArrayII(int[][] array, int target, boolean expected) {
+        boolean actual = Array.searchIn2DmatrixII(array, target);
+        assertEquals(expected, actual, "Expected and actual results should match.");
+    }
+    
+	private static Stream<Arguments> provideSearchIn2DArrayIITestCases() {
+		return Stream.of(
+				Arguments.of(new int[][] { { 1, 4, 7, 11, 15 }, { 2, 5, 8, 12, 19 }, { 3, 6, 9, 16, 22 },
+						{ 10, 13, 14, 17, 24 }, { 18, 21, 23, 26, 30 } }, 5, true),
+				Arguments.of(new int[][] { { 1, 4, 7, 11, 15 }, { 2, 5, 8, 12, 19 }, { 3, 6, 9, 16, 22 },
+						{ 10, 13, 14, 17, 24 }, { 18, 21, 23, 26, 30 } }, 55, false),
+				Arguments.of(new int[][] { { 1, 4, 7, 11, 15 }, { 2, 5, 8, 12, 19 }, { 3, 6, 9, 16, 22 },
+						{ 10, 13, 14, 17, 24 }, { 18, 21, 23, 26, 30 } }, 21, true),
+				Arguments.of(new int[][] { { 1, 4, 7, 11, 15 }, { 2, 5, 8, 12, 19 }, { 3, 6, 9, 16, 22 },
+						{ 10, 13, 14, 17, 24 }, { 18, 21, 23, 26, 30 } }, 19, true));
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideCountZerosTestCases")
+    @DisplayName("Test Count Zeros")
+	void testCountZeros(int[] nums,int expected) {
+		int actual = Array.countZeros(nums);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideCountZerosTestCases() {
+		return Stream.of(Arguments.of(new int[] { 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 }, 4),
+				Arguments.of(new int[] { 1, 1, 1, 1, 1 }, 0), 
+				Arguments.of(new int[] { 1, 0, 0, 0, 0, 0, 0, 0, 0 }, 8),
+				Arguments.of(new int[] { 1, 1, 1, 0, 0, 0 }, 3), 
+				Arguments.of(new int[] { 0, 0, 0, 0, 0, 0, 0 }, 7));
+	}
+	
+	@ParameterizedTest
+	@MethodSource("provideFindEquilibriumTestCases")
+	@DisplayName("Test Find Equilibrium Index")
+	void testFindEquilibrium(int[] arr, int expected) {
+	    int actual = Array.findEquilibrium(arr);
+	    assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideFindEquilibriumTestCases() {
+	    return Stream.of(
+	        Arguments.of(new int[]{1, 3, 5, 2, 2}, 2),   // equilibrium at index 2
+	        Arguments.of(new int[]{2, -2, 2, -2, 2}, 0), // equilibrium at index 0
+	        Arguments.of(new int[]{0, 0, 0, 0}, 0),      // any index works, returns first
+	        Arguments.of(new int[]{1, 2, 3}, -1),        // no equilibrium
+	        Arguments.of(new int[]{}, -1),               // empty array edge case
+	        Arguments.of(new int[]{5}, 0),               // single element → equilibrium at 0
+	        Arguments.of(new int[]{3, 4, 8, -9, 20, 6}, 4) // equilibrium at index 4
+	    );
+	}
+	
+	
+	
 }

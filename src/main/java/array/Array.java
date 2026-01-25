@@ -88,6 +88,9 @@ public class Array {
 	 * 67.Find square root of a number in log n
 	 * 68.Koko eating bananas
 	 * 69.Minimum number of days to make m buckets
+	 * 70.Search in 2D array II
+	 * 71.Find Equilibrium
+	 * 72.Count Zeros
 	 */
 
 	/**
@@ -3279,6 +3282,156 @@ public class Array {
 	    // Add remaining segment
 	    bouquets += (consecutive / k);
 	    return bouquets >= m;
+	}
+	
+	/**
+	 * 70. Search in 2D array II
+	 * Searches for a target value inside a 2D matrix where:
+	 * - Each row is sorted in ascending order.
+	 * - Each column is also sorted in ascending order.
+	 *
+	 * <p><b>Approach:</b>
+	 * We start from the top-right element of the matrix:
+	 * <ul>
+	 *   <li>If the current element equals the target → return true.</li>
+	 *   <li>If the current element is greater than the target → move left (decrease column).</li>
+	 *   <li>If the current element is smaller than the target → move down (increase row).</li>
+	 * </ul>
+	 * This works because moving left reduces the value and moving down increases the value,
+	 * leveraging the matrix’s sorted properties.
+	 *
+	 * <p><b>Time Complexity:</b> O(m + n)  
+	 * (At most you move left `n` times and down `m` times.)
+	 *
+	 * <p><b>Space Complexity:</b> O(1)  
+	 * (Only constant extra variables are used.)
+	 *
+	 * @param matrix 2D sorted matrix (sorted row-wise and column-wise)
+	 * @param target value to search for
+	 * @return true if target is found; false otherwise
+	 */
+	public static boolean searchIn2DmatrixII(int[][] matrix, int target) {
+		int rows = matrix.length;
+	    int cols = matrix[0].length;
+	    int row = 0;         // Start at top row
+	    int col = cols - 1;  // Start at last column (top-right corner)
+	    // Move within bounds of matrix
+	    while (row < rows && col >= 0) {
+	        int current = matrix[row][col];
+	        if (current == target) {
+	            return true; // Found target
+	        } else if (target < current) {
+	            col--;       // Move left to reduce value
+	        } else {
+	            row++;       // Move down to increase value
+	        }
+	    }
+	    return false; // Not found
+	}
+	
+	/**
+	 * 71. Find Equilibrium
+	 * Finds the equilibrium index of an array.
+	 *
+	 * <p><b>Definition:</b>
+	 * An equilibrium index is an index {@code i} such that:
+	 * <pre>
+	 * sum(arr[0] ... arr[i-1]) == sum(arr[i+1] ... arr[n-1])
+	 * </pre>
+	 *
+	 * <p><b>Approach:</b>
+	 * 1. Compute the total sum of all elements.  
+	 * 2. Iterate through the array keeping track of the left-prefix sum.  
+	 * 3. For each index {@code i}, the right-prefix sum is:
+	 *    <pre>
+	 *    right = totalSum - leftPrefix - arr[i]
+	 *    </pre>
+	 * 4. If {@code leftPrefix == right}, the index is equilibrium.
+	 * 5. Update {@code leftPrefix} as we move forward.
+	 *
+	 * <p><b>Time Complexity:</b> O(n)  
+	 * (One pass to compute total sum + one pass to find equilibrium.)
+	 *
+	 * <p><b>Space Complexity:</b> O(1)  
+	 * (No extra space except constant variables.)
+	 *
+	 * @param arr input array of integers
+	 * @return equilibrium index (0-based); -1 if no such index exists
+	 */
+	public static int findEquilibrium(int[] arr) {
+	    int n = arr.length;
+
+	    // Step 1: compute total array sum
+	    int totalSum = 0;
+	    for (int i = 0; i < n; i++) {
+	        totalSum += arr[i];
+	    }
+
+	    // Step 2: iterate again to find equilibrium index
+	    int leftPrefix = 0;
+	    for (int i = 0; i < n; i++) {
+	        // Right side sum = total - left side - current element
+	        int rightPrefix = totalSum - leftPrefix - arr[i];
+	        // Check equilibrium condition
+	        if (leftPrefix == rightPrefix) {
+	            return i;
+	        }
+	        // Update left-prefix sum
+	        leftPrefix += arr[i];
+	    }
+
+	    // No equilibrium found
+	    return -1;
+	}
+	
+	/**
+	 * 72. Count Zeros
+	 * Counts the number of zeroes in a sorted binary array where all 1s come first
+	 * followed by all 0s.
+	 *
+	 * <p>The array pattern is:
+	 * <pre>
+	 * [1, 1, 1, ..., 1, 0, 0, 0, ..., 0]
+	 * </pre>
+	 *
+	 * <p><b>Approach:</b>
+	 * Use binary search to find the first occurrence of 0.
+	 * - If mid element is 1 → search right half
+	 * - If mid is 0 → record it and search left half to find the earliest zero
+	 *
+	 * Once the first 0 (index = zerosStartIndex) is found:
+	 * <pre>
+	 * count = totalLength - zerosStartIndex
+	 * </pre>
+	 *
+	 * <p><b>Time Complexity:</b> O(log n)  
+	 * (Binary search)
+	 *
+	 * <p><b>Space Complexity:</b> O(1)
+	 *
+	 * @param arr sorted array of 0s and 1s where all 1s precede all 0s
+	 * @return number of zeroes in the array
+	 */
+	public static int countZeros(int[] arr) {
+		int left = 0;
+		int right = arr.length-1;
+
+		// If no zero is found, start index = arr.length
+		int zerosStartIndex = arr.length;
+
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			// If mid is 1 → move right
+			if (arr[mid] == 1) {
+				left = mid + 1;
+			} else {
+				// If mid is 0 → possible first zero, go left to check earlier positions
+				zerosStartIndex = mid;
+				right = mid - 1;
+			}
+		}
+		// Total zero count
+		return arr.length - zerosStartIndex;
 	}
 	
 	
