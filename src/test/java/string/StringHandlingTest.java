@@ -13,6 +13,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import sorting.SortingProblems;
+
 public class StringHandlingTest {
 	
 	@ParameterizedTest
@@ -318,6 +320,24 @@ public class StringHandlingTest {
 	void testLongestPalindromeSubString(String inputOne, String expected) {
 		String actual = StringHandling.longestPalindromicSubString.apply(inputOne);
 		assertEquals(actual, expected);
+	}
+	
+	@ParameterizedTest
+	@MethodSource("longestCommonPrefixInputs")
+	@DisplayName("Find longest common prefix")
+	void testLongestCommonPrefix(List<String> strs, String expected) {
+		String actual = StringHandling.longestCommonPrefix.apply(strs);
+		assertEquals(expected, actual);
+	}
+	
+	private static Stream<Arguments> longestCommonPrefixInputs() {
+		return Stream.of(Arguments.of(List.of("flower","flow","flight"), "fl"),
+				Arguments.of(List.of("dog","racecar","car"), ""),
+				Arguments.of(List.of("interspecies","interstellar","interstate"), "inters"),
+				Arguments.of(List.of("throme","dunggeon"),""),
+				Arguments.of(List.of("throne","throne"), "throne"),
+				Arguments.of(List.of("Java"), "Java")
+			);
 	}
 
 

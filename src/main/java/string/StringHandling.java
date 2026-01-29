@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StringHandling {
 	/*
@@ -43,8 +45,24 @@ public class StringHandling {
 	 * 19.Minimum number of Changes to make Two Strings are anagrams
 	 * 20.Longest SubString Without Repeating Characters
 	 * 21.Longest palindromic substring
+	 * 22.Longest Common Prefix
 	 */
-	
+	static Function<List<String>, String> longestCommonPrefix = strs -> {
+		List<String> list = strs.stream().sorted().toList();
+		String firstString = list.get(0);
+		String lastString = list.get(list.size() - 1);
+		StringBuilder commonPrefix = new StringBuilder();
+		int index = 0;
+		while (index < firstString.length()) {
+			if (firstString.charAt(index) == lastString.charAt(index)) {
+				commonPrefix.append(firstString.charAt(index));
+			} else {
+				break;
+			}
+			index++;
+		}
+		return String.valueOf(commonPrefix);
+	};
 	static UnaryOperator<String> longestPalindromicSubString = str -> {
 		int palindromeStart = 0;
 		int palindromeEnd = 0;
