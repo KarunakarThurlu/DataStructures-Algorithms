@@ -1419,6 +1419,52 @@ public class ArrayTest {
 	    );
 	}
 	
+    @ParameterizedTest
+    @MethodSource("inputsForIntersectionOfTwoArrays")
+    @DisplayName("Test Intersection Of Two Arrays")
+	void testIntersectionOfTwoArrays(int[] first, int[] second, int[] expected) {
+		int[] actual = Array.intersectionOfTwoArrays(first, second);
+		assertArrayEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> inputsForIntersectionOfTwoArrays() {
+		return Stream.of(Arguments.of(new int[] { 1, 2, 2, 1 }, new int[] { 2, 2 }, new int[] { 2 }),
+				Arguments.of(new int[] { 9, 4, 9, 8, 4 }, new int[] { 4, 9, 5 }, new int[] { 9, 4 }),
+				Arguments.of(new int[] { 1, 2, 2, 1 }, new int[] { 2, 2, 1 }, new int[] { 1, 2 }),
+				Arguments.of(new int[] { 1, 2, 3, 4 }, new int[] { 5, 6, 7, 8 }, new int[] {}),
+				Arguments.of(new int[] { 100 }, new int[] { 100 }, new int[] { 100 }));
+	}
+	
+	@ParameterizedTest
+	@MethodSource("provideIntersectionOfTwoArraysIITestCases")
+	@DisplayName("Test Intersection of Two Arrays II")
+	void testIntersectionOfTwoArraysII(int[] first, int[] second, int[] expected) {
+	    int[] actual = Array.intersectionOfTwoArraysII(first, second);
+	    assertArrayEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideIntersectionOfTwoArraysIITestCases() {
+	    return Stream.of(
+	        // Standard case with duplicates
+	        Arguments.of(new int[] {1, 2, 2, 1},new int[] {2, 2}, new int[] {2, 2}),
+
+	        // Different ordering, multiple duplicates
+	        Arguments.of( new int[] {4, 9, 5},new int[] {9, 4, 9, 8, 4}, new int[] {9, 4}),
+
+	        // All elements same
+	        Arguments.of(new int[] {1, 1, 1}, new int[] {1, 1}, new int[] {1, 1}),
+
+	        // No intersection
+	        Arguments.of( new int[] {1, 2, 3},new int[] {4, 5, 6},new int[] {}),
+
+	        // First array empty
+	        Arguments.of( new int[] {},new int[] {1, 2, 3},new int[] {}),
+
+	        // Second array empty
+	        Arguments.of( new int[] {1, 2, 2, 3}, new int[] {},  new int[] {} )
+	    );
+	}
+	
 	
 	
 }

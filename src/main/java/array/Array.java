@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Array {
 	/*
@@ -91,6 +93,8 @@ public class Array {
 	 * 70.Search in 2D array II
 	 * 71.Find Equilibrium
 	 * 72.Count Zeros
+	 * 73.Intersection of two array's
+	 * 74.Intersection of two array's II
 	 */
 
 	/**
@@ -3432,6 +3436,110 @@ public class Array {
 		}
 		// Total zero count
 		return arr.length - zerosStartIndex;
+	}
+	
+	/**
+	 * 73. Intersection of Two Arrays : Given two integer arrays, return an array of their intersection.
+	 * 
+	 * <p>
+	 * <pre>
+	 * Example 1: arr1 = [1,2,2,1], arr2 = [2,2] → Output: [2]
+	 * Example 2: arr1 = [4,9,5], arr2 = [9,4,9,8,4] → Output: [9,4]
+	 * Example 3: arr1 = [1,2,3], arr2 = [4,5,6] → Output: []
+	 * Example 4: arr1 = [], arr2 = [1,2,3] → Output: []
+	 * Example 5: arr1 = [1,2,2,1], arr2 = [] → Output: []
+	 * </pre>
+	 * </p>
+	 * 
+	 * <b>Time Complexity:</b> O(n + m) where n and m are the lengths of the two arrays.<br>
+	 * <b>Space Complexity:</b> O(min(n, m)) for storing the intersection elements.
+	 * 
+	 * <p>
+	 * <pre>
+	 * Approach:	
+	 * - Convert both arrays to sets to remove duplicates.
+	 * - Iterate through one set and check for presence in the other set.
+	 * - Collect common elements into a result set.
+	 * - Convert the result set back to an array and return.
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param one first input array
+	 * @param two second input array
+	 * @return array of intersection elements
+	 */
+	public static int[] intersectionOfTwoArrays(int[] one, int[] two) {
+		return Arrays.stream(one)
+				.distinct()
+				.filter(y -> Arrays.stream(two).distinct().anyMatch(x -> x == y))
+				.toArray();
+	}
+	
+	
+	/**
+	 * 74. Intersection of Two Arrays II : Given two integer arrays, return an array of their intersection such that each element appears as many times as it shows in both arrays.
+	 *
+	 * <p>
+	 * <pre>
+	 * Example 1:
+	 * Input:  arr1 = [1,2,2,1], arr2 = [2,2]
+	 * Output: [2,2]
+	 *
+	 * Example 2:
+	 * Input:  arr1 = [4,9,5], arr2 = [9,4,9,8,4]
+	 * Output: [4,9]
+	 *
+	 * Example 3:
+	 * Input:  arr1 = [1,1,1], arr2 = [1,1]
+	 * Output: [1,1]
+	 *
+	 * Example 4:
+	 * Input:  arr1 = [1,2,3], arr2 = [4,5,6]
+	 * Output: []
+	 *
+	 * Example 5:
+	 * Input:  arr1 = [], arr2 = [1,2]
+	 * Output: []
+	 * </pre>
+	 * </p>
+	 *
+	 * <b>Time Complexity:</b> O(n + m)  
+	 * where n is the length of the first array and m is the length of the second array.
+	 *
+	 * <br>
+	 * <b>Space Complexity:</b> O(n)  
+	 * for storing element frequencies of the first array in a HashMap.
+	 *
+	 * <p>
+	 * <pre>
+	 * Approach:
+	 * - Create a frequency map from the first array where:
+	 *     key   → element
+	 *     value → number of occurrences
+	 * - Traverse the second array:
+	 *     - If the element exists in the map and count > 0:
+	 *         - Add it to the result
+	 *         - Decrease its frequency
+	 * - Convert the result list to an array and return.
+	 * </pre>
+	 * </p>
+	 *
+	 * @param first the first input integer array
+	 * @param second the second input integer array
+	 * @return an array representing the intersection including duplicate occurrences
+	 */
+	public static int[] intersectionOfTwoArraysII(int[] first, int[] second) {
+		List<Integer> result = new ArrayList<>();
+		Map<Integer, Long> freqMap = Arrays.stream(first)
+											.boxed()
+											.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+		for(int num : second) {
+			if(freqMap.containsKey(num) && freqMap.get(num)>0) {
+				result.add(num);
+				freqMap.put(num, freqMap.get(num)-1);
+			}
+		}
+		return result.stream().mapToInt(Integer::intValue).toArray();
 	}
 	
 	
