@@ -95,6 +95,8 @@ public class Array {
 	 * 72.Count Zeros
 	 * 73.Intersection of two array's
 	 * 74.Intersection of two array's II
+	 * 75.Find smallest letter grater than target
+	 * 76.Container with most water
 	 */
 
 	/**
@@ -3542,7 +3544,106 @@ public class Array {
 		return result.stream().mapToInt(Integer::intValue).toArray();
 	}
 	
-	
+	/**
+	 * 75. Find Smallest Letter Greater Than Target
+	 *
+	 * <p> Given a sorted array of lowercase letters and a target letter, this method returns the smallest character in the array that is strictly greater than the target. If no such character exists,it wraps around and returns the first character of the array. </p>
+	 *
+	 * <p>
+	 * <pre>
+	 * Example 1: Input:  letters = ['c','f','j'], target = 'a' Output: 'c'
+	 * Example 2:Input:  letters = ['c','f','j'], target = 'c' Output: 'f'
+	 * Example 3:Input:  letters = ['c','f','j'], target = 'd' Output: 'f'
+	 * Example 4: Input:  letters = ['c','f','j'], target = 'j'Output: 'c'  
+	 * Example 5: Input:  letters = ['a','b'], target = 'z' Output: 'a'   (wrap-around)
+	 * </pre>
+	 * </p>
+	 *
+	 * <h3>Approach</h3>
+	 * <pre>
+	 * - Use a frequency array of size 256 to mark the presence of characters.
+	 * - Populate the frequency array using the given letters.
+	 * - Iterate from (target + 1) to the maximum ASCII value:
+	 *     - Return the first character whose frequency is greater than 0.
+	 * - If no such character is found, return the first character of the array
+	 *   (wrap-around case).
+	 * </pre>
+	 *
+	 * <p>Time Complexity :  O(n + 256) → effectively O(n), where n is the number of letters. </p>
+	 * <p>Space Complexity : O(256) → constant extra space for the frequency array.</p>
+	 *
+	 * @param letters sorted array of lowercase characters
+	 * @param target  the target character
+	 * @return the smallest character strictly greater than the target
+	 */
+	public static char findSmallestLetterGraterThanTarget(char[] letters, char target) { 
+		// Frequency array to mark presence of characters
+		int[] frequency = new int[256];
 
+		// Mark all characters present in the input array
+		for (char ch : letters) {
+			frequency[ch]++;
+		}
+
+		// Find the smallest character greater than target
+		for (int ascii = target + 1; ascii < 256; ascii++) {
+			if (frequency[ascii] > 0) {
+				return (char) ascii;
+			}
+		}
+
+		// If no greater character exists, wrap around
+		return letters[0];
+	}
+	
+	/**
+	 * 76. Container With Most Water
+	 *
+	 * <p> Given an integer array where each element represents the height of a vertical line, this method finds two lines that together with the x-axis form a container, such that the container holds the maximum amount of water. </p>
+	 *
+	 * <p>
+	 * <pre>
+	 * Example 1: Input:  heights = [1,8,6,2,5,4,8,3,7] Output: 49
+	 * Example 2: Input:  heights = [1,1] Output: 1
+	 * Example 3: Input:  heights = [4,3,2,1,4] Output: 16
+	 * Example 4: Input:  heights = [1,2,1] Output: 2
+	 * Example 5: Input:  heights = [2,3,10,5,7,8,9] Output: 36
+	 * </pre>
+	 * </p>
+	 *
+	 * <h3>Approach</h3>
+	 * <pre>
+	 * - Use two pointers: one at the beginning (left) and one at the end (right).
+	 * - The width of the container is (right - left).
+	 * - The height is the minimum of heights[left] and heights[right].
+	 * - Calculate area = width × height and update maximum area.
+	 * - Move the pointer pointing to the smaller height inward:
+	 *     - This may lead to a taller boundary and a larger area.
+	 * - Continue until left meets right.
+	 * </pre>
+	 *
+	 * <p> Time Complexity O(n), where n is the number of elements in the array. </p>
+	 * <p>Space Complexity O(1), as no extra space is used.</p>
+	 *
+	 * @param heights array representing heights of vertical lines
+	 * @return maximum amount of water that can be contained
+	 */
+	public static int containerWithMostWater(int[] heights) {
+		int left = 0;
+		int right = heights.length - 1;
+		int maxArea = 0;
+		while (left < right) {
+			int width  = right - left;
+			int height = Math.min(heights[left], heights[right]);
+			int currentArea = width * height;
+			maxArea = Math.max(maxArea, currentArea);
+			if (heights[left] < heights[right]) {
+				left++;
+			} else {
+				right--;
+			}
+		}
+		return maxArea;
+	}
 	
 }

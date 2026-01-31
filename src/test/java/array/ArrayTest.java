@@ -1465,6 +1465,41 @@ public class ArrayTest {
 	    );
 	}
 	
+    @ParameterizedTest
+    @MethodSource("provideFindSmallestLetterGraterThanTargetTestCases")
+    @DisplayName("Test provide find smallest letter grater than target")
+	void testFindSmallestLetterGraterThanTarget(char[] letters, char target, char expected) {
+		char actual = Array.findSmallestLetterGraterThanTarget(letters, target);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideFindSmallestLetterGraterThanTargetTestCases() {
+		return Stream.of(Arguments.of(new char[] { 'c', 'f', 'j' }, 'c', 'f'),
+				Arguments.of(new char[] { 'c', 'f', 'j' }, 'c', 'f'),
+				Arguments.of(new char[] { 'c', 'f', 'j', 'j' }, 'f', 'j'),
+				Arguments.of(new char[] { 'a', 'b', 'c', 'd' }, 'c', 'd'),
+				Arguments.of(new char[] { 'c', 'f', 'j' }, 'x', 'c'),
+				Arguments.of(new char[] { 'x', 'x', 'f', 'j', 'y', 'y' }, 'z', 'x'));
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideContainerWithMostWaterTestCases")
+    @DisplayName("Test container with most water")
+    void testContainerWithMostWater(int[] heights, int expected) {
+        assertEquals(expected, Array.containerWithMostWater(heights));
+    }
+
+    static Stream<Arguments> provideContainerWithMostWaterTestCases() {
+        return Stream.of(
+            Arguments.of(new int[]{1,8,6,2,5,4,8,3,7}, 49), // standard case
+            Arguments.of(new int[]{1,1}, 1),               // minimum size
+            Arguments.of(new int[]{4,3,2,1,4}, 16),        // same heights at ends
+            Arguments.of(new int[]{1,2,1}, 2),             // small array
+            Arguments.of(new int[]{2,3,10,5,7,8,9}, 36),   // max in middle
+            Arguments.of(new int[]{1,2,3,4,5}, 6)          // increasing heights
+        );
+    }
+	
 	
 	
 }
