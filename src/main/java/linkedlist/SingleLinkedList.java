@@ -20,7 +20,7 @@ public class SingleLinkedList {
 	 * 10.Delete nodes from list present in array 
 	 * 11.Deleting node
 	 */
-
+	
 	/**
 	 * 11. Delete Node from Linked List
 	 *
@@ -248,218 +248,535 @@ public class SingleLinkedList {
 	}
 
 	/**
-	 * 8. Remove duplicates from sorted linked list
-	 * 
-	 * @param head
-	 * @return head contains unique elements
+	 * 8. Remove Duplicates from Sorted Linked List
+	 *
+	 * <p>
+	 * Description : Given the head of a <b>sorted</b> singly linked list,
+	 * remove all duplicate elements such that each value appears only once.
+	 * The list must be modified in-place and the original head should be returned.
+	 * </p>
+	 *
+	 * <p>
+	 * <pre>
+	 * Example 1: Input: list = [1,1,2,3,3] Output: [1,2,3]
+	 * Example 2: Input: list = [1,1,1,1]   Output: [1]
+	 * Example 3: Input: list = [1,2,3]     Output: [1,2,3]
+	 * Example 4: Input: list = []          Output: []
+	 * Example 5: Input: list = [1]         Output: [1]
+	 * </pre>
+	 * </p>
+	 *
+	 * <p>
+	 * <b>Approach:</b>
+	 * <pre>
+	 * - Since the linked list is sorted, duplicate elements will be adjacent.
+	 * - Traverse the list using a pointer.
+	 * - If the current node's value is equal to the next node's value:
+	 *     - Skip the next node by adjusting the next pointer.
+	 * - Otherwise, move to the next node.
+	 * - Continue until the end of the list is reached.
+	 * </pre>
+	 * </p>
+	 *
+	 * <b>Time Complexity:</b> O(n)
+	 * <br>
+	 * where n is the number of nodes in the linked list.
+	 *
+	 * <br><br>
+	 * <b>Space Complexity:</b> O(1)
+	 * <br>
+	 * No extra space is used; duplicates are removed in-place.
+	 *
+	 * @param head head of the sorted singly linked list
+	 * @return head of the linked list with duplicates removed
 	 */
 	public static Node<Integer> removeDuplicates(Node<Integer> head) {
-		if (head == null) {
-			return head;
-		}
-		Node<Integer> temp = head;
-		while (null != temp && null != temp.next) {
-			while ((null != temp && null != temp.next) && (temp.data == temp.next.data)) {
-				temp.next = temp.next.next;
-			}
-			temp = temp.next;
-		}
-		return head;
+
+	    // Edge case: empty list or single node
+	    if (head == null || head.next == null) {
+	        return head;
+	    }
+
+	    // Pointer used to traverse the list
+	    Node<Integer> currentNode = head;
+
+	    // Traverse until the end of the list
+	    while (currentNode != null && currentNode.next != null) {
+
+	        // If duplicate found, skip the next node
+	        if (currentNode.data.equals(currentNode.next.data)) {
+	            currentNode.next = currentNode.next.next;
+	        } 
+	        // Otherwise move forward
+	        else {
+	            currentNode = currentNode.next;
+	        }
+	    }
+
+	    // Return the original head
+	    return head;
 	}
 
 	/**
-	 * 7. Adding element at nth position
-	 * 
-	 * @param head
-	 * @param data
-	 * @param n
-	 * @return head with added an element at nth position
+	 * 7. Add Element at Nth Position in Linked List
+	 *
+	 * <p>
+	 * Description : Given the head of a singly linked list, an integer value, and
+	 * an index n, insert a new node with the given value at the n-th position
+	 * (0-based indexing) and return the head of the modified list.
+	 * </p>
+	 *
+	 * <p>
+	 * <pre>
+	 * Example 1: Input: list = [1,2,3,4], data = 5, n = 2  Output: [1,2,5,3,4]
+	 * Example 2: Input: list = [1,2,3],   data = 9, n = 0  Output: [9,1,2,3]
+	 * Example 3: Input: list = [1,2],     data = 7, n = 5  Output: [1,2]
+	 * Example 4: Input: list = [],        data = 1, n = 0  Output: []
+	 * Example 5: Input: list = [1],       data = 8, n = 1  Output: [1,8]
+	 * </pre>
+	 * </p>
+	 *
+	 * <p>
+	 * <b>Approach:</b>
+	 * <pre>
+	 * - If the list is empty or n is negative, return the original head.
+	 * - If n == 0:
+	 *     - Create a new node and point it to the current head.
+	 *     - Return the new node as the head.
+	 * - Traverse the list until (n-1)th position.
+	 * - If traversal reaches the end before n, return the original list.
+	 * - Insert the new node by adjusting pointers.
+	 * </pre>
+	 * </p>
+	 *
+	 * <b>Time Complexity:</b> O(n)
+	 * <br>
+	 * where n is the position at which the node is inserted.
+	 *
+	 * <br><br>
+	 * <b>Space Complexity:</b> O(1)
+	 * <br>
+	 * Only one new node is created.
+	 *
+	 * @param head head of the singly linked list
+	 * @param data value to be inserted
+	 * @param n    position (0-based index)
+	 * @return head of the modified linked list
 	 */
 	public static Node<Integer> addAtNthPosition(Node<Integer> head, Integer data, int n) {
+		// Invalid index or empty list
 		if (head == null || n < 0) {
 			return head;
 		}
-		Node<Integer> dataNode = new Node<>(data);
+
+		// Create the new node
+		Node<Integer> newNode = new Node<>(data);
+
+		// Insert at head position
 		if (n == 0) {
-			dataNode.next = head;
-			return dataNode;
+			newNode.next = head;
+			return newNode;
 		}
-		Node<Integer> temp = head;
-		for (int i = 1; i < n; i++) {
-			if (temp.next == null) {
+
+		// Traverse to (n-1)th position
+		Node<Integer> current = head;
+		for (int index = 1; index < n; index++) {
+			if (current.next == null) {
+				// Position out of bounds
 				return head;
 			}
-			temp = temp.next;
+			current = current.next;
 		}
-		Node<Integer> next = temp.next;
-		temp.next = dataNode;
-		dataNode.next = next;
+
+		// Insert the node
+		newNode.next = current.next;
+		current.next = newNode;
+
 		return head;
 	}
 
 	/**
-	 * 6. Remove element at nth position from end
-	 * 
-	 * @param head
-	 * @param n
-	 * @return head with removed nth node from end
+	 * 6. Remove Nth Node From End of Linked List
+	 *
+	 * <p>
+	 * <b>Description:</b>
+	 * Given the head of a singly linked list, remove the nth node from the end
+	 * of the list and return the head of the modified list.
+	 * </p>
+	 *
+	 * <pre>
+	 * Example 1: Input: list = [1,2,3,4,5], n = 2 → Output: [1,2,3,5]
+	 * Example 2: Input: list = [1,2,3], n = 1 → Output: [1,2]
+	 * Example 3: Input: list = [1,2,3], n = 3 → Output: [2,3]
+	 * Example 4: Input: list = [1], n = 1 → Output: []
+	 * Example 5: Input: list = [1,2], n = 5 → Output: [1,2]
+	 * </pre>
+	 *
+	 * <p>
+	 * <b>Approach:</b>
+	 * <pre>
+	 * - Use two pointers: fastPointer and slowPointer.
+	 * - Move fastPointer n steps ahead.
+	 * - If fastPointer becomes null after moving n steps,
+	 *   it means the head node must be removed.
+	 * - Move both pointers together until fastPointer reaches the last node.
+	 * - slowPointer will then point to the node just before the one to delete.
+	 * - Adjust pointers to remove the nth node from the end.
+	 * </pre>
+	 * </p>
+	 *
+	 * <b>Time Complexity:</b> O(n) — single traversal of the list  
+	 * <br>
+	 * <b>Space Complexity:</b> O(1) — no extra space used
+	 *
+	 * @param head head of the singly linked list
+	 * @param n position from the end (1-based)
+	 * @return head of the linked list after removal
 	 */
 	public static Node<Integer> removeNthNodeFromEnd(Node<Integer> head, int n) {
+
+		// Edge case: empty list or invalid n
+		if (head == null || n <= 0) {
+			return head;
+		}
+
 		Node<Integer> fastPointer = head;
 		Node<Integer> slowPointer = head;
-		// Move fast Pointer n times forawd
-		for (int i = 0; i < n; i++) {
 
-			// If n is greater than list size
+		// Move fastPointer n steps ahead
+		for (int i = 0; i < n; i++) {
 			if (fastPointer == null) {
+				// n is greater than the length of the list
 				return head;
 			}
 			fastPointer = fastPointer.next;
 		}
 
-		// Remove Nth node from end (n==Size of LinkedList) i.e 1st node from start
+		// If fastPointer is null, remove the head node
 		if (fastPointer == null) {
-			return slowPointer.next;
+			return head.next;
 		}
 
-		// Move FP and SP by one step at a time
-		while (fastPointer != null && fastPointer.next != null) {
+		// Move both pointers until fastPointer reaches the end
+		while (fastPointer.next != null) {
 			fastPointer = fastPointer.next;
 			slowPointer = slowPointer.next;
 		}
-		// If Fastpointer at end then Slowpointer at Size-n poition
+
+		// Delete the target node
 		slowPointer.next = slowPointer.next.next;
+
 		return head;
 	}
 
 	/**
-	 * 5. Remove element at nth position
-	 * 
-	 * @param head
-	 * @param n
-	 * @return List after removing nth element
+	 * 5. Remove Element at Nth Position in Linked List
+	 *
+	 * <p>
+	 * <b>Description:</b>
+	 * Given the head of a singly linked list and an integer n (0-based index),
+	 * remove the node present at the nth position and return the updated list.
+	 * </p>
+	 *
+	 * <pre>
+	 * Example 1: Input: list = [1,2,3,4,5], n = 2 → Output: [1,2,4,5]
+	 * Example 2: Input: list = [10,20,30], n = 0 → Output: [20,30]
+	 * Example 3: Input: list = [5,6,7], n = 5 → Output: [5,6,7]
+	 * Example 4: Input: list = [1], n = 0 → Output: []
+	 * Example 5: Input: list = [], n = 1 → Output: []
+	 * </pre>
+	 *
+	 * <p>
+	 * <b>Approach:</b>
+	 * <pre>
+	 * - Handle edge cases: empty list or invalid index.
+	 * - If n == 0, remove the head node directly.
+	 * - Traverse the list until the (n-1)th node.
+	 * - Adjust pointers to skip the nth node.
+	 * - If n exceeds list length, return the original list.
+	 * </pre>
+	 * </p>
+	 *
+	 * <b>Time Complexity:</b> O(n) — traversal up to nth node  
+	 * <br>
+	 * <b>Space Complexity:</b> O(1) — constant extra space
+	 *
+	 * @param n zero-based index of the node to remove
+	 * @param head head of the singly linked list
+	 * @return head of the list after removing the nth node
 	 */
 	public static Node<Integer> removeElementAtNthPosition(Integer n, Node<Integer> head) {
-		if (head == null || n < 0)
+		// Edge case: empty list or invalid index
+		if (head == null || n < 0) {
 			return head;
-		Node<Integer> temp = head;
+		}
+
+		// If the head node itself must be removed
 		if (n == 0) {
 			return head.next;
 		}
-		for (int i = 1; i < n; i++) {
-			if (temp == null) {
+
+		Node<Integer> currentNode = head;
+
+		// Traverse to the (n-1)th node
+		for (int index = 1; index < n; index++) {
+			if (currentNode.next == null) {
+				// Index exceeds list length
 				return head;
 			}
-			temp = temp.next;
+			currentNode = currentNode.next;
 		}
-		temp.next = temp.next.next;
+
+		// If nth node exists, remove it
+		if (currentNode.next != null) {
+			currentNode.next = currentNode.next.next;
+		}
+
 		return head;
 	}
 
 	/**
-	 * 4. Find Mid element of single linked list
-	 * 
-	 * @param first
-	 * @param second
-	 * @return
+	 * 4. Find Middle Element of a Singly Linked List
+	 *
+	 * <p>
+	 * <b>Description:</b>
+	 * Given the head of a singly linked list, return the value of the middle node.
+	 * If the list contains an even number of nodes, the second middle element is returned.
+	 * </p>
+	 *
+	 * <pre>
+	 * Example 1: Input: list = ["A","B","C","D","E"] → Output: "C"
+	 * Example 2: Input: list = ["1","2","3","4"] → Output: "3"
+	 * Example 3: Input: list = ["X"] → Output: "X"
+	 * Example 4: Input: list = [] → Output: null
+	 * </pre>
+	 *
+	 * <p>
+	 * <b>Approach:</b>
+	 * <pre>
+	 * - Use two pointers:
+	 *     - slowPointer moves one step at a time
+	 *     - fastPointer moves two steps at a time
+	 * - When fastPointer reaches the end of the list,
+	 *   slowPointer will be positioned at the middle node.
+	 * - For even-length lists, this naturally returns the second middle element.
+	 * </pre>
+	 * </p>
+	 *
+	 * <b>Time Complexity:</b> O(n)
+	 * <br>
+	 * <b>Space Complexity:</b> O(1)
+	 *
+	 * @param head head of the singly linked list
+	 * @return value of the middle node, or null if the list is empty
 	 */
-	public static Node<Integer> mergingOfTwoSortedLists(Node<Integer> first, Node<Integer> second) {
-		if (first == null)
-			return second;
-		if (second == null)
-			return first;
-		Node<Integer> t = new Node<>(0);
-		Node<Integer> temp = t;
-		while (first != null && second != null) {
-			if (first.data <= second.data) {
-				temp.next = first;
-				first = first.next;
-				temp = temp.next;
-			} else {
-				temp.next = second;
-				second = second.next;
-				temp = temp.next;
-			}
-		}
-		temp.next = second == null ? first : second;
-		return t.next;
-	}
-
-	/**
-	 * 4. Find Mid element of single linked list
-	 * 
-	 * @param head
-	 * @return
-	 */
-	public static String findMidElement(Node<String> head) {
-		if (head == null)
+	public static Integer findMidElement(Node<Integer> head) {
+		// Edge case: empty list
+		if (head == null) {
 			return null;
-		Node<String> fast = head;
-		Node<String> slow = head;
-		while (fast != null && fast.next != null) {
-			fast = fast.next.next;
-			slow = slow.next;
 		}
-		return slow.data;
+
+		Node<Integer> slowPointer = head;
+		Node<Integer> fastPointer = head;
+
+		// Move slow by 1 step and fast by 2 steps
+		while (fastPointer != null && fastPointer.next != null) {
+			slowPointer = slowPointer.next;
+			fastPointer = fastPointer.next.next;
+		}
+
+		// slowPointer now points to the middle node
+		return slowPointer.data;
 	}
 
 	/**
-	 * 3. Reversing Single linked list
-	 * 
-	 * @param head
-	 * @return
+	 * 3. Reverse a Singly Linked List (Recursive)
+	 *
+	 * <p>
+	 * <b>Description:</b>
+	 * Given the head of a singly linked list, reverse the list and return
+	 * the new head.
+	 * </p>
+	 *
+	 * <pre>
+	 * Example 1: Input: list = [1,2,3,4,5] Output: [5,4,3,2,1]
+	 * Example 2: Input: list = [10,20] Output: [20,10]
+	 * Example 3: Input: list = [1] Output: [1]
+	 * Example 4: Input: list = [] Output: []
+	 * </pre>
+	 *
+	 * <p>
+	 * <b>Approach (Recursive):</b>
+	 * <pre>
+	 * - Base Case:
+	 *     - If the list is empty or contains only one node, return head.
+	 * - Recursive Case:
+	 *     - Reverse the remaining list starting from head.next.
+	 *     - Make head.next.next point back to head.
+	 *     - Set head.next to null to avoid cycle.
+	 * - Return the new head obtained from recursion.
+	 * </pre>
+	 * </p>
+	 *
+	 * <b>Time Complexity:</b> O(n)
+	 * <br>
+	 * <b>Space Complexity:</b> O(n)
+	 * <br>
+	 * Space is used due to recursive call stack.
+	 *
+	 * @param head head of the singly linked list
+	 * @return head of the reversed linked list
 	 */
 	public static Node<Integer> reverseSingleLinkedList(Node<Integer> head) {
-		if (head.next == null)
+		// Base case: empty list or single node list
+		if (head == null || head.next == null) {
 			return head;
-		Node<Integer> t = reverseSingleLinkedList(head.next);
+		}
+
+		// Recursively reverse the remaining list
+		Node<Integer> reversedHead = reverseSingleLinkedList(head.next);
+
+		// Reverse the current node's link
 		head.next.next = head;
+
+		// Set current node's next to null to avoid cycle
 		head.next = null;
-		return t;
+
+		// Return the new head of the reversed list
+		return reversedHead;
 	}
 
 	/**
-	 * 2. Adding Elements at the start of Head Node.
-	 * 
-	 * @param data
-	 * @return
+	 * 2. Add Elements at the Start of Head Node
+	 *
+	 * <p>
+	 * <b>Description:</b>
+	 * Given a list of values, create a singly linked list by inserting
+	 * each element at the beginning (head) of the linked list.
+	 * </p>
+	 *
+	 * <pre>
+	 * Example 1: Input: data = ["A","B","C"] Output: ["C","B","A"]
+	 * Example 2: Input: data = ["1","2"] Output: ["2","1"]
+	 * Example 3: Input: data = ["X"] Output: ["X"]
+	 * Example 4: Input: data = [] Output: []
+	 * Example 5: Input: data = null Output: null
+	 * </pre>
+	 *
+	 * <p>
+	 * <b>Approach:</b>
+	 * <pre>
+	 * - Initialize head as null.
+	 * - Iterate through each element in the input list.
+	 * - For every element:
+	 *     - Create a new node.
+	 *     - Point new node's next to current head.
+	 *     - Move head to the new node.
+	 * - Return head after processing all elements.
+	 * </pre>
+	 * </p>
+	 *
+	 * <b>Time Complexity:</b> O(n)
+	 * <br>
+	 * <b>Space Complexity:</b> O(n)
+	 *
+	 * @param values list of values to be added at the start of the linked list
+	 * @return head of the constructed linked list
 	 */
-	public static Node<String> addAtStartOfHeadNode(List<String> data) {
-		Node<String> head = null;
-		for (String s : data) {
-			Node<String> dataNode = new Node<>(s);
-			if (head == null) {
-				head = dataNode;
+	public static Node<Integer> addAtStartOfHeadNode(List<Integer> values) { 
+		// Edge case: null input list
+		if (values == null) {
+			return null;
+		}
+
+		Node<Integer> headNode = null;
+
+		// Insert each value at the beginning of the list
+		for (Integer value : values) {
+
+			// Create a new node for the current value
+			Node<Integer> newNode = new Node<>(value);
+
+			// Point new node to the existing head
+			newNode.next = headNode;
+
+			// Update head to the new node
+			headNode = newNode;
+		}
+
+		return headNode;
+	}
+
+	/**
+	 * 1. Add Elements at the End of Head Node
+	 *
+	 * <p>
+	 * <b>Description:</b>
+	 * Given a list of integers, create a singly linked list by appending
+	 * each element at the end (tail) of the linked list.
+	 * </p>
+	 *
+	 * <pre>
+	 * Example 1: Input: data = [1,2,3] Output: [1,2,3]
+	 * Example 2: Input: data = [5] Output: [5]
+	 * Example 3: Input: data = [] Output: []
+	 * Example 4: Input: data = null Output: null
+	 * Example 5: Input: data = [10,20,30,40] Output: [10,20,30,40]
+	 * </pre>
+	 *
+	 * <p>
+	 * <b>Approach:</b>
+	 * <pre>
+	 * - If input list is null or empty, return null.
+	 * - Initialize head as null.
+	 * - For each element in the list:
+	 *     - Create a new node.
+	 *     - If head is null, assign new node as head.
+	 *     - Otherwise, traverse to the last node and append the new node.
+	 * - Return the head of the constructed linked list.
+	 * </pre>
+	 * </p>
+	 *
+	 * <b>Time Complexity:</b> O(n²)
+	 * <br>
+	 * Traversing the list for each insertion.
+	 *
+	 * <br><br>
+	 * <b>Space Complexity:</b> O(n)
+	 *
+	 * @param values list of integers to be added at the end of the linked list
+	 * @return head of the linked list
+	 */
+	public static Node<Integer> addAtEndOfHeadNode(List<Integer> values) {
+
+		// Edge case: null or empty input list
+		if (values == null || values.isEmpty()) {
+			return null;
+		}
+
+		Node<Integer> headNode = null;
+
+		// Iterate through input values
+		for (Integer value : values) {
+
+			// Create a new node for current value
+			Node<Integer> newNode = new Node<>(value);
+
+			// If list is empty, assign new node as head
+			if (headNode == null) {
+				headNode = newNode;
 			} else {
-				dataNode.next = head;
-				head = dataNode;
-			}
-		}
-		return head;
-	}
-
-	/**
-	 * 1. Adding Elements at the end of Head Node.
-	 * 
-	 * @param data
-	 * @return head node
-	 */
-	public static Node<Integer> addAtEndOfHeadNode(List<Integer> data) {
-		Node<Integer> head = null;
-		for (Integer e : data) {
-			Node<Integer> dataNode = new Node<>(e);
-			if (head == null)
-				head = dataNode;
-			else {
-				Node<Integer> temp = head;
-				while (temp.next != null) {
-					temp = temp.next;
+				// Traverse to the last node
+				Node<Integer> currentNode = headNode;
+				while (currentNode.next != null) {
+					currentNode = currentNode.next;
 				}
-				temp.next = dataNode;
+				// Append new node at the end
+				currentNode.next = newNode;
 			}
 		}
-		;
-		return head;
+
+		return headNode;
 	}
 }
 
