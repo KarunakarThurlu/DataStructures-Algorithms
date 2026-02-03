@@ -19,7 +19,74 @@ public class SingleLinkedList {
 	 * 9. Merge sorted linked lists 
 	 * 10.Delete nodes from list present in array 
 	 * 11.Deleting node
+	 * 12.Remove nth node from end
 	 */
+	
+	
+	/**
+	 * 12. Swaps nodes of a singly linked list in pairs.
+	 *
+	 * <p>Description :  Given a linked list, swap every two adjacent nodes and return the head of the modified list.</p>
+	 *
+	 * <pre>
+	 * Example 1: Input: [1,2,3,4]   Output: [2,1,4,3]
+	 * Example 2: Input: [1,2,3]     Output: [2,1,3]
+	 * Example 3: Input: [1]         Output: [1]
+	 * Example 4: Input: []          Output: []
+	 * </pre>
+	 *
+	 * <b>Approach (Iterative):</b>
+	 * <pre>
+	 * - Use a dummy node before the head to simplify swapping at the start.
+	 * - Maintain a pointer (previousNode) to track the node before the pair.
+	 * - For each iteration:
+	 *     - Identify the two nodes to be swapped.
+	 *     - Rewire their next pointers to swap them.
+	 *     - Move previousNode forward to the end of the swapped pair.
+	 * - Continue until fewer than two nodes remain.
+	 * </pre>
+	 *
+	 * <b>Time Complexity:</b> O(n)  
+	 * <b>Space Complexity:</b> O(1)
+	 *
+	 * @param head head of the linked list
+	 * @param <T>  type of data stored in the linked list
+	 * @return head of the list after swapping nodes in pairs
+	 */
+	public static <T> Node<T> swapNodesInPair(Node<T> head) {
+
+		// Edge case: empty list or single node
+		if (head == null || head.next == null) {
+			return head;
+		}
+
+		// Dummy node to simplify head swapping
+		Node<T> dummyNode = new Node<>(null);
+		dummyNode.next = head;
+
+		// Pointer to track node before the current pair
+		Node<T> previousNode = dummyNode;
+
+		// Traverse while at least two nodes are available for swapping
+		while (previousNode.next != null && previousNode.next.next != null) {
+
+			// Identify the two nodes to swap
+			Node<T> firstNode  = previousNode.next;
+			Node<T> secondNode = firstNode.next;
+
+			// Perform the swap
+			firstNode.next = secondNode.next;
+			secondNode.next = firstNode;
+			previousNode.next = secondNode;
+
+			// Move previousNode to the end of the swapped pair
+			previousNode = firstNode;
+		}
+
+		// New head is dummy.next
+		return dummyNode.next;
+		
+	}
 	
 	/**
 	 * 11. Delete Node from Linked List
@@ -683,19 +750,19 @@ public class SingleLinkedList {
 	 * @param values list of values to be added at the start of the linked list
 	 * @return head of the constructed linked list
 	 */
-	public static Node<Integer> addAtStartOfHeadNode(List<Integer> values) { 
+	public static <T> Node<T> addAtStartOfHeadNode(List<T> values) { 
 		// Edge case: null input list
-		if (values == null) {
+		if (values == null || values.isEmpty()) {
 			return null;
 		}
 
-		Node<Integer> headNode = null;
+		Node<T> headNode = null;
 
 		// Insert each value at the beginning of the list
-		for (Integer value : values) {
+		for (int i = 0; i < values.size(); i++) {
 
 			// Create a new node for the current value
-			Node<Integer> newNode = new Node<>(value);
+			Node<T> newNode = new Node<>(values.get(i));
 
 			// Point new node to the existing head
 			newNode.next = headNode;
@@ -747,27 +814,27 @@ public class SingleLinkedList {
 	 * @param values list of integers to be added at the end of the linked list
 	 * @return head of the linked list
 	 */
-	public static Node<Integer> addAtEndOfHeadNode(List<Integer> values) {
+	public static <T> Node<T> addAtEndOfHeadNode(List<T> values) {
 
 		// Edge case: null or empty input list
 		if (values == null || values.isEmpty()) {
 			return null;
 		}
 
-		Node<Integer> headNode = null;
+		Node<T> headNode = null;
 
 		// Iterate through input values
-		for (Integer value : values) {
+		for (int i = 0; i < values.size(); i++) {
 
 			// Create a new node for current value
-			Node<Integer> newNode = new Node<>(value);
+			Node<T> newNode = new Node<>(values.get(i));
 
 			// If list is empty, assign new node as head
 			if (headNode == null) {
 				headNode = newNode;
 			} else {
 				// Traverse to the last node
-				Node<Integer> currentNode = headNode;
+				Node<T> currentNode = headNode;
 				while (currentNode.next != null) {
 					currentNode = currentNode.next;
 				}

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -192,32 +193,52 @@ public class TestSingleLinkedList {
 	@ParameterizedTest
 	@MethodSource("addAtStartOfHeadNodeProvider")
 	@DisplayName("Test Add Elements at Start of Head Node")
-	void testAddAtStartOfHeadNode(Node<String> actual, Node<String> expected) {
+	void testAddAtStartOfHeadNode(List<?> values, Node<?> expected) {
+		Node<?> actual = addAtStartOfHeadNode(values);
 		assertEquals(expected, actual);
 	}
 
 	private static Stream<Arguments> addAtStartOfHeadNodeProvider() {
 		return Stream.of(
-				Arguments.of(addAtStartOfHeadNode(Arrays.asList(1, 2, 3)), addAtEndOfHeadNode(Arrays.asList(3, 2, 1))),
-				Arguments.of(addAtStartOfHeadNode(Arrays.asList(1, 2)), addAtEndOfHeadNode(Arrays.asList(2, 1))),
-				Arguments.of(addAtStartOfHeadNode(Arrays.asList(1)), addAtEndOfHeadNode(Arrays.asList(1))),
-				Arguments.of(addAtStartOfHeadNode(Collections.emptyList()), addAtEndOfHeadNode(Collections.emptyList())),
-				Arguments.of(addAtStartOfHeadNode(null), addAtEndOfHeadNode(null))
+				Arguments.of(Arrays.asList(1, 2, 3), addAtEndOfHeadNode(Arrays.asList(3, 2, 1))),
+				Arguments.of(Arrays.asList(1, 2), addAtEndOfHeadNode(Arrays.asList(2, 1))),
+				Arguments.of(Arrays.asList(1), addAtEndOfHeadNode(Arrays.asList(1))),
+				Arguments.of(Collections.emptyList(), addAtEndOfHeadNode(Collections.emptyList())),
+				Arguments.of(null, addAtEndOfHeadNode(null))
 			);
 	}
 	@ParameterizedTest
 	@MethodSource("addAtEndOfHeadNodeProvider")
 	@DisplayName("Test Add Elements at End of Head Node")
-	void testAddAtEndOfHeadNode(Node<Integer> actual, Node<Integer> expected) {
+	void testAddAtEndOfHeadNode(List<?> values, Node<?> expected) {
+		Node<?> actual = addAtEndOfHeadNode(values);
 		assertEquals(expected, actual);
 	}
 
 	private static Stream<Arguments> addAtEndOfHeadNodeProvider() {
 		return Stream.of(
-				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 2, 3)), addAtEndOfHeadNode(Arrays.asList(1, 2, 3))),
-				Arguments.of(addAtEndOfHeadNode(Arrays.asList(5)), addAtEndOfHeadNode(Arrays.asList(5))),
-				Arguments.of(addAtEndOfHeadNode(Arrays.asList(10, 20, 30, 40)), addAtEndOfHeadNode(Arrays.asList(10, 20, 30, 40))),
-				Arguments.of(addAtEndOfHeadNode(Collections.emptyList()), addAtEndOfHeadNode(Collections.emptyList())),
+				Arguments.of(Arrays.asList(1, 2, 3), addAtStartOfHeadNode(Arrays.asList(3, 2, 1))),
+				Arguments.of(Arrays.asList('A'), addAtStartOfHeadNode(Arrays.asList('A'))),
+				Arguments.of(Arrays.asList("foo", "bar", "baz", "jaz"), addAtStartOfHeadNode(Arrays.asList("jaz", "baz", "bar", "foo"))),
+				Arguments.of(List.of(), addAtStartOfHeadNode(Collections.emptyList())),
+				Arguments.of(List.of(), addAtStartOfHeadNode(null))
+			);
+	}
+	
+	@ParameterizedTest
+	@MethodSource("swapNodesInPairProvider")
+	@DisplayName("Test reverse nodes in pair")
+	void testReverseNodesInPAir(Node<Integer> input, Node<Integer> expected) {
+		Node<Integer> actual = SingleLinkedList.swapNodesInPair(input);
+		assertEquals(expected, actual);
+	}
+	
+	private static Stream<Arguments> swapNodesInPairProvider() {
+		return Stream.of(
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 2, 3, 4, 5)), addAtEndOfHeadNode(Arrays.asList(2,1,4,3,5))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(10, 20, 20)), addAtEndOfHeadNode(Arrays.asList(20, 10, 20))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 1)), addAtEndOfHeadNode(Arrays.asList(1, 1))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(9)), addAtEndOfHeadNode(Arrays.asList(9))),
 				Arguments.of(addAtEndOfHeadNode(null), addAtEndOfHeadNode(null))
 			);
 	}
