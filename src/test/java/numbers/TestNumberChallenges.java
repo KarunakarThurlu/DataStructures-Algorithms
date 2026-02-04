@@ -4,10 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigInteger;
+import java.util.function.IntFunction;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class TestNumberChallenges {
 	
@@ -29,16 +33,6 @@ public class TestNumberChallenges {
 		Integer inputTwo = parseInput(inputArgumentTwo);
 		Integer expected = parseInput(expectedArgument);
 		Integer actual = NumberChallenges.nPowerM(inputOne,inputTwo);
-		assertEquals(expected, actual);
-	}
-	
-	@ParameterizedTest
-	@CsvSource({"'153','True'","'12','False'","'11','False'"})
-	@DisplayName("Test Armstrong number")
-	void testArmStrongNumber(String inputArgument,String expectedArgument) {
-		Integer input = parseInput(inputArgument);
-		Boolean expected = Boolean.parseBoolean(expectedArgument);
-		Boolean actual = NumberChallenges.armStrongNumber.test(input);
 		assertEquals(expected, actual);
 	}
 	
@@ -76,6 +70,39 @@ public class TestNumberChallenges {
 		Integer actual = NumberChallenges.reverseNumber(input);
 		assertEquals(expected, actual);
 	}
+	
+	@ParameterizedTest
+	@CsvSource({"'153','True'","'370','True'","'120','False'","'-1234','False'"})
+	@DisplayName("Test Armstrong Number")
+	void testArmStrongNumber(String inputArgument, String expectedArgument) {
+		Integer input = parseInput(inputArgument);
+		Boolean expected = Boolean.valueOf(expectedArgument);
+		Boolean actual = NumberChallenges.armStrongNumber.test(input);
+		assertEquals(expected, actual);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("provideCountSetBitsTestCases")
+    @DisplayName("Test count of set bits using Brian Kernighan’s Algorithm")
+    void testCountSetBits(int input, int expected) {
+        Integer actual = NumberChallenges.count1bits.apply(input);
+        assertEquals(expected, actual);
+    }
+
+    private static Stream<Arguments> provideCountSetBitsTestCases() {
+        return Stream.of(
+                Arguments.of(0, 0),    // 0 -> 0
+                Arguments.of(1, 1),    // 1 -> 1
+                Arguments.of(2, 1),    // 10 -> 1
+                Arguments.of(3, 2),    // 11 -> 2
+                Arguments.of(5, 2),    // 101 -> 2
+                Arguments.of(7, 3),    // 111 -> 3
+                Arguments.of(8, 1),    // 1000 -> 1
+                Arguments.of(15, 4),   // 1111 -> 4
+                Arguments.of(16, 1),   // 10000 -> 1
+                Arguments.of(31, 5)    // 11111 -> 5
+        );
+    }
 	
 	private Integer parseInput(String input) {
 		if (input.isBlank()) return 0;
