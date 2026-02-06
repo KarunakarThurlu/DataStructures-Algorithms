@@ -19,9 +19,279 @@ public class SingleLinkedList {
 	 * 9. Merge sorted linked lists 
 	 * 10.Delete nodes from list present in array 
 	 * 11.Deleting node
-	 * 12.Remove nth node from end
+	 * 12.Swaps nodes of a singly linked list in pairs.
+	 * 13.Reverse linked list by frequency
+	 * 14.Merge k sorted lists
+	 * 15.Rotate linked list
 	 */
-	
+	/**
+	 * 15. Rotate Linked List
+	 *
+	 * <p>
+	 * <b>Description:</b><br> Given the head of a singly linked list and a non-negative integer <code>k</code>, rotate the linked list to the right by <code>k</code> positions.
+	 * </p>
+	 *
+	 * <p>
+	 * A right rotation means that each rotation moves the last node to the front.
+	 * </p>
+	 *
+	 * <p>
+	 * <pre>
+	 * Example 1: Input:  head = [1, 2, 3, 4, 5], k = 2 Output: [4, 5, 1, 2, 3]
+	 * Example 2: Input:  head = [0, 1, 2], k = 4 Output: [2, 0, 1]
+	 * Example 3: Input:  head = [1], k = 3 Output: [1]
+	 * Example 4: Input:  head = [], k = 1 Output: []
+	 * </pre>
+	 * </p>
+	 *
+	 * <p>
+	 * <b>Approach:</b>
+	 * <pre>
+	 * 1. Handle edge cases (empty list or single node).
+	 * 2. Traverse the list to find:
+	 *    - Length of the linked list
+	 *    - Last node (tail)
+	 * 3. Normalize k using k = k % length.
+	 * 4. Convert the list into a circular linked list by connecting tail.next = head.
+	 * 5. Move (length - k) steps to find the new tail.
+	 * 6. Set newHead = newTail.next.
+	 * 7. Break the circular link.
+	 * </pre>
+	 * </p>
+	 *
+	 * <b>Time Complexity:</b> O(n)
+	 * <br>
+	 * where n is the number of nodes in the linked list.
+	 *
+	 * <br><br>
+	 * <b>Space Complexity:</b> O(1)
+	 * <br>
+	 * Rotation is done in-place without extra memory.
+	 *
+	 * @param <T>  the type of data stored in the linked list
+	 * @param head head of the singly linked list
+	 * @param k    number of times the list should be rotated to the right
+	 * @return new head of the rotated linked list
+	 */
+	public static <T> Node<T> rotateLinkedList(Node<T> head, int k) {
+		  // Edge cases: empty list or single node
+	    if (head == null || head.next == null || k == 0) {
+	        return head;
+	    }
+
+	    // Step 1: Find length of the linked list and last node
+	    Node<T> tail = head;
+	    int length = 1;
+
+	    while (tail.next != null) {
+	        length++;
+	        tail = tail.next;
+	    }
+
+	    // Step 2: Normalize k when k > length
+	    k = k % length;
+	    if (k == 0) {
+	        return head; // No rotation needed
+	    }
+
+	    // Step 3: Make the linked list circular
+	    tail.next = head;
+
+	    // Step 4: Find the new tail (length - k steps)
+	    Node<T> newTail = head;
+	    for (int i = 1; i < length - k; i++) {
+	        newTail = newTail.next;
+	    }
+
+	    // Step 5: Set new head and break the circular link
+	    Node<T> newHead = newTail.next;
+	    newTail.next = null;
+
+	    return newHead;
+	}
+	 
+	/**
+	 * 14. Merge K Sorted Linked Lists
+	 * 
+	 * <p>
+	 * <pre>
+	 * Description: Given a list of k sorted singly linked lists, merge them into one sorted linked list and return the head of the merged list.
+	 *
+	 * Example 1: Input: lists = [[1,4,5],[1,3,4],[2,6]] Output: [1,1,2,3,4,4,5,6]
+	 * Example 2: Input: lists = [] Output: []
+	 * Example 3: Input: lists = [[]] Output: []
+	 * Example 4: Input: lists = [[1,2,3],[4,5,6],[7,8,9]] Output: [1,2,3,4,5,6,7,8,9]
+	 * Example 5: Input: lists = [[1,4,5],[1,3,4],[2,6],[0,9]] Output: [0,1,1,2,3,4,4,5,6,9]
+	 * 
+	 * Approach:
+	 * - Use a min-heap (priority queue) to keep track of the smallest current node among the k lists.
+	 * - Initialize the min-heap with the head nodes of all non-empty lists.
+	 * - Create a dummy node to simplify edge cases when building the merged list.
+	 * - While the min-heap is not empty:
+	 *    - Extract the node with the smallest value from the min-heap.
+	 *    - Append this node to the merged list.
+	 *    - If the extracted node has a next node, add that next node to the min-heap.
+	 *    - Return the merged list starting from dummy.next.
+	 *    - This approach efficiently merges k sorted lists with a time complexity of O(N log k), where N is the total number of nodes across all lists.
+	 *    - Alternatively, we can iteratively merge the lists two at a time using the mergeSortedLists method defined earlier, which has a time complexity of O(kN) in the worst case.
+	 * 
+	 * <b>Time Complexity:</b> O(N log k) where N is the total number of nodes across all lists and k is the number of lists.
+	 * <b>Space Complexity:</b> O(k) for the min-heap storing the current nodes of each list.
+	 * 
+	 * </pre>
+	 * </p>
+	 * 
+	 * @param lists a list of head nodes of k sorted linked lists
+	 * @return head of the merged sorted linked list
+	 */
+	public static Node<Integer> mergeSortedLists(List<Node<Integer>> lists) {
+		
+		// Edge case: if the list of linked lists is empty, return null
+		if (lists.size() == 0)
+			return null;
+		
+		// If there is only one linked list, return its head as the merged result
+		if (lists.size() == 1)
+			return lists.get(0);
+		
+		// Initialize the head of the merged list with the first linked list
+		Node<Integer> head = lists.get(0);
+		
+		// Merge each subsequent list with the current merged result
+		for (int i = 1; i < lists.size(); i++)
+			// Merge the current head with the next list and update head to the new merged list
+			head = mergeSortedLists(head, lists.get(i));
+		
+		// Return the head of the fully merged linked list
+		return head;
+	}
+
+	/**
+	 * 13. Reverse Linked List by Frequency (Group Size)
+	 *
+	 * <p>
+	 * <b>Description:</b><br>
+	 * Given the head of a singly linked list and a positive integer <code>frequency</code>,
+	 * reverse the linked list in groups of size <code>frequency</code>.
+	 * </p>
+	 *
+	 * <p>If the number of remaining nodes is less than <code>frequency</code>, those nodes are also reversed.</p>
+	 *
+	 * <p>
+	 * <pre>
+	 * Example 1: Input:  head = [1, 2, 3, 4, 5, 6], frequency = 2 Output: [2, 1, 4, 3, 6, 5]
+	 * Example 2: Input:  head = [1, 2, 3, 4, 5], frequency = 3 Output: [3, 2, 1, 5, 4]
+	 * Example 3: Input:  head = [1, 2], frequency = 3 Output: [2, 1]
+	 * Example 4: Input:  head = [], frequency = 2 Output: []
+	 * </pre>
+	 * </p>
+	 *
+	 * <p>
+	 * <b>Approach:</b>
+	 * <pre>
+	 * - Traverse the linked list group by group.
+	 * - For each group:
+	 *     - Count up to 'frequency' nodes.
+	 *     - Reverse the collected nodes.
+	 *     - Connect the reversed group to the previous group.
+	 * - Keep track of:
+	 *     - newHead: head of the final modified list
+	 *     - previousGroupTail: tail of the previously processed group
+	 * - Continue until all nodes are processed.
+	 * </pre>
+	 * </p>
+	 *
+	 * <b>Time Complexity:</b> O(n) Each node is visited exactly once.
+	 * <br>
+	 * <b>Space Complexity:</b> O(1) In-place reversal using constant extra space.
+	 *
+	 * @param <T>          the type of data stored in the linked list
+	 * @param originalHead head of the singly linked list
+	 * @param frequency    number of nodes to reverse in each group
+	 * @return head of the modified linked list
+	 */
+	public static <T> Node<T> reverseLinkedListByFrequency(Node<T> originalHead, int frequency) {
+
+	    // Edge cases:
+	    // - Empty list
+	    // - Invalid frequency
+	    // - Single node list
+	    if (originalHead == null || frequency <= 0 || originalHead.next == null) {
+	        return originalHead;
+	    }
+
+	    Node<T> newHead = null;              // Head of the final modified list
+	    Node<T> currentNode = originalHead;  // Pointer to traverse the list
+	    Node<T> previousGroupTail = null;    // Tail of the previously reversed group
+
+	    while (currentNode != null) {
+
+	        int count = 0;
+	        Node<T> groupStart = currentNode; // Starting node of the current group
+
+	        // Move currentNode ahead by 'frequency' nodes
+	        while (count < frequency && currentNode != null) {
+	            count++;
+	            currentNode = currentNode.next;
+	        }
+
+	        // Reverse exactly 'count' nodes (handles last partial group as well)
+	        Node<T> reversedGroupHead = reverseGroup(groupStart, count);
+
+	        // If this is the first group, set it as the new head
+	        if (newHead == null) {
+	            newHead = reversedGroupHead;
+	        }
+
+	        // Connect previous group to current reversed group
+	        if (previousGroupTail != null) {
+	            previousGroupTail.next = reversedGroupHead;
+	        }
+
+	        // After reversal, groupStart becomes the tail of this group
+	        previousGroupTail = groupStart;
+	    }
+
+	    return newHead;
+	}
+
+	/**
+	 * Reverses exactly 'count' nodes starting from the given node.
+	 *
+	 * <p>
+	 * This method performs an in-place reversal of a linked list segment.
+	 * </p>
+	 *
+	 * <p>
+	 * Example:
+	 * <pre>
+	 * Input:  startNode = [1 -> 2 -> 3], count = 2
+	 * Output: [2 -> 1]
+	 * </pre>
+	 * </p>
+	 *
+	 * @param <T>        the type of data stored in the linked list
+	 * @param startNode starting node of the group to be reversed
+	 * @param count     number of nodes to reverse
+	 * @return head of the reversed group
+	 */
+	private static <T> Node<T> reverseGroup(Node<T> startNode, int count) {
+
+	    Node<T> reversedHead = null;     // Head of the reversed group
+	    Node<T> currentNode = startNode; // Pointer to traverse the group
+	    Node<T> nextNode;                // Temporary pointer to store next node
+
+	    // Reverse 'count' nodes
+	    while (count-- > 0 && currentNode != null) {
+
+	        nextNode = currentNode.next;     // Save next node
+	        currentNode.next = reversedHead; // Reverse pointer
+	        reversedHead = currentNode;      // Move reversed head
+	        currentNode = nextNode;          // Move forward
+	    }
+
+	    return reversedHead;
+	}
 	
 	/**
 	 * 12. Swaps nodes of a singly linked list in pairs.
@@ -54,38 +324,7 @@ public class SingleLinkedList {
 	 * @return head of the list after swapping nodes in pairs
 	 */
 	public static <T> Node<T> swapNodesInPair(Node<T> head) {
-
-		// Edge case: empty list or single node
-		if (head == null || head.next == null) {
-			return head;
-		}
-
-		// Dummy node to simplify head swapping
-		Node<T> dummyNode = new Node<>(null);
-		dummyNode.next = head;
-
-		// Pointer to track node before the current pair
-		Node<T> previousNode = dummyNode;
-
-		// Traverse while at least two nodes are available for swapping
-		while (previousNode.next != null && previousNode.next.next != null) {
-
-			// Identify the two nodes to swap
-			Node<T> firstNode  = previousNode.next;
-			Node<T> secondNode = firstNode.next;
-
-			// Perform the swap
-			firstNode.next = secondNode.next;
-			secondNode.next = firstNode;
-			previousNode.next = secondNode;
-
-			// Move previousNode to the end of the swapped pair
-			previousNode = firstNode;
-		}
-
-		// New head is dummy.next
-		return dummyNode.next;
-		
+		return reverseLinkedListByFrequency(head, 2);
 	}
 	
 	/**
@@ -855,6 +1094,12 @@ class Node<T> {
 		super();
 		this.data = data;
 		this.next = null;
+	}
+	
+	public Node(T data, Node<T> next) {
+		super();
+		this.data = data;
+		this.next = next;
 	}
 
 	public Node() {

@@ -228,7 +228,7 @@ public class TestSingleLinkedList {
 	@ParameterizedTest
 	@MethodSource("swapNodesInPairProvider")
 	@DisplayName("Test reverse nodes in pair")
-	void testReverseNodesInPAir(Node<Integer> input, Node<Integer> expected) {
+	void testReverseNodesInPair(Node<Integer> input, Node<Integer> expected) {
 		Node<Integer> actual = SingleLinkedList.swapNodesInPair(input);
 		assertEquals(expected, actual);
 	}
@@ -238,8 +238,53 @@ public class TestSingleLinkedList {
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 2, 3, 4, 5)), addAtEndOfHeadNode(Arrays.asList(2,1,4,3,5))),
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(10, 20, 20)), addAtEndOfHeadNode(Arrays.asList(20, 10, 20))),
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 1)), addAtEndOfHeadNode(Arrays.asList(1, 1))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(10, 11, 12, 13, 14, 15)), addAtEndOfHeadNode(Arrays.asList(11, 10, 13, 12, 15, 14))),
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(9)), addAtEndOfHeadNode(Arrays.asList(9))),
 				Arguments.of(addAtEndOfHeadNode(null), addAtEndOfHeadNode(null))
+			);
+	}
+	
+	
+	@ParameterizedTest
+	@MethodSource("mergeKSortedListsProvider")
+	@DisplayName("Test reverse nodes in pair")
+	void testMergeSortedLists(List<Node<Integer>> input, Node<Integer> expected) {
+		Node<Integer> actual = SingleLinkedList.mergeSortedLists(input);
+		assertEquals(expected, actual);
+	}
+	
+	private static Stream<Arguments> mergeKSortedListsProvider() {
+		return Stream.of(
+				Arguments.of(List.of(addAtEndOfHeadNode(Arrays.asList(10, 20, 20)),
+						addAtEndOfHeadNode(Arrays.asList(5, 10, 15, 20, 25)),
+						addAtEndOfHeadNode(Arrays.asList(25, 30, 35))),
+						addAtEndOfHeadNode(Arrays.asList(5, 10, 10, 15, 20, 20, 20, 25, 25, 30, 35))), 
+				
+				Arguments.of(List.of(addAtEndOfHeadNode(Arrays.asList(10, 20, 20))),
+						addAtEndOfHeadNode(Arrays.asList(10, 20, 20))),
+						
+				Arguments.of(List.of(addAtEndOfHeadNode(Arrays.asList(10, 20, 20)),
+						addAtEndOfHeadNode(Arrays.asList(25, 30, 35))),
+						addAtEndOfHeadNode(Arrays.asList(10, 20,20, 25, 30, 35)))
+			);
+	}
+	
+	@ParameterizedTest
+	@MethodSource("rotateLinkedListProvider")
+	@DisplayName("Test rotate linked list")
+	void testRotateLinkedList(Node<Integer> input,int k, Node<Integer> expected) {
+		Node<Integer> actual = SingleLinkedList.rotateLinkedList(input,k);
+		assertEquals(expected, actual);
+	}
+	
+	private static Stream<Arguments> rotateLinkedListProvider() {
+		return Stream.of(
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 2, 3, 4, 5)),2, addAtEndOfHeadNode(Arrays.asList(4,5,1,2,3))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(10, 20, 20)),1, addAtEndOfHeadNode(Arrays.asList(20, 10, 20))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 1)),0, addAtEndOfHeadNode(Arrays.asList(1, 1))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(10, 11, 12, 13, 14, 15)),1, addAtEndOfHeadNode(Arrays.asList(15, 10, 11, 12, 13, 14))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(9)),0, addAtEndOfHeadNode(Arrays.asList(9))),
+				Arguments.of(addAtEndOfHeadNode(null),100, addAtEndOfHeadNode(null))
 			);
 	}
 
