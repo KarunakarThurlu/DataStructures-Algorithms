@@ -87,6 +87,7 @@ public class TestSingleLinkedList {
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 1, 1, 1, 1)),  addAtEndOfHeadNode(Arrays.asList(1))),
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 2, 3, 4, 5)), addAtEndOfHeadNode(Arrays.asList(1, 2, 3, 4, 5))),
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1)), addAtEndOfHeadNode(Arrays.asList(1))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1,1)), addAtEndOfHeadNode(Arrays.asList(1))),
 				Arguments.of(addAtEndOfHeadNode(null), addAtEndOfHeadNode(null))
 			);
 	}
@@ -285,6 +286,44 @@ public class TestSingleLinkedList {
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(10, 11, 12, 13, 14, 15)),1, addAtEndOfHeadNode(Arrays.asList(15, 10, 11, 12, 13, 14))),
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(9)),0, addAtEndOfHeadNode(Arrays.asList(9))),
 				Arguments.of(addAtEndOfHeadNode(null),100, addAtEndOfHeadNode(null))
+			);
+	}
+	
+	@ParameterizedTest
+	@MethodSource("partitionLinkedListProvider")
+	@DisplayName("Test partition linked list")
+	void testPartitionLinkedList(Node<Integer> input, int k, Node<Integer> expected) {
+		Node<Integer> actual = SingleLinkedList.partitionLinkedList(input, k);
+		assertEquals(expected, actual);
+	}
+	
+	private static Stream<Arguments> partitionLinkedListProvider() {
+		return Stream.of(
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 4, 3, 2, 5, 2)), 3, addAtEndOfHeadNode(Arrays.asList(1, 2, 2, 4, 3, 5))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(10, 20, 25)), 35, addAtEndOfHeadNode(Arrays.asList(10, 20, 25))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(2, 1)), 2, addAtEndOfHeadNode(Arrays.asList(1, 2))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(9, 9, 9, 9, 9)), 9, addAtEndOfHeadNode(Arrays.asList(9, 9, 9, 9, 9))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(100)), 100, addAtEndOfHeadNode(Arrays.asList(100))),
+				Arguments.of(addAtEndOfHeadNode(null), 100, addAtEndOfHeadNode(null))
+			);
+	}
+	
+	@ParameterizedTest
+	@MethodSource("remoreDuplicatesLinkedListProvider")
+	@DisplayName("Test removed uplicates II linked list")
+	void testRemoveDuplicatesLinkedListII(Node<Integer> input,Node<Integer> expected) {
+		Node<Integer> actual = SingleLinkedList.removeDuplicatesII(input);
+		assertEquals(expected, actual);
+	}
+	
+	private static Stream<Arguments> remoreDuplicatesLinkedListProvider() {
+		return Stream.of(
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 4, 3, 3, 2, 5)), addAtEndOfHeadNode(Arrays.asList(1, 4, 2, 5))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 1, 1, 2, 3, 4)), addAtEndOfHeadNode(Arrays.asList(2, 3, 4))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(2, 2)), addAtEndOfHeadNode(null)),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(6, 7, 8, 9, 9)), addAtEndOfHeadNode(Arrays.asList(6, 7, 8))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(100)), addAtEndOfHeadNode(Arrays.asList(100))),
+				Arguments.of(addAtEndOfHeadNode(null), addAtEndOfHeadNode(null))
 			);
 	}
 

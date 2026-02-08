@@ -23,7 +23,150 @@ public class SingleLinkedList {
 	 * 13.Reverse linked list by frequency
 	 * 14.Merge k sorted lists
 	 * 15.Rotate linked list
+	 * 16.Remove duplicates II
+	 * 17.Partition linked list
 	 */
+	
+	
+	/**
+	 * 17. Partition Linked List
+	 *
+	 * <p>
+	 * Description: Given the head of a singly linked list and an integer <code>x</code>, partition the linked list such that all nodes with values less than <code>x</code> come before nodes greater than or equal to <code>x</code>.
+	 * </p>
+	 *
+	 * <p>
+	 * The relative order of nodes in each partition should be preserved.
+	 * </p>
+	 *
+	 * <p>
+	 * <pre>
+	 * Example 1: Input:  head = [1, 4, 3, 2, 5, 2], x = 3 Output: [1, 2, 2, 4, 3, 5]
+	 * Example 2: Input:  head = [2, 1], x = 2 Output: [1, 2]
+	 * Example 3: Input:  head = [], x = 3 Output: []
+	 * </pre>
+	 * </p>
+	 *
+	 * <p>
+	 * <b>Approach:</b>
+	 * <pre>
+	 * - Create two separate linked lists:
+	 *     1. "lessThanX" list for nodes with values < x
+	 *     2. "greaterOrEqualX" list for nodes with values >= x
+	 * - Traverse the original list:
+	 *     - Append each node to the appropriate list.
+	 * - Connect the two lists.
+	 * - Ensure the last node points to null to avoid cycles.
+	 * </pre>
+	 * </p>
+	 *
+	 * <b>Time Complexity:</b> O(n) where n is the number of nodes in the linked list.
+	 * <br>
+	 * <b>Space Complexity:</b> O(1)
+	 * 
+	 * Nodes are rearranged in-place without creating new nodes.
+	 *
+	 * @param <T>  the type of data stored in the linked list (must be comparable to x)
+	 * @param head head of the singly linked list
+	 * @param x    partition value
+	 * @return head of the partitioned linked list
+	 */
+	public static Node<Integer> partitionLinkedList(Node<Integer> head, int x){
+	    // Edge case: empty list or single node
+	    if (head == null || head.next == null)
+	        return head;
+	    // Dummy heads for two partitions
+	    Node<Integer> lessDummy = new Node<>(0);     // Nodes < x
+	    Node<Integer> greaterDummy = new Node<>(0);  // Nodes >= x
+	    // Tails to build both lists
+	    Node<Integer> lessTail = lessDummy;
+	    Node<Integer> greaterTail = greaterDummy;
+
+	    Node<Integer> currentNode = head;
+	    // Traverse the original list
+	    while (currentNode != null) {
+	        if (currentNode.data < x) {
+	            // Append to "less than x" list
+	            lessTail.next = currentNode;
+	            lessTail = lessTail.next;
+	        } else {
+	            // Append to "greater than or equal to x" list
+	            greaterTail.next = currentNode;
+	            greaterTail = greaterTail.next;
+	        }
+	        // Move to next node
+	        currentNode = currentNode.next;
+	    }
+	    // Important: terminate the greater list to avoid cycle
+	    greaterTail.next = null;
+	    // Connect both partitions
+	    lessTail.next = greaterDummy.next;
+	    // Return head of the new list
+	    return lessDummy.next;
+	}
+	
+	/**
+	 * 16. Remove Duplicates from Sorted Linked List II
+	 *
+	 * <p>
+	 * <pre>
+	 * Description:  Given the head of a sorted singly linked list, remove all nodes that have duplicate numbers, leaving only nodes with distinct values.
+	 *
+	 * Example1: Input: [1,2,3,3,4,4,5] → Output: [1,2,5]
+	 * Example2: Input: [1,2,3,4,5,5]   → Output: [1,2,3,4]
+	 * Example1: Input: [6,6]           → Output: []
+	 * Example1: Input: [7,7,8,8,9]     → Output: [9]
+	 * Example1: Input: []              → Output: []
+	 * 
+	 * <b>Approach:</b>
+	 * 
+	 * - Use a dummy node before the head to handle edge cases.
+	 * - Traverse the list using a "previousDistinct" pointer.
+	 * - Detect duplicate sequences by comparing adjacent nodes.
+	 * - Skip all nodes with duplicate values entirely.
+	 * - Keep only nodes that appear exactly once.
+
+	 * <b>Time Complexity:</b> O(n) where n is the number of nodes in the linked list.
+	 * <b>Space Complexity:</b> O(1)  No extra data structures are used.
+	 * 
+	 * <pre>
+	 * </p>
+	 * @param <T>  the type of data stored in the linked list
+	 * @param head head of the sorted singly linked list
+	 * @return head of the linked list containing only unique values
+	 */
+	public static <T> Node<T> removeDuplicatesII(Node<T> head) {
+		// Edge case: empty list or single node
+		if (head == null || head.next == null)
+			return head;
+
+		// Dummy node simplifies removal at head
+		Node<T> dummyNode = new Node<>(null, head);
+		
+		// Pointer to the last node that is confirmed unique
+		Node<T> previousDistinct = dummyNode;
+		
+		// Traverse the linked list
+		while (previousDistinct.next != null) {
+			Node<T> currentNode = previousDistinct.next;
+			boolean hasDuplicate = false;
+			// Detect duplicates for the current value
+			while (currentNode.next != null && Objects.equals(currentNode.data, currentNode.next.data)) {
+				currentNode = currentNode.next;
+				hasDuplicate = true;
+			}
+			if (hasDuplicate)
+				// Skip all nodes with duplicate value
+				previousDistinct.next = currentNode.next;
+			else
+				// Move forward when no duplicate found
+				previousDistinct = previousDistinct.next;
+		}
+
+		// Return the head of the modified list
+		return dummyNode.next;
+	}
+	
 	/**
 	 * 15. Rotate Linked List
 	 *
