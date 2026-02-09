@@ -1,6 +1,7 @@
 package linkedlist;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -25,8 +26,101 @@ public class SingleLinkedList {
 	 * 15.Rotate linked list
 	 * 16.Remove duplicates II
 	 * 17.Partition linked list
+	 * 18.Convert sorted list into BST 
+	 * 19.Detect cycle in linked list
+	 * 20.Detect cycle in linked list II
 	 */
 	
+	/**
+	 * 20.Detect cycle in linked list II
+	 * 
+	 * <pre>
+	 * Description : Given the head of a singly linked list, return the node where the cycle begins. If there is no cycle, return null.
+	 * 
+	 * Example 1: Input: head = [ 1 | * -]--> [ 2 | * -]--> [ 3 | * -]--> [ 4 | * -]--null Output: null Explanation: There is no cycle in the linked list.
+	 * Example 2: Input: head = [ 1 | * -]--> [ 2 | * -]--> [ 3 | * -]--> [ 4 | * -]-->(Back to 2nd node) Output: Reference to the second node Explanation: There is a cycle in the linked list, where the tail connects to the second node.
+	 * Example 3: Input: head = [ 1 | * -]--> [ 2 | * -]--> [ 3 | * -]--> [ 4 | * -]-->(Back to 1st node) Output: Reference to the first node Explanation: There is a cycle in the linked list, where the tail connects to the first node.
+	 * Example 4: Input: head = [ 1 | * -]--> [ 2 | * -]--> [ 3 | * -]--> [ 4 | * -]-->(Back to 3rd node) Output: Reference to the third node Explanation: There is a cycle in the linked list, where the tail connects to the third node.
+	 * Example 5: Input: head = [] Output: null Explanation: There is no cycle in the linked list.
+	 * 
+	 * Approach:
+	 * - Use a HashSet to keep track of visited nodes.
+	 * - Traverse the linked list starting from the head.
+	 * - For each node, check if it is already in the HashSet:
+	 *   - If it is, then we have found the start of the cycle, return that node.
+	 *   - If it is not, add the node to the HashSet and continue traversing.
+	 *   - If we reach the end of the list (null) without finding a cycle, return null.
+	 * 
+	 * Time Complexity: O(n) where n is the number of nodes in the linked list.
+	 * Space Complexity: O(n) in the worst case if there is no cycle, as we may store all nodes in the HashSet.
+	 *   
+	 * </pre>
+	 * 
+	 * @param head head of the singly linked list
+	 * @return the node where the cycle begins, or null if there is no cycle
+	 */
+	public static Node<Integer> detectCycleII(Node<Integer> head) {
+		if (head == null || head.next == null)
+			return null;
+		Set<Integer> lookUp = new HashSet<>();
+		Node<Integer> temp = head;
+		while (temp != null) {
+			if (lookUp.add(temp.data)) {
+				return temp;
+			} else {
+				lookUp.add(temp.data);
+				temp = temp.next;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 19.Detect cycle in linked list
+	 * 
+	 * <pre>
+	 * Description : Given the head of a singly linked list, determine if the linked list has a cycle in it. A cycle occurs when a node's next pointer points to a previous node in the list, creating a loop.
+	 * 
+	 * Example 1: Input: head = [ 1 | * -]--> [ 2 | * -]--> [ 3 | * -]--> [ 4 | * -]--null Output: false Explanation: There is no cycle in the linked list.
+	 * Example 2: Input: head = [ 1 | * -]--> [ 2 | * -]--> [ 3 | * -]--> [ 4 | * -]-->(Back to 2nd node) Output: true Explanation: There is a cycle in the linked list, where the tail connects to the second node.
+	 * Example 3: Input: head = [ 1 | * -]--> [ 2 | * -]--> [ 3 | * -]--> [ 4 | * -]-->(Back to 1st node) Output: true Explanation: There is a cycle in the linked list, where the tail connects to the first node.
+	 * Example 4: Input: head = [ 1 | * -]--> [ 2 | * -]--> [ 3 | * -]--> [ 4 | * -]-->(Back to 3rd node) Output: true Explanation: There is a cycle in the linked list, where the tail connects to the third node.
+	 * Example 5: Input: head = [] Output: false Explanation: There is no cycle in the linked list.
+	 * 
+	 * Approach:
+	 * - Use the Floyd’s Tortoise and Hare algorithm (also known as the fast and slow pointer technique).
+	 * - Initialize two pointers, slow and fast, at the head of the linked list.
+	 * - Move the slow pointer one step at a time and the fast pointer two steps at a time.
+	 * - If there is a cycle, the fast pointer will eventually meet the slow pointer.
+	 * 
+	 * Time Complexity: O(n) where n is the number of nodes in the linked list.
+	 * Space Complexity: O(1) No extra space is used apart from the two pointers.
+	 * 
+	 * </pre>
+	 * 
+	 * @param head head of the singly linked list
+	 * @return true if there is a cycle in the linked list, false otherwise
+	 */
+	public static Boolean detectCycyle(Node<Integer> head) {
+		// Edge case: empty list or single node cannot have a cycle
+		if (head == null || head.next == null)
+			return false;
+		// Initialize two pointers for the fast and slow traversal
+		Node<Integer> fast = head;
+		Node<Integer> slow = head;
+		// Traverse the linked list with the two pointers
+		while (fast != null && fast.next != null) {
+			// Move fast pointer by two steps and slow pointer by one step
+			fast = fast.next.next;
+			// Move slow pointer by one step
+			slow = slow.next;
+			// If the fast pointer meets the slow pointer, there is a cycle
+			if(fast==slow) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	/**
 	 * 17. Partition Linked List

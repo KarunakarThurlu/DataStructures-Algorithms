@@ -326,5 +326,25 @@ public class TestSingleLinkedList {
 				Arguments.of(addAtEndOfHeadNode(null), addAtEndOfHeadNode(null))
 			);
 	}
+	
+	@ParameterizedTest
+	@MethodSource("detectCycleProvider")
+	@DisplayName("Test detect cycle in linked list")
+	void testDetectCycle(Node<Integer> head, boolean expected) {
+		boolean actual = SingleLinkedList.detectCycyle(head);
+		assertEquals(expected, actual);
+	}
+	
+	private static Stream<Arguments> detectCycleProvider() {
+		Node<Integer> headWithCycle = addAtEndOfHeadNode(Arrays.asList(1, 2));
+		headWithCycle.next.next = headWithCycle.next; // create a cycle
+
+		return Stream.of(
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 2, 3, 4, 5)), false),
+				Arguments.of(headWithCycle, true),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(10)), false),
+				Arguments.of(addAtEndOfHeadNode(null), false)
+			);
+	}
 
 }
