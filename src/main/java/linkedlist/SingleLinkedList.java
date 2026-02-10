@@ -29,7 +29,134 @@ public class SingleLinkedList {
 	 * 18.Convert sorted list into BST 
 	 * 19.Detect cycle in linked list
 	 * 20.Detect cycle in linked list II
+	 * 21.Reorder linked list
+	 * 22.Sort List
 	 */
+	
+	
+	/**
+	 * 22. Sort Linked List (Merge Sort on Linked List)
+	 *
+	 * <pre>
+	 * Description: Given the head of a singly linked list, sort the list in ascending order.
+	 *
+	 * Example1: Input: [4,2,1,3]     → Output: [1,2,3,4]
+	 * Example2: Input: [-1,5,3,4,0]  → Output: [-1,0,3,4,5]
+	 * Example3: Input: [1]           → Output: [1]
+	 *
+	 * Approach:
+	 * 1. Find the middle of the linked list.
+	 * 2. Recursively sort the left and right halves.
+	 * 3. Merge the two sorted halves.
+	 *
+	 * Time Complexity: O(n log n)
+	 * Space Complexity: O(log n)  (recursion stack)
+	 * </pre>
+	 *
+	 * @param head head of the singly linked list
+	 * @return head of the sorted linked list
+	 */
+	public static  Node<Integer> sortLinkedList(Node<Integer> head){
+		if(head==null || head.next==null)
+			return head;
+		Node<Integer> mid   = findMid(head);
+		Node<Integer> left  = sortLinkedList(head);
+		Node<Integer> right = sortLinkedList(mid);
+		return mergeSortedLists(left, right);
+	}
+	
+	private static Node<Integer> findMid(Node<Integer> head) {
+		Node<Integer> fast = head.next;
+		Node<Integer> slow = head;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			slow = slow.next;
+		}
+		Node<Integer> mid = slow.next;
+		slow.next = null;
+		return mid;
+	}
+	
+	
+	
+	/**
+	 * 21. Reorder Linked List (LeetCode 143)
+	 *
+	 * <pre>
+	 * Description:  Given the head of a singly linked list, reorder the list in-place such that the node order becomes:
+	 *
+	 * L0 → L1 → L2 → ... → Ln    becomes  L0 → Ln → L1 → Ln-1 → L2 → Ln-2 → ...
+	 * 
+	 * Example1: Input: [1,2,3,4,5]   → Output: [1,5,2,4,3]
+	 * Example2: Input: [1,2,3,4,5,6] → Output: [1,6,2,5,3,4]
+	 * Example3: Input: [1,2,3,4]     → Output: [1,4,2,3]
+	 * 
+	 * Approach:
+	 * 1. Find the middle of the linked list using the slow and fast pointer technique.
+	 * 2. Split the list into two halves.
+	 * 3. Reverse the second half of the linked list.
+	 * 4. Merge the two halves alternately (first node from first half,
+	 *    then first node from second half).
+	 * 
+	 * Time Complexity: O(n) where n is the number of nodes in the linked list.
+	 * Space Complexity: O(1)  The list is reordered in-place using constant extra space.
+	 * 
+	 *</pre>
+	 *
+	 * @param <T>  the type of data stored in the linked list
+	 * @param head head of the singly linked list
+	 * @return head of the reordered linked list
+	 */
+	public static <T> Node<T> reorderLinkedList(Node<T> head) {
+		if (head == null || head.next == null)
+			return head;
+
+		// 1. Find middle of the linked list
+		Node<T> slow = head;
+		Node<T> fast = head;
+
+		while (fast != null && fast.next != null) {
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+
+		// 2. Reverse second half
+		Node<T> prev = null;
+		Node<T> secondHalf = slow.next;
+		slow.next = null; // 🔥 IMPORTANT: split the list
+		Node<T> current = secondHalf;
+		while (current != null) {
+			Node<T> next = current.next;
+			current.next = prev;
+			prev = current;
+			current = next;
+		}
+
+		// 3. Merge two halves alternately
+		Node<T> dummy = new Node<>(null);
+		Node<T> temp = dummy;
+
+		Node<T> first = head;
+		Node<T> second = prev;
+
+		while (first != null && second != null) {
+
+			temp.next = first;
+			first = first.next;
+			temp = temp.next;
+
+			temp.next = second;
+			second = second.next;
+			temp = temp.next;
+		}
+
+		// 🔥 Append remaining node (for odd-length list)
+		if (first != null) {
+			temp.next = first;
+		}
+
+		return dummy.next;
+	}
 	
 	/**
 	 * 20.Detect cycle in linked list II

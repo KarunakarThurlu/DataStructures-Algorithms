@@ -346,5 +346,38 @@ public class TestSingleLinkedList {
 				Arguments.of(addAtEndOfHeadNode(null), false)
 			);
 	}
+	
+	@ParameterizedTest
+	@MethodSource("reorderLinkedListProvider")
+	@DisplayName("Test reorder linked list")
+	void testReOrderLinkedList(Node<?> head, Node<?> expected) {
+		Node<?> actual = SingleLinkedList.reorderLinkedList(head);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> reorderLinkedListProvider() {
+		return Stream.of(
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 2, 3, 4, 5, 6)), addAtEndOfHeadNode(Arrays.asList(1, 6, 2, 5, 3, 4))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 2, 3, 4, 5)), addAtEndOfHeadNode(Arrays.asList(1, 5, 2, 4, 3))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 2, 3, 4)), addAtEndOfHeadNode(Arrays.asList(1, 4, 2, 3)))
+			);
+	}
+	
+	@ParameterizedTest
+	@MethodSource("sortLinkedListProvider")
+	@DisplayName("Test sort linked list")
+	void testSortLinkedList(Node<Integer> head, Node<Integer> expected) {
+		Node<Integer> actual = SingleLinkedList.sortLinkedList(head);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> sortLinkedListProvider() {
+		return Stream.of(
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 3, 4, 5, 6, 2, 7)), addAtEndOfHeadNode(Arrays.asList(1, 2, 3, 4, 5, 6, 7))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList( 4, 5, 1, 2, 3)), addAtEndOfHeadNode(Arrays.asList(1, 2, 3, 4, 5))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1)), addAtEndOfHeadNode(Arrays.asList(1))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(2,1)), addAtEndOfHeadNode(Arrays.asList(1,2)))
+			);
+	}
 
 }
