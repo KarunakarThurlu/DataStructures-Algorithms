@@ -31,7 +31,87 @@ public class SingleLinkedList {
 	 * 20.Detect cycle in linked list II
 	 * 21.Reorder linked list
 	 * 22.Sort List
+	 * 23.Palindrome linked list
+	 * 24.Odd even linked list
 	 */
+	
+	/**
+	 * 24. Odd Even Linked List (LeetCode 328)
+	 *
+	 * <pre>
+	 * Description: Given the head of a singly linked list, group all odd-indexed nodes
+	 * together followed by the even-indexed nodes (1-based indexing).
+	 *
+	 * Example1: Input: [1,2,3,4,5]   → Output: [1,3,5,2,4]
+	 * Example2: Input: [2,1,3,5,6,4,7] → Output: [2,3,6,7,1,5,4]
+	 * Example3: Input: [1,2] → Output: [1,2]
+	 *
+	 * Approach:
+	 * 1. Maintain separate pointers for odd and even indexed nodes.
+	 * 2. Rearrange links to group odd nodes first.
+	 * 3. Attach even list at the end of odd list.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 * </pre>
+	 *
+	 * @param head head of the singly linked list
+	 * @return head of the rearranged linked list
+	 */
+	public static Node<Integer> oddEvenLinkedList(Node<Integer> head){
+		if(head==null || head.next==null) {
+			return head;
+		}
+		Node<Integer> odd  = head;
+		Node<Integer> even = head.next;
+		Node<Integer> evenHead = head.next;
+		while(even!=null && even.next!=null) {
+			odd.next  = odd.next.next;
+			even.next = even.next.next;
+			
+			even = even.next;
+			odd  = odd.next;
+		}
+		odd.next= evenHead;
+		return head;
+	}
+	
+	/**
+	 * 23. Palindrome Linked List
+	 *
+	 * <pre>
+	 * Description: Given the head of a singly linked list, determine whether the list is a palindrome.
+	 *
+	 * Example1: Input: [1,2,2,1] → Output: true
+	 * Example2: Input: [1,2,3,2,1] → Output: true
+	 * Example3: Input: [1,2] → Output: false
+	 *
+	 * Approach:
+	 * 1. Find the middle of the linked list.
+	 * 2. Reverse the second half of the list.
+	 * 3. Compare the first half and reversed second half node by node.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 * </pre>
+	 *
+	 * @param head head of the singly linked list
+	 * @return true if the linked list is a palindrome, otherwise false
+	 */
+	public static Boolean palindromeLinkedList(Node<Integer> head) {
+		if(head==null || head.next==null)
+			return true;
+		Node<Integer> secondHalf = reverseSingleLinkedList(findMid(head));
+		Node<Integer> firstHalf  = head;
+		while(secondHalf!=null) {
+			if(!Objects.equals(secondHalf.data, firstHalf.data)) {
+				return false;
+			}
+			secondHalf = secondHalf.next;
+			firstHalf  = firstHalf.next;
+		}
+		return true;
+	}
 	
 	
 	/**

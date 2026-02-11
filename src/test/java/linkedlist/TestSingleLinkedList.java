@@ -379,5 +379,40 @@ public class TestSingleLinkedList {
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(2,1)), addAtEndOfHeadNode(Arrays.asList(1,2)))
 			);
 	}
+	
+	@ParameterizedTest
+	@MethodSource("palindromeLinkedListProvider")
+	@DisplayName("Test palindrome linked list")
+	void testPalindromeLinkedList(Node<Integer> head, Boolean expected) {
+		Boolean actual = SingleLinkedList.palindromeLinkedList(head);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> palindromeLinkedListProvider() {
+		return Stream.of(
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 3, 4, 3, 1)), true),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList( 4, 5, 1, 2, 3)), false),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1)), true),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(2,1)), false)
+			);
+	}
+	
+	
+	@ParameterizedTest
+	@MethodSource("oddEvenLinkedListProvider")
+	@DisplayName("Test odd even linked list")
+	void testOddEvenLinkedList(Node<Integer> head, Node<Integer> expected) {
+		Node<Integer> actual = SingleLinkedList.oddEvenLinkedList(head);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> oddEvenLinkedListProvider() {
+		return Stream.of(
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 3, 4, 5, 6, 2, 7)), addAtEndOfHeadNode(Arrays.asList(1, 4, 6, 7, 3, 5, 2))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList( 4, 5, 1, 2, 3)), addAtEndOfHeadNode(Arrays.asList(4, 1, 3, 5, 2))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1)), addAtEndOfHeadNode(Arrays.asList(1))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(2,1)), addAtEndOfHeadNode(Arrays.asList(2, 1)))
+			);
+	}
 
 }
