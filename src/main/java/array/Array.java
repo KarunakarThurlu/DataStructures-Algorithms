@@ -97,6 +97,7 @@ public class Array {
 	 * 74.Intersection of two array's II
 	 * 75.Find smallest letter grater than target
 	 * 76.Container with most water
+	 * 77.House Robber
 	 */
 
 	/**
@@ -3644,6 +3645,52 @@ public class Array {
 			}
 		}
 		return maxArea;
+	}
+	
+    /**
+     * 77. House Robber (LeetCode 198)
+     *
+     * <pre>
+     * Description: Given an integer array where each element represents money in a house, determine the maximum amount that can be robbed without robbing adjacent houses.
+     *
+     * Example1: Input: [1,2,3,1] → Output: 4
+     * Example2: Input: [2,7,9,3,1] → Output: 12
+     * Example3: Input: [2,1,1,2] → Output: 4
+     *
+     * Approach:
+     * 1. At each house, choose either:
+     *    - Rob it (previous skip + current value)
+     *    - Skip it (previous max)
+     * 2. Track only two variables instead of full DP array.
+     *
+     * Time Complexity: O(n)
+     * Space Complexity: O(1)
+     * </pre>
+     *
+     * @param houses array representing money in each house
+     * @return maximum amount that can be robbed
+     */
+	public static int houseRobber(int[] houses) {
+		// Maximum money if previous house was robbed
+		int robPrevious = 0;
+
+		// Maximum money if previous house was skipped
+		int skipPrevious = 0;
+
+		for (int currentHouseMoney : houses) {
+
+			// If we rob current house, we must have skipped previous
+			int robCurrent = skipPrevious + currentHouseMoney;
+
+			// If we skip current house, take max of previous states
+			skipPrevious = Math.max(skipPrevious, robPrevious);
+
+			// Update robPrevious for next iteration
+			robPrevious = robCurrent;
+		}
+
+		// Final answer is max of robbing or skipping last house
+		return Math.max(robPrevious, skipPrevious);
 	}
 	
 }

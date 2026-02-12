@@ -1499,6 +1499,23 @@ public class ArrayTest {
             Arguments.of(new int[]{1,2,3,4,5}, 6)          // increasing heights
         );
     }
+    
+    @ParameterizedTest
+    @MethodSource("provideHouseRobberTestCases")
+    @DisplayName("Test house robber")
+	void testHouseRobber(int[] nums,int expected) {
+		int actual = Array.houseRobber(nums);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideHouseRobberTestCases() {
+		return Stream.of(Arguments.of(new int[] { 1, 2, 3, 1 }, 4),
+				Arguments.of(new int[] { 2, 7, 9, 3, 1 }, 12), 
+				Arguments.of(new int[] { 1, 0, 0, 0, 0, 0, 0, 0, 0 }, 1),
+				Arguments.of(new int[] { 1, 1, 1, 0, 0, 0 }, 2), 
+				Arguments.of(new int[] { 0, 0, 0, 0, 0, 0, 0 }, 0)
+			);
+	}
 	
 	
 	
