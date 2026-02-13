@@ -98,6 +98,7 @@ public class Array {
 	 * 75.Find smallest letter grater than target
 	 * 76.Container with most water
 	 * 77.House Robber
+	 * 78.House Robber II
 	 */
 
 	/**
@@ -3671,16 +3672,20 @@ public class Array {
      * @return maximum amount that can be robbed
      */
 	public static int houseRobber(int[] houses) {
+		return robRange(houses, 0, houses.length - 1);
+	}
+	
+    private static int robRange(int[] houses, int start, int end) {
 		// Maximum money if previous house was robbed
 		int robPrevious = 0;
 
 		// Maximum money if previous house was skipped
 		int skipPrevious = 0;
 
-		for (int currentHouseMoney : houses) {
+		for (int i = start; i <= end; i++) {
 
 			// If we rob current house, we must have skipped previous
-			int robCurrent = skipPrevious + currentHouseMoney;
+			int robCurrent = skipPrevious + houses[i];
 
 			// If we skip current house, take max of previous states
 			skipPrevious = Math.max(skipPrevious, robPrevious);
@@ -3691,6 +3696,41 @@ public class Array {
 
 		// Final answer is max of robbing or skipping last house
 		return Math.max(robPrevious, skipPrevious);
+    }
+    
+    /**
+	 * 78. House Robber II (LeetCode 213)
+	 *
+	 * <pre>
+	 * Description: Similar to House Robber I, but houses are arranged in a circle. The first and last houses are adjacent, so you cannot rob both.
+	 *
+	 * Example1: Input: [2,3,2] → Output: 3
+	 * Example2: Input: [1,2,3,1] → Output: 4
+	 * Example3: Input: [0] → Output: 0
+	 *
+	 * Approach:
+	 * - Since the first and last houses are adjacent, we have two scenarios:
+	 *   1. Rob from the first house to the second-to-last house (exclude last).
+	 *   2. Rob from the second house to the last house (exclude first).
+	 * - Compute both scenarios using the same helper function and take the maximum.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 * </pre>
+	 *
+	 * @param houses array representing money in each house arranged in a circle
+	 * @return maximum amount that can be robbed
+	 */
+	public static int houseRobberII(int[] houses) {
+		// Edge case: if there's only one house, rob it
+		if (houses.length == 1) {
+			return houses[0]; 
+		}
+		// Scenario 1: Rob from first to second-to-last house
+		int firstOneSkip = robRange(houses, 1, houses.length - 1);
+		// Scenario 2: Rob from second to last house
+		int lastOneSkip  = robRange(houses, 0, houses.length - 2);
+		return Math.max(firstOneSkip, lastOneSkip);
 	}
 	
 }

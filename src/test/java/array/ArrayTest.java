@@ -1517,6 +1517,22 @@ public class ArrayTest {
 			);
 	}
 	
+    @ParameterizedTest
+    @MethodSource("provideHouseRobberIITestCases")
+    @DisplayName("Test house robber II")
+	void testHouseRobberII(int[] nums,int expected) {
+		int actual = Array.houseRobberII(nums);
+		assertEquals(expected, actual);
+	}
+    
+    private static Stream<Arguments> provideHouseRobberIITestCases() {
+    			return Stream.of(Arguments.of(new int[] { 2, 3, 2 }, 3),
+    									Arguments.of(new int[] { 1, 2, 3, 1 }, 4),
+    									Arguments.of(new int[] { 1, 2, 3 }, 3)
+    							);
+    }
+	
+	
 	
 	
 }
