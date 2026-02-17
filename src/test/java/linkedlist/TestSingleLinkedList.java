@@ -414,5 +414,20 @@ public class TestSingleLinkedList {
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(2,1)), addAtEndOfHeadNode(Arrays.asList(2, 1)))
 			);
 	}
+	
+	@ParameterizedTest
+	@MethodSource("addTwoNumbersAsLinkedListProvider")
+	@DisplayName("Test add two numbers as linked list")
+	void testAddTwoNumbersAsLinkedList(Node<Integer> headOne, Node<Integer> headTwo, Node<Integer> expected) {
+		Node<Integer> actual = SingleLinkedList.addTwoNumbers(headOne, headTwo);
+		assertEquals(expected, actual);
+	}
+	private static Stream<Arguments> addTwoNumbersAsLinkedListProvider() {
+		return Stream.of(
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(2, 4, 3)), addAtEndOfHeadNode(Arrays.asList(5, 6, 4)), addAtEndOfHeadNode(Arrays.asList(7, 0, 8))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(0)), addAtEndOfHeadNode(Arrays.asList(0)), addAtEndOfHeadNode(Arrays.asList(0))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(9, 9, 9, 9, 9, 9, 9)), addAtEndOfHeadNode(Arrays.asList(9, 9, 9, 9)), addAtEndOfHeadNode(Arrays.asList(8, 9, 9, 9, 0, 0, 0, 1)))
+			);
+	}
 
 }

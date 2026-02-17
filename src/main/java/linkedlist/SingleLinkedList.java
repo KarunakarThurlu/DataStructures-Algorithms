@@ -33,7 +33,58 @@ public class SingleLinkedList {
 	 * 22.Sort List
 	 * 23.Palindrome linked list
 	 * 24.Odd even linked list
+	 * 25.Add two numbers represented by linked list
 	 */
+	
+	/**
+	 * 25. Add two numbers represented by linked list
+	 * 
+	 * <pre>
+	 * Description: Given the heads of two non-empty singly linked lists representing two non-negative integers, where the digits are stored in reverse order and each node contains a single digit, add the two numbers and return the sum as a linked list.
+	 *
+	 * Example 1: Input: num1 = [2,4,3], num2 = [5,6,4] Output: [7,0,8] Explanation: The numbers represented are 342 and 465. Their sum is 807, which is represented as [7,0,8] in reverse order.
+	 * Example 2: Input: num1 = [0], num2 = [0] Output: [0] Explanation: The numbers represented are 0 and 0. Their sum is 0, which is represented as [0] in reverse order.
+	 * Example 3: Input: num1 = [9,9,9,9,9,9,9], num2 = [9,9,9,9] Output: [8,9,9,9,0,0,0,1] Explanation: The numbers represented are 9999999 and 9999. Their sum is 10009998, which is represented as [8,9,9,9,0,0,0,1] in reverse order.
+	 *
+	 * Approach:
+	 * - Initialize a dummy head for the result linked list and a current pointer to build the result.
+	 * - Use a carry variable to handle sums greater than or equal to 10.
+	 * - Traverse both linked lists simultaneously:
+	 *   - Sum the corresponding digits along with any carry from the previous step.
+	 *   - Update the carry for the next iteration.
+	 *   - Create a new node with the digit value of (sum % 10) and attach it to the current node.
+	 *   - Move the current pointer forward.
+	 * - After traversing both lists, if there is any remaining carry, create a new node for it.
+	 *
+	 * Time Complexity: O(max(m,n)) where m and n are the lengths of the two linked lists.
+	 * Space Complexity: O(max(m,n)) for the resulting linked list.
+	 *
+	 * </pre>
+	 *
+	 * @param num1 head of the first linked list representing a number in reverse order
+	 * @param num2 head of the second linked list representing a number in reverse order
+	 * @return head of the linked list representing the sum of the two numbers in reverse order
+	 */
+	public static Node<Integer> addTwoNumbers(Node<Integer> num1, Node<Integer> num2) {
+		Node<Integer> dummyHead = new Node<>(null);
+		Node<Integer> current = dummyHead;
+		int carry = 0;
+		while (num1 != null || num2 != null || carry != 0) {
+			int sum = carry;
+			if (num1 != null) {
+				sum += num1.data;
+				num1 = num1.next;
+			}
+			if (num2 != null) {
+				sum +=  num2.data;
+				num2 = num2.next;
+			}
+			carry = sum / 10;
+			current.next = new  Node<>(Integer.valueOf(sum % 10));
+			current = current.next;
+		}
+		return dummyHead.next;
+	}
 	
 	/**
 	 * 24. Odd Even Linked List (LeetCode 328)
@@ -156,8 +207,6 @@ public class SingleLinkedList {
 		slow.next = null;
 		return mid;
 	}
-	
-	
 	
 	/**
 	 * 21. Reorder Linked List (LeetCode 143)
