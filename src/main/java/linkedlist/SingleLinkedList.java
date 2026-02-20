@@ -15,7 +15,7 @@ public class SingleLinkedList {
 	 * 4. Find Mid element of single linked list 
 	 * 5. Remove element at nth position 
 	 * 6. Remove element at nth position from end 
-	 * 7. Adding element at nth position 
+	 * 7. Adding eleme nt at nth position 
 	 * 8. Remove duplicates from sorted list 
 	 * 9. Merge sorted linked lists 
 	 * 10.Delete nodes from list present in array 
@@ -34,7 +34,53 @@ public class SingleLinkedList {
 	 * 23.Palindrome linked list
 	 * 24.Odd even linked list
 	 * 25.Add two numbers represented by linked list
+	 * 26.Intersection of two linked lists
 	 */
+	
+	/**
+	 * 
+	 * 26.Intersection of two linked lists
+	 * 
+	 * <pre>
+	 * Description : Finds the intersection node of two singly linked lists.
+	 *
+	 * This method uses the two-pointer technique:
+	 *
+	 * - Traverse both lists simultaneously.
+	 * - When a pointer reaches the end of one list,
+	 *   redirect it to the head of the other list.
+	 * - If the lists intersect, the pointers will meet at
+	 *   the intersection node after at most (m + n) steps.
+	 *
+	 * Why it works:
+	 * Both pointers traverse equal total distance:
+	 *      lengthA + lengthB
+	 *
+	 * Time Complexity:  O(m + n)
+	 * Space Complexity: O(1)
+	 * 
+	 *</pre>
+	 *
+	 * @param headOne head of the first linked list
+	 * @param headTwo head of the second linked list
+	 * @return the intersection node if present, otherwise null
+	 */
+	public static Node<Integer> getIntersectionNode(Node<Integer> headOne, Node<Integer> headTwo){
+	    if (headOne == null || headTwo == null) {
+	        return null;
+	    }
+
+	    Node<Integer> pointerOne = headOne;
+	    Node<Integer> pointerTwo = headTwo;
+
+	    while (pointerOne != pointerTwo) {
+	        pointerOne = (pointerOne == null) ? headTwo : pointerOne.next;
+	        pointerTwo = (pointerTwo == null) ? headOne : pointerTwo.next;
+	    }
+
+	    // Either intersection node OR null
+	    return pointerOne;
+	}
 	
 	/**
 	 * 25. Add two numbers represented by linked list
