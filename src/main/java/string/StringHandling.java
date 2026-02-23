@@ -46,7 +46,79 @@ public class StringHandling {
 	 * 20.Longest SubString Without Repeating Characters
 	 * 21.Longest palindromic substring
 	 * 22.Longest Common Prefix
+	 * 23.String to integer (atoi)
 	 */
+	/**
+	 * 23. String to Integer (atoi)
+	 *
+	 * <pre>
+	 * Description:
+	 * Implement a function that converts a string to a 32-bit signed integer.
+	 * The function discards leading whitespace, handles an optional '+' or '-' sign,
+	 * reads digits until a non-digit character is encountered, and returns the parsed integer.
+	 *
+	 * If the integer overflows beyond the 32-bit signed range:
+	 *   [-2^31, 2^31 - 1]
+	 * it clamps to Integer.MIN_VALUE or Integer.MAX_VALUE.
+	 *
+	 * Example1: Input: "42" → Output: 42
+	 * Example2: Input: "   -42" → Output: -42
+	 * Example3: Input: "4193abc" → Output: 4193
+	 * Example4: Input: "abc123" → Output: 0
+	 * Example5: Input: "-91283472332" → Output: -2147483648
+	 *
+	 * Approach:
+	 * 1. Trim leading and trailing whitespace.
+	 * 2. Check for optional '+' or '-' sign.
+	 * 3. Traverse characters while they are digits.
+	 * 4. Convert each character to numeric value.
+	 * 5. Before multiplying, check for overflow:
+	 *        result > (Integer.MAX_VALUE - digit) / 10
+	 * 6. Apply sign and return result.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 * </pre>
+	 *
+	 * @param input the input string to be converted
+	 * @return parsed 32-bit signed integer value
+	 */
+	static Function<String, Integer> atoi = str -> {
+		//Step 1 : Removing leading white spaces
+		str = str.trim();
+		
+		//Step 2 : Check if the string is empty after trimming
+		if (str.length() == 0)
+			return 0;
+		
+		//Step 3 : Initialize variables to store the result and track the sign
+		int result = 0;
+		int i = 0;
+		boolean nVe = false;
+		
+		//Step 4 : Handle optional sign
+		if (str.charAt(i) == '-' || str.charAt(i) == '+') {
+			nVe = str.charAt(i) == '-';
+			i++;
+		}
+		
+		//Step 5 : Parse digits and build the result
+		while (i < str.length() && Character.isDigit(str.charAt(i))) {
+			//Extract digit value from character
+			int digit = str.charAt(i) - '0';
+			
+			//Check for overflow and underflow before updating the result
+			if (result > (Integer.MAX_VALUE - digit) / 10)
+				return nVe ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+			
+			//Update result by multiplying current result by 10 and adding new digit
+			result = result * 10 + digit;
+			i++;
+		}
+		//Step 6 : Apply the sign to the result and return it
+		return nVe ? -result : result;
+	};
+	
 	static Function<List<String>, String> longestCommonPrefix = strs -> {
 		List<String> list = strs.stream().sorted().toList();
 		String firstString = list.get(0);
@@ -63,6 +135,7 @@ public class StringHandling {
 		}
 		return String.valueOf(commonPrefix);
 	};
+	
 	static UnaryOperator<String> longestPalindromicSubString = str -> {
 		int palindromeStart = 0;
 		int palindromeEnd = 0;

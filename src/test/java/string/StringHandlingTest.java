@@ -339,6 +339,43 @@ public class StringHandlingTest {
 				Arguments.of(List.of("Java"), "Java")
 			);
 	}
+	
+	/**
+     * Provides test cases for stringToInteger method.
+     */
+    static Stream<Arguments> provideAtoiTestData() {
+        return Stream.of(
+
+                // Normal cases
+                Arguments.of("42", 42),
+                Arguments.of("   123", 123),
+                Arguments.of("+99", 99),
+                Arguments.of("-56", -56),
+
+                // Stops at non-digit
+                Arguments.of("4193abc", 4193),
+                Arguments.of("123 456", 123),
+
+                // Invalid start
+                Arguments.of("abc123", 0),
+                Arguments.of("", 0),
+                Arguments.of("   ", 0),
+
+                // Overflow
+                Arguments.of("2147483648", Integer.MAX_VALUE),
+                Arguments.of("91283472332", Integer.MAX_VALUE),
+
+                // Underflow
+                Arguments.of("-2147483649", Integer.MIN_VALUE),
+                Arguments.of("-91283472332", Integer.MIN_VALUE)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideAtoiTestData")
+    void testStringToInteger(String input, int expected) {
+        assertEquals(expected, StringHandling.atoi.apply(input));
+    }
 
 
 }
