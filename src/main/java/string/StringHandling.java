@@ -13,8 +13,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,7 +49,130 @@ public class StringHandling {
 	 * 21.Longest palindromic substring
 	 * 22.Longest Common Prefix
 	 * 23.String to integer (atoi)
+	 * 24.Generate parenthesis
+	 * 25.Check if two strings are isomorphic
 	 */
+	
+	/**
+	 * 25. Isomorphic Strings
+	 *
+	 * <pre>
+	 * Description:
+	 * Given two strings str1 and str2, determine if they are isomorphic.
+	 *
+	 * Two strings are isomorphic if:
+	 * - Characters in str1 can be replaced to get str2.
+	 * - Each character must map to exactly one character.
+	 * - No two characters may map to the same character.
+	 * - Character order must be preserved.
+	 *
+	 * Example 1: Input: str1 = "egg", str2 = "add" Output: true
+	 * Example 2: Input: str1 = "foo", str2 = "bar" Output: false
+	 * Example 3: Input: str1 = "paper", str2 = "title" Output: true
+	 * Example 4: Input: str1 = "ab", str2 = "aa" Output: false
+	 * Example 5: Input: str1 = "", str2 = "" Output: true
+	 * Example 6: Input: str1 = "a", str2 = "" Output: false
+	 *
+	 * Approach:
+	 * - If lengths are different → return false.
+	 * - Use two HashMaps:
+	 *      mapFromFirst  → maps characters from str1 to str2
+	 *      mapFromSecond → maps characters from str2 to str1
+	 * - Iterate both strings simultaneously.
+	 * - Check:
+	 *      1. Existing mapping must match.
+	 *      2. New mapping must not conflict with reverse mapping.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1) (At most 256 character mappings)
+	 *
+	 * </pre>
+	 */
+	public static BiPredicate<String, String> isomorphicStrings = (str1, str2) -> {
+		if(str1==null || str2==null)
+			return false;
+		if (str1.length() != str2.length())
+			return false;
+		Map<Character, Character> mapOne = new HashMap<>();
+		Map<Character, Character> mapTwo = new HashMap<>();
+		for (int i = 0; i < str1.length(); i++) {
+			if (mapOne.containsKey(str1.charAt(i))) {
+				if (mapOne.get(str1.charAt(i)) != str2.charAt(i))
+					return false;
+			} else {
+				mapOne.put(str1.charAt(i), str2.charAt(i));
+			}
+			if (mapTwo.containsKey(str2.charAt(i))) {
+				if (mapTwo.get(str2.charAt(i)) != str1.charAt(i))
+					return false;
+			} else {
+				mapTwo.put(str2.charAt(i), str1.charAt(i));
+			}
+		}
+		return true;
+	};
+	
+	/**
+	 * 24. Generate Parentheses
+	 *
+	 * <pre>
+	 * Description:  Given an integer n, generate all combinations of well-formed parentheses.
+	 *
+	 * A combination is considered well-formed if:
+	 * - Every opening parenthesis '(' has a corresponding closing parenthesis ')'
+	 * - At no point should closing parentheses exceed opening parentheses
+	 *
+	 * Example 1: Input: n = 1 Output: ["()"]
+	 * Example 2: Input: n = 2 Output: ["(())", "()()"]
+	 * Example 3: Input: n = 3 Output: ["((()))", "(()())", "(())()", "()(())", "()()()"]
+	 * Example 4: Input: n = 0 Output: [""]
+	 * Example 5: Input: n =-1 Output: []
+	 * 
+	 * Approach:
+	 * - Use Backtracking.
+	 * - Maintain:
+	 *      openCount  → number of '(' used
+	 *      closeCount → number of ')' used
+	 * - Add '(' if openCount < n
+	 * - Add ')' if closeCount < openCount
+	 * - When current string length becomes 2 * n, add to result list
+	 *
+	 * Time Complexity: O(4^n / √n)  (Catalan number growth)
+	 * Space Complexity: O(n) recursion stack (excluding output list)
+	 *
+	 * </pre>
+	 */
+	public static Function<Integer, List<String>> generateParenthesis = totalPairs -> {
+        List<String> validCombinations = new ArrayList<>();
+        // Edge case: if n <= 0 return empty list
+        if (totalPairs == null || totalPairs <= 0) {
+            return validCombinations;
+        }
+        generateCombinations(totalPairs, "", 0, 0, validCombinations);
+        return validCombinations;
+	};
+
+	private static void generateCombinations(int totalPairs, String currentString, int openCount, int closeCount,
+			List<String> resultCombinations) {
+		// Base case: if string length equals 2 * n, it's valid
+		if (currentString.length() == totalPairs * 2) {
+			resultCombinations.add(currentString);
+			return;
+		}
+
+		// Add opening parenthesis if we still have '(' remaining
+		if (openCount < totalPairs) {
+			generateCombinations(totalPairs, currentString + "(", openCount + 1, closeCount, resultCombinations);
+		}
+
+		// Add closing parenthesis only if it won't invalidate the sequence
+		if (closeCount < openCount) {
+			generateCombinations(totalPairs, currentString + ")", openCount, closeCount + 1, resultCombinations);
+		}
+	}
+	
+	
+	
 	/**
 	 * 23. String to Integer (atoi)
 	 *

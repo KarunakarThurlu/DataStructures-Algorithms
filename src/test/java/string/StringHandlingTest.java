@@ -376,6 +376,45 @@ public class StringHandlingTest {
     void testStringToInteger(String input, int expected) {
         assertEquals(expected, StringHandling.atoi.apply(input));
     }
+    
+    @ParameterizedTest
+    @MethodSource("parenthesesTestData")
+    void testGenerateParentheses(Integer input, List<String> expectedOutput) {
+        List<String> actualOutput = StringHandling.generateParenthesis.apply(input);
+        assertEquals(expectedOutput.size(), actualOutput.size());
+        assertEquals(expectedOutput.stream().sorted().toList(), actualOutput.stream().sorted().toList());
+    }
+
+	private static Stream<Arguments> parenthesesTestData() {
+		return Stream.of(
+				Arguments.of(1, List.of("()")),
+				Arguments.of(2, List.of("(())", "()()")),
+				Arguments.of(3, List.of("((()))", "(()())", "(())()", "()(())", "()()()")),
+				Arguments.of(0, List.of()),
+				Arguments.of(-1, List.of()),
+				Arguments.of(null, List.of())
+			);
+	}
+	
+    @ParameterizedTest
+    @MethodSource("isomorphicTestData")
+    void testIsomorphicStrings(String input1, String input2, boolean expectedResult) {
+        boolean actualResult = StringHandling.isomorphicStrings.test(input1, input2);
+        assertEquals(expectedResult, actualResult);
+    }
+
+    private static Stream<Arguments> isomorphicTestData() {
+        return Stream.of(
+                Arguments.of("egg", "add", true),
+                Arguments.of("foo", "bar", false),
+                Arguments.of("paper", "title", true),
+                Arguments.of("ab", "aa", false),
+                Arguments.of("", "", true),
+                Arguments.of("a", "", false),
+                Arguments.of(null, "abc", false),
+                Arguments.of("abc", null, false)
+        );
+    }
 
 
 }
