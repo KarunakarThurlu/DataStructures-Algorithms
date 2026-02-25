@@ -899,47 +899,44 @@ public class Array {
      * 
      * <pre>
      * Example:
-     * Input: array = [5, 7, 7, 8, 8, 10], target = 8
-     * Output: [3, 4]
-     * 
-     * Input: array = [5, 7, 7, 8, 8, 10], target = 6
-     * Output: [-1, -1]
-     * 
-     * Input: array = [], target = 0
-     * Output: [-1, -1]
+     * Input: array = [5, 7, 7, 8, 8, 10], target = 8 Output: [3, 4]
+     * Input: array = [5, 7, 7, 8, 8, 10], target = 6 Output: [-1, -1]
+     * Input: array = [], target = 0 Output: [-1, -1]
      * </pre>
+     * 
+     * @param sortedArray sorted input array
+     * @param targetValue value to search
+     * @return array of size 2 → [firstIndex, lastIndex]
      */
-    public static int[] findFirstAndLastIndex(int[] array,int target) {
-    	//Base Cases
-    	if(array.length==0) return new int[] {-1,-1};
-    	if(array.length==1 && array[0]==target) return new int[] {0,0};
-    	if(array.length==1 && array[0]!=target) return new int[] {-1,-1};
-    	
-    	int startIndex = -1;
-    	int endIndex   = -1;
-    	boolean startFound = false;
-    	//Finding firstIndex
-    	for (int i = 0; i < array.length; i++) {
-			if(array[i]==target) {
-				if(!startFound) {
-					startIndex=i;
-					startFound=true;
-					break;
-				}
+	public static int[] findFirstAndLastIndex(int[] sortedArray, int targetValue) {
+        int[] resultIndices = { -1, -1 };
+        if (sortedArray == null || sortedArray.length == 0)
+            return resultIndices;
+        resultIndices[0] = findBoundary(sortedArray, targetValue, true);
+        resultIndices[1] = findBoundary(sortedArray, targetValue, false);
+        return resultIndices;
+	}
+	
+	private static int findBoundary(int[] array, int target, boolean searchFirst) {
+		int leftPointer = 0;
+		int rightPointer = array.length - 1;
+		int boundaryIndex = -1;
+		while (leftPointer <= rightPointer) {
+			int midIndex = leftPointer + (rightPointer - leftPointer) / 2;
+			if (array[midIndex] == target) {
+				boundaryIndex = midIndex;
+				if (searchFirst)// Move towards left boundary
+					rightPointer = midIndex - 1;
+				else // Move towards right boundary
+					leftPointer = midIndex + 1;
+			} else if (array[midIndex] < target) {
+				leftPointer = midIndex + 1;
+			} else {
+				rightPointer = midIndex - 1;
 			}
 		}
-    	//Finding EndIndex
-		if (startFound) {
-			for (int i = startIndex; i < array.length; i++) {
-				if (array[i] == target) {
-					endIndex = i;
-				}else {
-					break;
-				}
-			}
-		}
-    	return new int[] {startIndex,endIndex};
-    }
+		return boundaryIndex;
+	}
 	
     /**
      * 23. Spiral Matrix : Traverses a 2D matrix in a spiral order and returns the result as a list of characters.
