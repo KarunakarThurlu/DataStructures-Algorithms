@@ -1157,13 +1157,19 @@ public class ArrayTest {
 		int actual = Array.searchInsertPosition(nums,target);
 		assertEquals(expected, actual);
 	}
+    private static Stream<Arguments> provideSearchInsertPositionTestCases() {
+        return Stream.of(
 
-	private static Stream<Arguments> provideSearchInsertPositionTestCases() {
-		return Stream.of(Arguments.of(new int[] { 1, 3, 5, 6 }, 7, 4), 
-				Arguments.of(new int[] { 1, 3, 5, 6 }, 2, 1),
-				Arguments.of(new int[] { 1, 2, 5, 6 }, 5, 2)
-			);
-	}
+                Arguments.of(new int[]{1, 3, 5, 6}, 5, 2), // target exists
+                Arguments.of(new int[]{1, 3, 5, 6}, 2, 1), // insert middle
+                Arguments.of(new int[]{1, 3, 5, 6}, 7, 4), // insert at end
+                Arguments.of(new int[]{1, 3, 5, 6}, 0, 0), // insert at beginning
+                Arguments.of(new int[]{ 1 }, 0, 0),        // single element, insert before
+                Arguments.of(new int[]{ 1 }, 2, 1),        // single element, insert after
+                Arguments.of(new int[]{ }, 5, 0),          // empty array
+                Arguments.of(null, 5, 0)                   // null array
+        );
+    }
 	
     @ParameterizedTest
     @MethodSource("provideGetFloorAndCeilTestCases")

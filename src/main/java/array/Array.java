@@ -2699,36 +2699,57 @@ public class Array {
 	}
 	
 	/**
-	 * 58. Search insert position
-	 * Returns the index where the target should be inserted in a sorted array.
-	 * 
-	 * <p>
-	 * If the target exists in the array, its existing index is returned.  
-	 * If it does not exist, the index where it should be inserted to maintain
-	 * sorted order is returned.
-	 * </p>
+	 * 27. Search Insert Position
 	 *
-	 * <p><b>Example:</b><br>
-	 * nums = [1,3,5,6], target = 5  →  returns 2<br>
-	 * nums = [1,3,5,6], target = 2  →  returns 1<br>
-	 * nums = [1,3,5,6], target = 7  →  returns 4
-	 * </p>
+	 * <pre>
+	 * Description: Given a sorted array of distinct integers and a target value, return the index if the target is found. If not, return the index where it would be inserted in order.
 	 *
-	 * <p><b>Time Complexity:</b> O(n) — Linear scan.</p>
+	 * The algorithm must run in O(log n) time.
 	 *
-	 * @param nums    A sorted integer array (ascending order)
-	 * @param target  The value to search or insert
-	 * @return The index of the target or its insertion position
+	 * Example 1: Input: nums = [1,3,5,6], target = 5 Output: 2
+	 * Example 2: Input: nums = [1,3,5,6], target = 2 Output: 1
+	 * Example 3: Input: nums = [1,3,5,6], target = 7 Output: 4
+	 * Example 4: Input: nums = [1,3,5,6], target = 0 Output: 0
+	 * Example 5: Input: nums = [1], target = 0 Output: 0
+	 * Example 6: Input: nums = [1], target = 2 Output: 1
+	 *
+	 * Approach:
+	 * - Use Binary Search.
+	 * - If target is found → return its index.
+	 * - If not found → when loop ends, left pointer represents the correct insertion position.
+	 *
+	 * Why return left?
+	 * - After binary search finishes, left will point to
+	 *   the smallest index where target can be inserted
+	 *   while maintaining sorted order.
+	 *
+	 * Time Complexity: O(log n)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param nums   sorted array of distinct integers
+	 * @param target value to search or insert
+	 * @return index of target or correct insertion position
 	 */
 	public static int searchInsertPosition(int[] nums, int target) {
-		// Scan until you find an element >= target
-		for (int index = 0; index < nums.length; index++) {
-			if (nums[index] >= target) {
-				return index;
-			}
-		}
-		// If not found, the target should be inserted at the end
-		return nums.length;
+	    // Edge case: null or empty array
+	    if (nums == null || nums.length == 0)
+	        return 0;
+	    int leftPointer = 0;
+	    int rightPointer = nums.length - 1;
+	    while (leftPointer <= rightPointer) {
+	        // Prevent overflow
+	        int midIndex = leftPointer + (rightPointer - leftPointer) / 2;
+	        if (nums[midIndex] == target)
+	            return midIndex;
+	        else if (nums[midIndex] < target)
+	            leftPointer = midIndex + 1;
+	        else
+	            rightPointer = midIndex - 1;
+	    }
+	    // leftPointer is the correct insertion index
+	    return leftPointer;
 	}
 	
 	/**
