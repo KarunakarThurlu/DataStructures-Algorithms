@@ -1537,7 +1537,27 @@ public class ArrayTest {
     									Arguments.of(new int[] { 1, 2, 3 }, 3)
     							);
     }
-	
+    
+    @ParameterizedTest
+    @DisplayName("Test find peak element in moutain array")
+    @MethodSource("mountainArrayTestData")
+    void testFindPeakIndex(int[] inputArray, int expectedPeakIndex) {
+        int actualIndex = Array.findPeakIndexInMountainArray(inputArray);
+        assertEquals(expectedPeakIndex, actualIndex);
+    }
+
+    private static Stream<Arguments> mountainArrayTestData() {
+        return Stream.of(
+                Arguments.of(new int[]{0,1,0}, 1),
+                Arguments.of(new int[]{0,2,1,0}, 1),
+                Arguments.of(new int[]{0,10,5,2}, 1),
+                Arguments.of(new int[]{1,3,5,4,2}, 2),
+                Arguments.of(new int[]{2,4,6,8,6,3,1}, 3),
+                Arguments.of(new int[]{1,2,3,4,3,2,1}, 3),
+                Arguments.of(new int[]{1,2}, -1),
+                Arguments.of(null, -1)
+        );
+    }
 	
 	
 	

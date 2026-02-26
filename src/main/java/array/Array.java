@@ -99,6 +99,7 @@ public class Array {
 	 * 76.Container with most water
 	 * 77.House Robber
 	 * 78.House Robber II
+	 * 79.Peak Index in a Mountain Array
 	 */
 
 	/**
@@ -536,33 +537,55 @@ public class Array {
 	}
 	
 	/**
-	 * 13. Finding Peak Element: Finds a peak element in the given array. A peak element is an element that is
-	 * greater than its immediate neighbors. If the array has multiple peaks, this 
-	 * method returns the index of the first peak found while scanning from left to right.
-	 * If no peak is found in the middle, the last element is considered a peak.
-	 * 
-	 * <p><strong>Time Complexity:</strong> O(n), where n is the length of the array.</p>
-	 * <p><strong>Space Complexity:</strong> O(1), as no additional data structures are used.</p>
-	 * 
-	 * @param array the input array of integers
-	 * @return the index of a peak element in the array
-	 * 
+	 * 13. Find Peak Element
+	 *
 	 * <pre>
-	 * Example:
-	 * Input:  array = [1, 3, 20, 4, 1, 0]
-	 * Output: 2 (index of peak element 20)
-	 * 
-	 * Input:  array = [10, 8, 9]
-	 * Output: 0 (index of peak element 10)
+	 * Description: A peak element is an element that is strictly greater than its neighbors.
+	 * Given an integer array nums, return the index of any peak element.
+	 *
+	 * Example 1: Input: nums = [1,2,3,1]  Output: 2  => Explanation: 3 is a peak element.
+	 * Example 2: Input: nums = [1,2,1,3,5,6,4] Output: 1 or 5 => Explanation: Both 2 and 6 are peak elements.
+	 * Example 3: Input: nums = [1] Output: 0
+	 * Example 4: Input: nums = [2,1] Output: 0
+	 * Example 5: Input: nums = [1,2] Output: 1
+	 *
+	 * Approach:
+	 * - Handle small array sizes (1 or 2 elements).
+	 * - Traverse the array from index 1 to n-2.
+	 * - Check if current element is greater than both neighbors.
+	 * - Return index immediately when peak is found.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 *
 	 * </pre>
+	 *
+	 * @param array input integer array
+	 * @return index of a peak element, or -1 if none found
 	 */
 	public static int findPeakElement(int[] array) {
-		for(int i=0;i<array.length-1;i++) {
-			if(array[i]>array[i+1]) {
-				return i;
-			}
-		}
-		return array.length-1;
+
+	    if (array == null || array.length == 0)
+	        return -1;
+
+	    // If only one element, it's automatically a peak
+	    if (array.length == 1)
+	        return 0;
+
+	    // If two elements, return the larger one
+	    if (array.length == 2)
+	        return array[0] > array[1] ? 0 : 1;
+
+	    // Check middle elements
+	    for (int index = 1; index < array.length - 1; index++) {
+	        if (array[index - 1] < array[index] &&
+	            array[index] > array[index + 1]) {
+	            return index;
+	        }
+	    }
+
+	    // No peak found (possible if peak is at boundary and not handled)
+	    return -1;
 	}
 	
 	/**
@@ -3749,6 +3772,66 @@ public class Array {
 		// Scenario 2: Rob from second to last house
 		int lastOneSkip  = robRange(houses, 0, houses.length - 2);
 		return Math.max(firstOneSkip, lastOneSkip);
+	}
+	
+	/**
+	 * 79. Peak Index in a Mountain Array
+	 *
+	 * <pre>
+	 * Description:
+	 * A mountain array is defined as:
+	 * - Length >= 3
+	 * - There exists some index i such that:
+	 *      nums[0] < nums[1] < ... < nums[i]
+	 *      nums[i] > nums[i+1] > ... > nums[n - 1]
+	 *
+	 * Return the index i of the peak element.
+	 *
+	 * Example 1: Input: nums = [0,1,0]    Output: 1
+	 * Example 2: Input: nums = [0,2,1,0]  Output: 1
+	 * Example 3: Input: nums = [0,10,5,2] Output: 1
+	 * 
+	 * Approach:
+	 * - Use Binary Search.
+	 * - If nums[mid] < nums[mid + 1]
+	 *      → we are in ascending slope
+	 *      → peak is on the right
+	 * - Else
+	 *      → we are in descending slope
+	 *      → peak is at mid or on the left
+	 * - Continue until left == right.
+	 *
+	 * Time Complexity: O(log n)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param mountainArray input mountain array
+	 * @return index of peak element
+	 */
+	public static int findPeakIndexInMountainArray(int[] mountainArray) {
+	    if (mountainArray == null || mountainArray.length < 3)
+	        return -1;
+
+	    int leftPointer = 0;
+	    int rightPointer = mountainArray.length - 1;
+
+	    // Important: use left < right to avoid out-of-bounds
+	    while (leftPointer < rightPointer) {
+
+	        int midIndex = leftPointer + (rightPointer - leftPointer) / 2;
+
+	        // If ascending slope, move right
+	        if (mountainArray[midIndex] < mountainArray[midIndex + 1]) {
+	            leftPointer = midIndex + 1;
+	        }
+	        // If descending slope, move left
+	        else {
+	            rightPointer = midIndex;
+	        }
+	    }
+	    // leftPointer == rightPointer → peak index
+	    return leftPointer;
 	}
 	
 }
