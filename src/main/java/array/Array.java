@@ -100,6 +100,7 @@ public class Array {
 	 * 77.House Robber
 	 * 78.House Robber II
 	 * 79.Peak Index in a Mountain Array
+	 * 80.Find maximum in Rotated Sorted Array
 	 */
 
 	/**
@@ -3832,6 +3833,70 @@ public class Array {
 	    }
 	    // leftPointer == rightPointer → peak index
 	    return leftPointer;
+	}
+	
+	/**
+	 * 80. Find Maximum in Rotated Sorted Array
+	 *
+	 * <pre>
+	 * Description: Given a rotated sorted array of distinct integers, return the maximum element in the array.
+	 *
+	 * A rotated sorted array is an array that was originally sorted in ascending order
+	 * and then rotated at some pivot unknown to you beforehand.
+	 *
+	 * Example: Original: [1,2,3,4,5,6,7] Rotated : [4,5,6,7,1,2,3]
+	 *
+	 * The maximum element is the pivot point (largest value).
+	 *
+	 * Example 1: Input: nums = [4,5,6,7,0,1,2]  Output: 7
+	 * Example 2: Input: nums = [3,4,5,1,2]      Output: 5
+	 * Example 3: Input: nums = [1]              Output: 1
+	 * Example 4: Input: nums = [2,1]            Output: 2
+	 *
+	 * Approach:
+	 * - Use Binary Search.
+	 * - The maximum element lies at the pivot point.
+	 * - Compare nums[mid] with nums[left]:
+	 *
+	 *      Case 1:
+	 *      nums[mid] > nums[left]
+	 *      → We are in the increasing (left sorted) portion.
+	 *      → Maximum is at mid or to the right.
+	 *      → Move left pointer to mid.
+	 *
+	 *      Case 2:
+	 *      nums[mid] <= nums[left]
+	 *      → We are in the rotated portion.
+	 *      → Maximum lies to the left of mid.
+	 *      → Move right pointer to mid - 1.
+	 *
+	 * - Use upper mid calculation:
+	 *      mid = left + (right - left + 1) / 2
+	 *   This prevents infinite loop when left and right are adjacent.
+	 *
+	 * - Loop until left == right.
+	 * - nums[left] will be the maximum element.
+	 *
+	 * Time Complexity: O(log n)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param nums rotated sorted array of distinct integers
+	 * @return maximum element in the rotated sorted array
+	 */
+	public static int findMaximumInRotatedSortedArray(int[] nums) {
+		int left = 0;
+		int right = nums.length - 1;
+		while (left < right) {
+			int mid = left + (right - left + 1) / 2; // ← bias to higher mid
+			if (nums[mid] > nums[left]) {
+				left = mid; // max is at mid or to the right
+			} else {
+				right = mid - 1; // max is to the left of mid
+			}
+		}
+		return nums[left];
 	}
 	
 }

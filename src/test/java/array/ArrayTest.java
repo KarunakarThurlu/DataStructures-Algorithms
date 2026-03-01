@@ -1537,27 +1537,44 @@ public class ArrayTest {
     									Arguments.of(new int[] { 1, 2, 3 }, 3)
     							);
     }
-    
     @ParameterizedTest
-    @DisplayName("Test find peak element in moutain array")
+    @DisplayName("Test find peak element index in mountain array")
     @MethodSource("mountainArrayTestData")
-    void testFindPeakIndex(int[] inputArray, int expectedPeakIndex) {
-        int actualIndex = Array.findPeakIndexInMountainArray(inputArray);
-        assertEquals(expectedPeakIndex, actualIndex);
-    }
+	void testFindPeakIndex(int[] inputArray, int expectedPeakIndex) {
+		int actualIndex = Array.findPeakIndexInMountainArray(inputArray);
+		assertEquals(expectedPeakIndex, actualIndex);
+	}
+	private static Stream<Arguments> mountainArrayTestData() {
+		return Stream.of(Arguments.of(new int[] { 0, 1, 0 }, 1), 
+				Arguments.of(new int[] { 0, 2, 1, 0 }, 1),
+				Arguments.of(new int[] { 0, 10, 5, 2 }, 1), 
+				Arguments.of(new int[] { 1, 3, 5, 4, 2 }, 2),
+				Arguments.of(new int[] { 2, 4, 6, 8, 6, 3, 1 }, 3), 
+				Arguments.of(new int[] { 1, 2, 3, 4, 3, 2, 1 }, 3),
+				Arguments.of(new int[] { 1, 2 }, -1), 
+				Arguments.of(null, -1)
+			);
+	}
+	
+    @ParameterizedTest
+    @DisplayName("Test find maximum element in rotated sorted array")
+    @MethodSource("findingMaximumInRotatedSortedArrayTestData")
+	void testFindingMaximumInRotatedSortedArrayTestData(int[] inputArray, int expectedPeakIndex) {
+		int actualIndex = Array.findMaximumInRotatedSortedArray(inputArray);
+		assertEquals(expectedPeakIndex, actualIndex);
+	}
 
-    private static Stream<Arguments> mountainArrayTestData() {
-        return Stream.of(
-                Arguments.of(new int[]{0,1,0}, 1),
-                Arguments.of(new int[]{0,2,1,0}, 1),
-                Arguments.of(new int[]{0,10,5,2}, 1),
-                Arguments.of(new int[]{1,3,5,4,2}, 2),
-                Arguments.of(new int[]{2,4,6,8,6,3,1}, 3),
-                Arguments.of(new int[]{1,2,3,4,3,2,1}, 3),
-                Arguments.of(new int[]{1,2}, -1),
-                Arguments.of(null, -1)
-        );
-    }
+	private static Stream<Arguments> findingMaximumInRotatedSortedArrayTestData() {
+		return Stream.of(
+				Arguments.of(new int[] { 3 },3),
+				Arguments.of(new int[] { 1, 2 }, 2),
+				Arguments.of(new int[] { 3, 1, 2 }, 3),
+				Arguments.of(new int[] { 1, 2, 3 }, 3), 
+				Arguments.of(new int[] { 5, 6, 1, 2, 3, 4 }, 6),
+				Arguments.of(new int[] { 3, 4, 5, 6, 1, 2 }, 6),
+				Arguments.of(new int[] { 5, 6, 7, 8, 9, 1, 2, 3, 4 }, 9)
+			);
+	}
 	
 	
 	
