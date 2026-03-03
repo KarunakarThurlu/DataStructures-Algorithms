@@ -122,7 +122,6 @@ class BinarySearchTreeTest {
 				Arguments.of(BinarySearchTree.addAll(List.of(10, 15, 20)), List.of(10, 15, 20)), // Right skewed tree
 				Arguments.of(BinarySearchTree.addAll(List.of(10, 5, 15)), List.of(10, 5, 15)), // Balanced tree
 				Arguments.of(BinarySearchTree.addAll(List.of(10, 5, 1, 7, 15, 12, 20)), List.of(10, 5, 15, 1, 7, 12, 20)) // Complex
-																													// tree
 		);
 	}
 
@@ -422,11 +421,39 @@ class BinarySearchTreeTest {
 		return Stream.of(
 				// Case 1: Both trees are null (symmetric by definition)
 				Arguments.of(null, null, true),
-
-				// Case 2: Non-symmetric trees (one tree is left-skewed, one is right-skewed)
+				// Case 2: Second tree is  null (symmetric by definition)
+				Arguments.of(BinarySearchTree.addAll(List.of(10, 5, 15)), null, false ),
+				// Case 3: Non-symmetric trees (one tree is left-skewed, one is right-skewed)
 				Arguments.of(BinarySearchTree.addAll(List.of(10, 5, 3)), BinarySearchTree.addAll(List.of(10, 5, 3)), false),
-				// Case 3: One tree is null, the other is not
-				Arguments.of(BinarySearchTree.addAll(List.of(10, 5, 5, 3, 7, 7, 3)), null, false));
+				// Case 4: One tree is null, the other is not
+				Arguments.of(BinarySearchTree.addAll(List.of(10, 5, 5, 3, 7, 7, 3)), null, false)
+			);
 	}
+	
+	@ParameterizedTest
+	@MethodSource("provideSameTreeTestCases")
+	@DisplayName("Test Same Binary Tree")
+	void testSameTree(TreeNode<Integer> rootOne, TreeNode<Integer> rootTwo, Boolean expected) {
+		Boolean actual = BinarySearchTree.sameTree(rootOne, rootTwo);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideSameTreeTestCases() {
+		return Stream.of(
+				// Case 1: Both trees are null → identical
+				Arguments.of(null, null, true),
+				// Case 2: Identical BST structures and values
+				Arguments.of(BinarySearchTree.addAll(List.of(10, 5, 15, 3, 7)), BinarySearchTree.addAll(List.of(10, 5, 15, 3, 7)), true),
+				// Case 3: Same values but different structure
+				Arguments.of(BinarySearchTree.addAll(List.of(10, 5, 3)), BinarySearchTree.addAll(List.of(10, 15, 20)), false),
+				// Case 4: Different values but same structure
+				Arguments.of(BinarySearchTree.addAll(List.of(10, 5, 15)), BinarySearchTree.addAll(List.of(10, 5, 20)), false),
+				// Case 5: One tree null, other not
+				Arguments.of(BinarySearchTree.addAll(List.of(10, 5, 15)), null, false),
+				// Case 6: Larger identical trees
+				Arguments.of(BinarySearchTree.addAll(List.of(50, 30, 70, 20, 40, 60, 80)),BinarySearchTree.addAll(List.of(50, 30, 70, 20, 40, 60, 80)), true)
+			);
+	}
+	
 
 }
