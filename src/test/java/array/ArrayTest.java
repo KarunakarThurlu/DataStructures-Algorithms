@@ -261,20 +261,19 @@ public class ArrayTest {
     @ParameterizedTest
     @MethodSource("providePeakElementTestCases")
     @DisplayName("Test Peak Element Finder")
-    void testFindPeakElement(int[] nums, int expected) {
-        int actual = Array.findPeakElement(nums);
-        assertEquals(expected, actual, "Expected and actual peak element index should match");
-    }
+	void testFindPeakElement(int[] nums, int expected) {
+		int actual = Array.findPeakElement(nums);
+		assertEquals(expected, actual, "Expected and actual peak element index should match");
+	}
 
-    private static Stream<Arguments> providePeakElementTestCases() {
-        return Stream.of(
-                Arguments.of(new int[]{1, 2, 3, 1}, 2),
-                Arguments.of(new int[]{1, 2, 1, 3, 5, 6, 4}, 1),
-                Arguments.of(new int[]{3, 4, 3, 2, 1}, 1),
-                Arguments.of(new int[]{1}, 0),
-                Arguments.of(new int[]{10, 20, 15, 2, 23, 90, 67}, 1)
-        );
-    }
+	private static Stream<Arguments> providePeakElementTestCases() {
+		return Stream.of(Arguments.of(new int[] { 1, 2, 3, 1 }, 2), 
+				Arguments.of(new int[] { 1, 2, 1, 3, 5, 6, 4 }, 1),
+				Arguments.of(new int[] { 3, 4, 3, 2, 1 }, 1), 
+				Arguments.of(new int[] { 1 }, 0),
+				Arguments.of(new int[] { 10, 20, 15, 2, 23, 90, 67 }, 1)
+			);
+	}
     
     @ParameterizedTest
     @MethodSource("provideTestCasesForLCIS")

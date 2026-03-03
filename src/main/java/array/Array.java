@@ -565,28 +565,12 @@ public class Array {
 	 * @return index of a peak element, or -1 if none found
 	 */
 	public static int findPeakElement(int[] array) {
-
-	    if (array == null || array.length == 0)
-	        return -1;
-
-	    // If only one element, it's automatically a peak
-	    if (array.length == 1)
-	        return 0;
-
-	    // If two elements, return the larger one
-	    if (array.length == 2)
-	        return array[0] > array[1] ? 0 : 1;
-
-	    // Check middle elements
-	    for (int index = 1; index < array.length - 1; index++) {
-	        if (array[index - 1] < array[index] &&
-	            array[index] > array[index + 1]) {
-	            return index;
-	        }
-	    }
-
-	    // No peak found (possible if peak is at boundary and not handled)
-	    return -1;
+		if (array == null || array.length == 0)
+			return -1;
+		for (int i = 0; i < array.length-1; i++)
+			if (array[i] > array[i + 1])
+				return i;
+		return array.length - 1;
 	}
 	
 	/**
