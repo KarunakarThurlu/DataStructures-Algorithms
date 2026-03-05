@@ -358,10 +358,48 @@ public class BinarySearchTree {
 	}
 
 	/**
-	 * 11 Finding Height of BST
-	 * 
-	 * @param rootNode
-	 * @return Integer
+	 * 11. Find Height of Binary Search Tree
+	 *
+	 * <pre>
+	 * Description:
+	 * The height of a Binary Search Tree (BST) is defined as the number of nodes
+	 * in the longest path from the root node to a leaf node.
+	 *
+	 * A leaf node is a node with no children.
+	 *
+	 * Example 1:
+	 * Input Tree:
+	 *        4
+	 *       / \
+	 *      2   6
+	 *     / \   \
+	 *    1   3   7
+	 *
+	 * Output: 3
+	 *
+	 * Explanation:
+	 * Longest path is: 4 → 2 → 1 (3 nodes)
+	 *
+	 * Example 2:
+	 * Input: root = [1]
+	 * Output: 1
+	 *
+	 * Example 3:
+	 * Input: root = []
+	 * Output: 0
+	 *
+	 * Approach:
+	 * - Use recursion (Post-order traversal)
+	 * - Recursively compute the height of left and right subtrees
+	 * - Height of current node = max(leftHeight, rightHeight) + 1
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(h) where h is tree height (recursion stack)
+	 *
+	 * </pre>
+	 *
+	 * @param rootNode root node of BST
+	 * @return height of the tree (number of nodes in longest path)
 	 */
 	public static Integer findHeightOfBST(TreeNode<Integer> rootNode) {
 		if (rootNode == null)
@@ -390,18 +428,79 @@ public class BinarySearchTree {
 	}
 
 	/**
-	 * 13 Balanced BinarySearchTree
-	 * 
-	 * @param root
-	 * @return true for balanced BinarySearchTree otherwise false
+	 * 13. Check if Binary Search Tree is Balanced
+	 *
+	 * <pre>
+	 * Description:  A Binary Tree is considered height-balanced if the height difference between the left and right subtree of every node is not more than 1.
+	 *
+	 * Example 1:
+	 * Input Tree:
+	 *        4
+	 *       / \
+	 *      2   6
+	 *     / \ / \
+	 *    1  3 5  7
+	 *
+	 * Output: true
+	 * Explanation:
+	 * The tree is perfectly balanced.
+	 *
+	 * Example 2:
+	 * Input Tree:
+	 *        1
+	 *         \
+	 *          2
+	 *           \
+	 *            3
+	 *
+	 * Output: false
+	 * Explanation:
+	 * The right subtree is deeper than the left by more than 1 level.
+	 *
+	 * Example 3:
+	 * Input: root = null
+	 * Output: true
+	 *
+	 * Approach:
+	 * - Use a bottom-up recursive approach.
+	 * - Compute height of left and right subtrees.
+	 * - If height difference > 1, return -1 immediately to signal imbalance.
+	 * - If any subtree already returned -1, propagate the imbalance upward.
+	 *
+	 * Optimization:
+	 * - Early termination avoids unnecessary traversal once imbalance is detected.
+	 *
+	 * Time Complexity: O(n) where n is number of nodes
+	 * Space Complexity: O(h) recursion stack where h is tree height
+	 *
+	 * </pre>
+	 *
+	 * @param root root node of the Binary Search Tree
+	 * @return true if tree is balanced, otherwise false
 	 */
 	public static Boolean balancedBST(TreeNode<Integer> root) {
-		if (root == null)
-			return true;
-		int leftChildHeight = findHeightOfBST(root.left);
-		int rightChildHeight = findHeightOfBST(root.right);
-		return (Math.abs(leftChildHeight - rightChildHeight) <= 1 && balancedBST(root.left) && balancedBST(root.right));
+		 // If height() returns -1 → tree is not balanced
+		return height(root)!=-1;
+	}
+	private static int height(TreeNode<Integer> node) {
+	    // Base case: empty subtree has height 0
+	    if (node == null)
+	        return 0;
 
+	    // Recursively calculate height of left,right subtree
+	    int leftHeight = height(node.left);
+	    int rightHeight = height(node.right);
+
+	    // If left or right subtree already unbalanced, propagate -1
+	    if (leftHeight == -1 || rightHeight == -1)
+	        return -1;
+
+	    // Check balance condition
+	    if (Math.abs(leftHeight - rightHeight) > 1)
+	        return -1;
+
+	    // Return height of current subtree
+	    return Math.max(leftHeight, rightHeight) + 1;
 	}
 
 	/**
@@ -499,14 +598,66 @@ public class BinarySearchTree {
 	}
 	
 	/**
-	 * 18 Find Diameter of Binary Search Tree
-	 * @param root
-	 * @return
+	 * 18. Find Diameter of Binary Search Tree
+	 *
+	 * <pre>
+	 * Description:
+	 * The diameter of a binary tree is the length of the longest path between
+	 * any two nodes in the tree. This path may or may not pass through the root.
+	 *
+	 * The diameter is measured as the number of edges between the two farthest nodes.
+	 *
+	 * Example 1:
+	 * Input Tree:
+	 *        1
+	 *       / \
+	 *      2   3
+	 *     / \
+	 *    4   5
+	 *
+	 * Output: 3
+	 *
+	 * Explanation:
+	 * Longest path: 4 → 2 → 1 → 3
+	 * Number of edges = 3
+	 *
+	 * Example 2:
+	 * Input:
+	 *        1
+	 *       /
+	 *      2
+	 *     /
+	 *    3
+	 *
+	 * Output: 2
+	 *
+	 * Explanation:
+	 * Longest path: 3 → 2 → 1
+	 *
+	 * Example 3:
+	 * Input: root = null
+	 * Output: 0
+	 *
+	 * Approach:
+	 * - Use Post-order traversal.
+	 * - For each node:
+	 *      compute height of left subtree
+	 *      compute height of right subtree
+	 * - The diameter passing through that node = leftHeight + rightHeight
+	 * - Track the maximum diameter found so far.
+	 *
+	 * Optimization:
+	 * - Height and diameter are calculated in the same traversal.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(h) recursion stack
+	 *
+	 * </pre>
+	 *
+	 * @param root root node of the Binary Search Tree
+	 * @return diameter (number of edges in longest path)
 	 */
-	public static Integer diameteOfBST(TreeNode<Integer> root) {
-		if(root == null) {
-			return 0;
-		}
+	public static Integer diameterOfBST(TreeNode<Integer> root) {
 		int[] diameter = new int[1];
 		findDiameter(root,diameter);
 		return diameter[0];
@@ -523,25 +674,102 @@ public class BinarySearchTree {
 	}
 
 	/**
-	 * 19 Balance a UnBalanced Binary Search Tree
-	 * 
-	 * @param root
-	 * @return Balance Binary Search Tree root
+	 * 19. Balance an Unbalanced Binary Search Tree
+	 *
+	 * <pre>
+	 * Description:
+	 * Given the root of a Binary Search Tree (BST), return a balanced BST
+	 * containing the same node values.
+	 *
+	 * A balanced BST is defined as a tree where the depth of the two
+	 * subtrees of every node never differs by more than 1.
+	 *
+	 * Approach:
+	 * 1. Perform an inorder traversal of the BST.
+	 *    - Inorder traversal of a BST produces sorted values.
+	 *
+	 * 2. Store the values in a sorted list.
+	 *
+	 * 3. Build a balanced BST from the sorted list.
+	 *    - Pick the middle element as root.
+	 *    - Recursively build left subtree from left half.
+	 *    - Recursively build right subtree from right half.
+	 *
+	 * Example:
+	 *
+	 * Input (Unbalanced BST)
+	 *
+	 *        1
+	 *         \
+	 *          2
+	 *           \
+	 *            3
+	 *             \
+	 *              4
+	 *
+	 * Inorder Traversal → [1,2,3,4]
+	 *
+	 * Balanced BST Output:
+	 *
+	 *         2
+	 *        / \
+	 *       1   3
+	 *            \
+	 *             4
+	 *
+	 * Time Complexity:
+	 *      O(n)
+	 *      - Inorder traversal → O(n)
+	 *      - Build balanced tree → O(n)
+	 *
+	 * Space Complexity:
+	 *      O(n)
+	 *      - List storing inorder traversal
+	 *      - Recursion stack
+	 *
+	 * </pre>
+	 *
+	 * @param root root of the unbalanced BST
+	 * @return root node of the balanced BST
 	 */
 	public static TreeNode<Integer> balanceBST(TreeNode<Integer> root) {
-		List<Integer> list = inOrderTraversal(root, new ArrayList<>());
-		return buildBalacedTree(list, 0, list.size() - 1);
+
+	    // Step 1: Get sorted nodes using inorder traversal
+	    List<Integer> sortedNodes = inOrderTraversal(root, new ArrayList<>());
+
+	    // Step 2: Build balanced BST from sorted nodes
+	    return buildBalacedTree(sortedNodes, 0, sortedNodes.size() - 1);
 	}
 
+	/**
+	 * Recursively builds a balanced BST from a sorted list.
+	 *
+	 * Uses divide and conquer approach by selecting the middle
+	 * element as root and recursively constructing left and right subtrees.
+	 *
+	 * @param list sorted list of BST node values
+	 * @param start starting index
+	 * @param end ending index
+	 * @return root node of the balanced subtree
+	 */
 	private static TreeNode<Integer> buildBalacedTree(List<Integer> list, int start, int end) {
-		if (start > end) {
-			return null;
-		}
-		int mid = (start + end) / 2;
-		TreeNode<Integer> node = new TreeNode<>(list.get(mid));
-		node.left = buildBalacedTree(list, start, mid - 1);
-		node.right = buildBalacedTree(list, mid + 1, end);
-		return node;
+	    // Base case: no elements to construct subtree
+	    if (start > end) {
+	        return null;
+	    }
+
+	    // Middle element becomes root to maintain balance
+	    int mid = (start + end) / 2;
+
+	    TreeNode<Integer> node = new TreeNode<>(list.get(mid));
+
+	    // Recursively build left subtree
+	    node.left = buildBalacedTree(list, start, mid - 1);
+
+	    // Recursively build right subtree
+	    node.right = buildBalacedTree(list, mid + 1, end);
+
+	    return node;
 	}
 	
 	/**

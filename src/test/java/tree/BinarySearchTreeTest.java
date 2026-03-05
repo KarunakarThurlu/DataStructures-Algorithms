@@ -196,19 +196,36 @@ class BinarySearchTreeTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource("provideFindingHeightTestCases")
-	@DisplayName("Test the height of different binary search trees")
-	void testFindHeightOfBST(TreeNode<Integer> root, int expectedHeight) {
-		assertEquals(expectedHeight, BinarySearchTree.findHeightOfBST(root));
+	@MethodSource("provideFindHeightBSTTestCases")
+	@DisplayName("Test Find Height of Binary Search Tree")
+	void testFindHeightBST(TreeNode<Integer> root, int expectedHeight) {
+
+	    int actualHeight = BinarySearchTree.findHeightOfBST(root);
+
+	    assertEquals(expectedHeight, actualHeight);
 	}
 
-	private static Stream<Arguments> provideFindingHeightTestCases() {
-		return Stream.of(Arguments.of(BinarySearchTree.addAll(List.of()), 0), // Zero node tree
-				Arguments.of(BinarySearchTree.addAll(List.of(1)), 1), // Single node tree
-				Arguments.of(BinarySearchTree.addAll(List.of(1, 2)), 2), // Two-node tree with one child
-				Arguments.of(BinarySearchTree.addAll(List.of(3, 2, 1)), 3), // Left skewed tree with three nodes
-				Arguments.of(BinarySearchTree.addAll(List.of(2, 1, 3)), 2) // Balanced tree with three nodes
-		);
+	private static Stream<Arguments> provideFindHeightBSTTestCases() {
+	    return Stream.of(
+
+	            // Case 1: Empty tree
+	            Arguments.of(null, 0),
+
+	            // Case 2: Single node
+	            Arguments.of(BinarySearchTree.addAll(List.of(10)), 1),
+
+	            // Case 3: Balanced tree
+	            Arguments.of(BinarySearchTree.addAll(List.of(4,2,6,1,3,5,7)), 3),
+
+	            // Case 4: Left skewed tree
+	            Arguments.of(BinarySearchTree.addAll(List.of(5,4,3,2,1)), 5),
+
+	            // Case 5: Right skewed tree
+	            Arguments.of(BinarySearchTree.addAll(List.of(1,2,3,4,5)), 5),
+
+	            // Case 6: Random BST
+	            Arguments.of(BinarySearchTree.addAll(List.of(10,5,15,3,7,18)), 3)
+	    );
 	}
 
 	@ParameterizedTest
@@ -334,41 +351,77 @@ class BinarySearchTreeTest {
 	}
 	
 	@ParameterizedTest
-	@MethodSource("provideDiameterOfBSTTestCases")
-	@DisplayName("Test Find Diameter of Binary Search Tree")
-	void testDiameterOfBST(TreeNode<Integer> root, Integer expected) {
-		Integer actual= BinarySearchTree.diameteOfBST(root);
-		assertEquals(expected, actual);
+	@MethodSource("provideDiameterBSTTestCases")
+	@DisplayName("Test Diameter of Binary Search Tree")
+	void testDiameterBST(TreeNode<Integer> root, Integer expectedDiameter) {
+	    Integer actual = BinarySearchTree.diameterOfBST(root);
+	    assertEquals(expectedDiameter, actual);
 	}
 
-	private static Stream<Arguments> provideDiameterOfBSTTestCases() {
-		 return Stream.of(
-		            // Case 1: Null tree
-		            Arguments.of(null, 0),  // Empty tree, diameter should be 0
-		            // Case 2: Single node
-		            Arguments.of(BinarySearchTree.addAll(List.of(10)), 0),  // Single node, no edges, diameter should be 0
-		            // Case 3: Linear tree (right skewed)
-		            Arguments.of(BinarySearchTree.addAll(List.of(10, 15, 20)), 2),  // Linear tree: 10 -> 15 -> 20, diameter is 2
-		            // Case 4: Balanced tree
-		            Arguments.of(BinarySearchTree.addAll(List.of(10, 5, 15, 3, 7, 12, 20)), 4),  // Balanced tree, diameter is 4
-		            // Case 5: Complex tree
-		            Arguments.of(BinarySearchTree.addAll(List.of(10, 5, 15, 3, 7, 12, 20, 17)), 5),  // Complex tree, diameter is 5
-		            // Case 6: Left skewed tree
-		            Arguments.of(BinarySearchTree.addAll(List.of(10, 5, 3, 1)), 3)  // Left skewed, diameter is 3
-		        );
+	private static Stream<Arguments> provideDiameterBSTTestCases() {
+	    return Stream.of(
+
+	            // Case 1: Empty tree
+	            Arguments.of(null, 0),
+
+	            // Case 2: Single node
+	            Arguments.of(BinarySearchTree.addAll(List.of(1)), 0),
+
+	            // Case 3: Two nodes
+	            Arguments.of(BinarySearchTree.addAll(List.of(2,1)), 1),
+
+	            // Case 4: Balanced tree
+	            //        4
+	            //       / \
+	            //      2   6
+	            //     / \ / \
+	            //    1  3 5  7
+	            Arguments.of(BinarySearchTree.addAll(List.of(4,2,6,1,3,5,7)), 4),
+
+	            // Case 5: Left skewed tree
+	            // 5 → 4 → 3 → 2 → 1
+	            Arguments.of(BinarySearchTree.addAll(List.of(5,4,3,2,1)), 4),
+
+	            // Case 6: Right skewed tree
+	            // 1 → 2 → 3 → 4 → 5
+	            Arguments.of(BinarySearchTree.addAll(List.of(1,2,3,4,5)), 4),
+
+	            // Case 7: Mixed tree
+	            Arguments.of(BinarySearchTree.addAll(List.of(10,5,15,3,7,18)), 4)
+	    );
 	}
 	
 	@ParameterizedTest
 	@MethodSource("provideBalanceBSTTestCases")
-	@DisplayName("Test Balance a UnBalanced Binary Search Tree")
-	void testBalanceBST(TreeNode<Integer> root, Boolean expected) {
-		TreeNode<Integer> balanceBST = BinarySearchTree.balanceBST(root);
-		Boolean actual = BinarySearchTree.balancedBST(balanceBST);
-		assertEquals(expected, actual);
+	@DisplayName("Test Balance Binary Search Tree")
+	void testBalanceBST(TreeNode<Integer> inputRoot) {
+	    TreeNode<Integer> actual = BinarySearchTree.balanceBST(inputRoot);
+	    List<Integer> original = BinarySearchTree.inOrderTraversal(inputRoot, new ArrayList<>());
+	    List<Integer> balanced = BinarySearchTree.inOrderTraversal(actual, new ArrayList<>());
+	    // Verify BST property preserved
+	    assertEquals(original, balanced);
+	    // Verify tree is balanced
+	    assertTrue(BinarySearchTree.balancedBST(actual));
 	}
 
 	private static Stream<Arguments> provideBalanceBSTTestCases() {
-		return Stream.of(Arguments.of(BinarySearchTree.addAll(List.of(10, 15, 25, 35, 45, 55, 65)), true));
+	    return Stream.of(
+
+	            // Case 1: Empty tree
+	            Arguments.of((TreeNode<Integer>) null),
+
+	            // Case 2: Single node
+	            Arguments.of(BinarySearchTree.addAll(List.of(1))),
+
+	            // Case 3: Already balanced tree
+	            Arguments.of(BinarySearchTree.addAll(List.of(2,1,3))),
+
+	            // Case 4: Right skewed tree
+	            Arguments.of(BinarySearchTree.addAll(List.of(1,2,3,4))),
+
+	            // Case 5: Larger skewed tree
+	            Arguments.of(BinarySearchTree.addAll(List.of(10,20,30,40,50)))
+	    );
 	}
 
 	@ParameterizedTest
@@ -453,6 +506,33 @@ class BinarySearchTreeTest {
 				// Case 6: Larger identical trees
 				Arguments.of(BinarySearchTree.addAll(List.of(50, 30, 70, 20, 40, 60, 80)),BinarySearchTree.addAll(List.of(50, 30, 70, 20, 40, 60, 80)), true)
 			);
+	}
+	
+	@ParameterizedTest
+	@MethodSource("provideBalancedBSTTestCases")
+	@DisplayName("Test Balanced Binary Search Tree")
+	void testBalancedBST(TreeNode<Integer> root, Boolean expected) {
+	    Boolean actual = BinarySearchTree.balancedBST(root);
+	    assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideBalancedBSTTestCases() {
+	    return Stream.of(
+	            // Case 1: Empty tree
+	            Arguments.of(null, true),
+	            // Case 2: Single node
+	            Arguments.of(BinarySearchTree.addAll(List.of(10)), true),
+	            // Case 3: Perfect balanced tree
+	            Arguments.of(BinarySearchTree.addAll(List.of(4,2,6,1,3,5,7)), true),
+	            // Case 4: Left skewed tree
+	            Arguments.of(BinarySearchTree.addAll(List.of(5,4,3,2,1)), false),
+	            // Case 5: Right skewed tree
+	            Arguments.of(BinarySearchTree.addAll(List.of(1,2,3,4,5)), false),
+	            // Case 6: Slightly unbalanced but valid
+	            Arguments.of(BinarySearchTree.addAll(List.of(10,5,15,3,7)), true),
+	            // Case 7: Deep imbalance
+	            Arguments.of(BinarySearchTree.addAll(List.of(10,9,8,7,6,5)), false)
+	    );
 	}
 	
 
