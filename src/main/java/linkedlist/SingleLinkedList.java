@@ -15,7 +15,7 @@ public class SingleLinkedList {
 	 * 4. Find Mid element of single linked list 
 	 * 5. Remove element at nth position 
 	 * 6. Remove element at nth position from end 
-	 * 7. Adding eleme nt at nth position 
+	 * 7. Adding element at nth position 
 	 * 8. Remove duplicates from sorted list 
 	 * 9. Merge sorted linked lists 
 	 * 10.Delete nodes from list present in array 

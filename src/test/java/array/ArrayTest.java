@@ -257,7 +257,6 @@ public class ArrayTest {
                 Arguments.of(new int[]{-2, -3, 4, -1, -2, 1, 5, -3}, 3, 3)
         );
     }
-    
     @ParameterizedTest
     @MethodSource("providePeakElementTestCases")
     @DisplayName("Test Peak Element Finder")
@@ -265,7 +264,7 @@ public class ArrayTest {
 		int actual = Array.findPeakElement(nums);
 		assertEquals(expected, actual, "Expected and actual peak element index should match");
 	}
-
+    
 	private static Stream<Arguments> providePeakElementTestCases() {
 		return Stream.of(Arguments.of(new int[] { 1, 2, 3, 1 }, 2), 
 				Arguments.of(new int[] { 1, 2, 1, 3, 5, 6, 4 }, 1),
@@ -274,7 +273,7 @@ public class ArrayTest {
 				Arguments.of(new int[] { 10, 20, 15, 2, 23, 90, 67 }, 1)
 			);
 	}
-    
+
     @ParameterizedTest
     @MethodSource("provideTestCasesForLCIS")
     @DisplayName("Test findLengthOfLCIS with various cases")
