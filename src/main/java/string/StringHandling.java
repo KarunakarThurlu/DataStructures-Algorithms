@@ -244,21 +244,61 @@ public class StringHandling {
 		return nVe ? -result : result;
 	};
 	
-	static Function<List<String>, String> longestCommonPrefix = strs -> {
-		List<String> list = strs.stream().sorted().toList();
-		String firstString = list.get(0);
-		String lastString = list.get(list.size() - 1);
-		StringBuilder commonPrefix = new StringBuilder();
-		int index = 0;
-		while (index < firstString.length()) {
-			if (firstString.charAt(index) == lastString.charAt(index)) {
-				commonPrefix.append(firstString.charAt(index));
-			} else {
-				break;
-			}
-			index++;
-		}
-		return String.valueOf(commonPrefix);
+	/**
+	 * 22. Longest Common Prefix
+	 *
+	 * <pre>
+	 * Description: Given a list of strings, find the longest common prefix shared among all strings. If there is no common prefix, return an empty string "".
+	 *
+	 * Example 1: Input: ["flower","flow","flight"] Output: "fl"
+	 * Example 2: Input: ["dog","racecar","car"] Output: ""
+	 * Example 3: Input: ["interview","internet","internal","interval"] Output: "inte"
+	 * Example 4: Input: [] Output: ""
+	 *
+	 * Approach:
+	 * - Sort the list of strings lexicographically.
+	 * - After sorting:
+	 *      first string → smallest
+	 *      last string  → largest
+	 * - The longest common prefix of the entire list must be the common prefix
+	 *   between these two strings.
+	 * - Compare characters until mismatch occurs.
+	 *
+	 * Time Complexity: O(n log n + m)
+	 *      n → number of strings
+	 *      m → length of prefix comparison
+	 *
+	 * Space Complexity: O(1) (ignoring sorting overhead)
+	 *
+	 * </pre>
+	 * @param strings the list of input strings
+	 * @return the longest common prefix among the input strings
+	 */
+	static Function<List<String>, String> longestCommonPrefix = strings -> {
+	    // Handle empty input
+	    if (strings == null || strings.isEmpty()) {
+	        return "";
+	    }
+	    // Sort strings lexicographically
+	    List<String> sortedStrings = strings.stream()
+	            .sorted()
+	            .toList();
+	    String firstString = sortedStrings.get(0);
+	    String lastString = sortedStrings.get(sortedStrings.size() - 1);
+	    StringBuilder commonPrefix = new StringBuilder();
+	    int index = 0;
+	    int maxPrefixLength = Math.min(firstString.length(), lastString.length());
+
+	    // Compare characters until mismatch
+	    while (index < maxPrefixLength) {
+	        if (firstString.charAt(index) == lastString.charAt(index)) {
+	            commonPrefix.append(firstString.charAt(index));
+	        } else {
+	            break;
+	        }
+	        index++;
+	    }
+	    return commonPrefix.toString();
 	};
 	
 	static UnaryOperator<String> longestPalindromicSubString = str -> {
