@@ -5,7 +5,6 @@ import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,10 +15,8 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.IntFunction;
-import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class StringHandling {
 	/*
@@ -301,6 +298,34 @@ public class StringHandling {
 	    return commonPrefix.toString();
 	};
 	
+	/**
+	 * 21. Longest Palindromic Substring
+	 *
+	 * <pre>
+	 * Description: Given a string, find the longest substring that is a palindrome.
+	 *
+	 * A palindrome is a string that reads the same forward and backward.
+	 *
+	 * Example 1: Input: "babad" Output: "bab"  Explanation: "aba" is also a valid answer.
+	 * Example 2: Input: "cbbd"  Output: "bb"
+	 * Example 3: Input: "a"     Output: "a"
+	 * Example 4: Input: "ac"    Output: "a"
+	 *
+	 * Approach:
+	 * - Treat every character as a potential center of a palindrome.
+	 * - Expand outward while characters match.
+	 * - Consider two cases:
+	 *      1) Odd length palindrome  → center at one character
+	 *      2) Even length palindrome → center between two characters
+	 * - Track the start and end indices of the longest palindrome found.
+	 *
+	 * Time Complexity: O(n²)
+	 * Space Complexity: O(1)
+	 *
+	 *@param str input string
+	 *@return longest palindrome sub string
+	 * </pre>
+	 */
 	static UnaryOperator<String> longestPalindromicSubString = str -> {
 		int palindromeStart = 0;
 		int palindromeEnd = 0;
