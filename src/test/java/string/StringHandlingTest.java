@@ -307,7 +307,7 @@ public class StringHandlingTest {
 	}
 	
 	@ParameterizedTest
-	@CsvSource({ "aabcad, bcad", "accept, cept","buy, buy","leetcode, etcod","aab,ab"})
+	@CsvSource({ "aabcad, bcad", "accept, cept","buy, buy","leetcode, etcod","aab,ab","bbbbbb,b",","})
 	@DisplayName("Test Laongest SubString WithOut Repeating Chars")
 	void testLongestSubStringWithOutRepeatingChars(String inputOne, String expected) {
 		String actual = StringHandling.longestSubStringWithOutRepeatingChars.apply(inputOne);

@@ -350,6 +350,82 @@ public class StringHandling {
 		return right - left - 1;
 	}
 	
+	/**
+	 * 20. Longest Substring Without Repeating Characters
+	 *
+	 * <pre>
+	 * Description: Given a string, find the longest substring that contains no repeating characters.
+	 * The substring must contain only unique characters.
+	 *
+	 * Example 1: Input: "abcabcbb" Output: "abc" Explanation: The longest substring without repeating characters is "abc".
+	 * Example 2: Input: "bbbbb"    Output: "b"
+	 * Example 3: Input: "pwwkew"   Output: "wke"
+	 * Example 4: Input: ""         Output: ""
+	 *
+	 * Approach:
+	 * - Use the Sliding Window technique with two pointers:
+	 *      start → beginning of current window
+	 *      end   → expanding pointer
+	 *
+	 * - Maintain a Set to track characters currently in the window.
+	 *
+	 * - If the current character is not in the set:
+	 *      add it and expand the window.
+	 *
+	 * - If a duplicate is found:
+	 *      shrink the window from the left until the duplicate is removed.
+	 *
+	 * - Track the maximum window length and starting index of the longest substring.
+	 *
+	 * Time Complexity: O(n)
+	 *      Each character is visited at most twice.
+	 *
+	 * Space Complexity: O(k)
+	 *      k = size of character set stored in the HashSet.
+	 *
+	 * </pre>
+	 *
+	 * @param str the input string to evaluate
+	 * @return the longest substring containing only unique characters
+	 */
+	static Function<String, String> longestSubStringWithOutRepeatingChars = str -> {
+		// Handle null or empty input
+		if (str == null || str.isEmpty())
+			return null;
+
+		// Set to keep track of characters in the current window
+		Set<Character> seenCharacters = new HashSet<>();
+
+		int maxLength = 0;
+
+		// Sliding window pointers
+		int windowStart = 0;
+		int windowEnd = 0;
+
+		// Track starting index of the longest unique substring
+		int longestSubstringStartIndex = 0;
+
+		while (windowEnd < str.length()) {
+			// If character not present → expand window
+			if (seenCharacters.add(str.charAt(windowEnd))) {
+
+				int currentWindowLength = windowEnd - windowStart + 1;
+
+				// Update longest substring
+				if (currentWindowLength > maxLength) {
+					maxLength = currentWindowLength;
+					longestSubstringStartIndex = windowStart;
+				}
+				windowEnd++;
+			} else {
+				// Duplicate found → shrink window from left
+				seenCharacters.remove(str.charAt(windowStart));
+				windowStart++;
+			}
+		}
+		return str.substring(longestSubstringStartIndex, longestSubstringStartIndex + maxLength);
+	};
+	
 	static UnaryOperator<String> stringReverse = input -> {
 		char[] charArray = input.toCharArray();
 		int startIndex = 0;
@@ -633,27 +709,4 @@ public class StringHandling {
 		}
 		return total;
 	};
-	
-	
-	static Function<String, String> longestSubStringWithOutRepeatingChars = str -> {
-		Set<Character> seen = new HashSet<>();
-		int maxLength = 0;
-		int start = 0;
-		int end = 0;
-		int uniqueCharsStringStartIndex = 0;
-		while (end < str.length()) {
-			if (seen.add(str.charAt(end))) {
-				if (end - start+1 > maxLength) {
-					maxLength = end - start+1;
-					uniqueCharsStringStartIndex = start;
-				}
-				end++;
-			} else {
-				seen.remove(str.charAt(start));
-				start++;
-			}
-		}
-		return str.substring(uniqueCharsStringStartIndex, uniqueCharsStringStartIndex + maxLength);
-	};
-	
 }
