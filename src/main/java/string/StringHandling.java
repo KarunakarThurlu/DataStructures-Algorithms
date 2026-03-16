@@ -426,6 +426,68 @@ public class StringHandling {
 		return str.substring(longestSubstringStartIndex, longestSubstringStartIndex + maxLength);
 	};
 	
+	/**
+	 * 28. Minimum Changes to Make Two Strings Anagrams
+	 *
+	 * <pre>
+	 * Description: Given two strings of equal length, determine the minimum number of character changes required in one string to make it an anagram of the other.
+	 *
+	 * An anagram is a word or phrase formed by rearranging the letters of another,
+	 * using all the original letters exactly once.
+	 *
+	 * Example 1: Input: one = "bab", two = "aba"         Output: 1 Explanation: Change 'b' → 'a' in "bab" to make it "aab".
+	 * Example 2: Input: one = "anagram", two = "mangaar" Output: 0
+	 * Example 3: Input: one = "abc", two = "def"         Output: 3
+	 * Example 4: Input: one = "aabbcc", two = "abcabc"   Output: 0
+	 * Example 5: Input: one = "abc", two = "ab"          Output: -1
+	 * 
+	 * Explanation: Strings must have the same length to become anagrams by character replacement.
+	 *
+	 * Approach:
+	 * - Use a frequency array to count character differences.
+	 * - Iterate through both strings simultaneously:
+	 *      increment frequency for characters in first string
+	 *      decrement frequency for characters in second string
+	 *
+	 * - After processing both strings:
+	 *      positive values represent extra characters in first string
+	 *
+	 * - Sum all positive values to determine how many replacements are needed.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1) (fixed-size frequency array)
+	 *
+	 * </pre>
+	 *
+	 * @param one the first input string
+	 * @param two the second input string
+	 * @return the minimum number of character changes required to make the strings anagrams, or -1 if the strings have different lengths
+	 */
+	static BiFunction<String, String, Integer> minChangesToMakeAnagrams = (one, two) -> {
+	    // If lengths differ, it's impossible to make anagrams via replacements
+	    if (one.length() != two.length()) {
+	        return -1;
+	    }
+
+	    // Frequency array for ASCII characters
+	    int[] frequency = new int[128];
+
+	    // Count characters
+	    for (int i = 0; i < one.length(); i++) {
+	        frequency[one.charAt(i)]++;   // count characters in first string
+	        frequency[two.charAt(i)]--;   // remove characters from second string
+	    }
+
+	    int totalChangesRequired = 0;
+
+	    // Only positive values indicate extra characters in first string
+	    for (int i = 0; i < frequency.length; i++) {
+	        totalChangesRequired += Math.max(0, frequency[i]);
+	    }
+
+	    return totalChangesRequired;
+	};
+	
 	static UnaryOperator<String> stringReverse = input -> {
 		char[] charArray = input.toCharArray();
 		int startIndex = 0;
@@ -694,19 +756,4 @@ public class StringHandling {
 		return String.valueOf(charArray);
 	};
 	
-	static BiFunction<String, String, Integer> minChangesToMakeAnagrams = (one, two) -> {
-		if (one.length() != two.length()) {
-			return -1;
-		}
-		int[] count = new int[128];
-		for (int i = 0; i < one.length(); i++) {
-			count[one.charAt(i)]++;
-			count[two.charAt(i)]--;
-		}
-		int total = 0;
-		for (int i = 0; i < count.length; i++) {
-			total = total + Math.max(0, count[i]);
-		}
-		return total;
-	};
 }
