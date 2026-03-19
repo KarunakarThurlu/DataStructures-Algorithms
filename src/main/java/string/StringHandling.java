@@ -427,7 +427,7 @@ public class StringHandling {
 	};
 	
 	/**
-	 * 28. Minimum Changes to Make Two Strings Anagrams
+	 * 19. Minimum Changes to Make Two Strings Anagrams
 	 *
 	 * <pre>
 	 * Description: Given two strings of equal length, determine the minimum number of character changes required in one string to make it an anagram of the other.
@@ -488,16 +488,51 @@ public class StringHandling {
 	    return totalChangesRequired;
 	};
 	
+	/**
+	 * 18. Reverse a String
+	 *
+	 * <pre>
+	 * Description: Given a string, reverse the characters of the string and return the reversed string.
+	 *
+	 * Example 1: Input: "hello" Output: "olleh"
+	 * Example 2: Input: "Java"  Output: "avaJ"
+	 * Example 3: Input: "a"     Output: "a"
+	 * Example 4: Input: ""      Output: ""
+	 *
+	 * Approach:
+	 * - Convert the string into a character array.
+	 * - Use two pointers:
+	 *      startIndex → beginning of the array
+	 *      endIndex   → end of the array
+	 * - Swap characters while moving pointers toward each other.
+	 * - Convert the modified array back to a string.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n) (due to char array)
+	 *
+	 * </pre>
+	 *
+	 * @param input the string to be reversed
+	 * @return the reversed string
+	 */
 	static UnaryOperator<String> stringReverse = input -> {
 		char[] charArray = input.toCharArray();
 		int startIndex = 0;
 		int endIndex = input.length() - 1;
+		// Swap characters from both ends moving toward center
 		while (startIndex <= endIndex) {
 			swap(charArray, startIndex++, endIndex--);
 		}
 		return new String(charArray);
 	};
-
+	
+	/**
+	 * Swaps two characters in the array.
+	 *
+	 * @param charArray the character array
+	 * @param startIndex index of first character
+	 * @param endIndex index of second character
+	 */
 	private static void swap(char[] charArray, int startIndex, int endIndex) {
 		char temp = charArray[startIndex];
 		charArray[startIndex] = charArray[endIndex];
