@@ -760,15 +760,56 @@ public class StringHandling {
 		return one.concat(one).contains(two);
 	};
 	
+	/**
+	 * 30. Subsequence Check
+	 *
+	 * <pre>
+	 * Description: Given two strings, determine if the second string is a subsequence of the first string.
+	 *
+	 * A subsequence is a sequence that can be derived from another string by deleting some or no elements without changing the order of the remaining elements.
+	 *
+	 * Example 1: Input: one = "abcde", two = "ace" Output: true
+	 * Example 2: Input: one = "abc", two = "acb" Output: false
+	 * Example 3: Input: one = "abc", two = "" Output: true
+	 * Example 4: Input: one = "", two = "a" Output: false
+	 *
+	 * Approach:
+	 * - Use two pointers:
+	 *      oneIndex → iterate over main string
+	 *      twoIndex → iterate over subsequence
+	 *
+	 * - If characters match, move both pointers.
+	 * - Otherwise, move only main string pointer.
+	 * - If we reach end of subsequence → it is a valid subsequence.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param one the main string
+	 * @param two the string to check as subsequence
+	 * @return true if 'two' is a subsequence of 'one', otherwise false
+	 */
 	static BiFunction<String, String, Boolean> subSequenceCheck = (one, two) -> {
-		int oneIndex = 0, twoIndex = 0;
-		while (oneIndex < one.length() && twoIndex < two.length()) {
-			if (one.charAt(oneIndex) == two.charAt(twoIndex)) {
-				twoIndex++;
-			}
-			oneIndex++;
-		}
-		return oneIndex == twoIndex;
+	    // Handle null cases
+	    if (one == null || two == null) {
+	        return false;
+	    }
+	    int oneIndex = 0;
+	    int twoIndex = 0;
+
+	    // Traverse both strings
+	    while (oneIndex < one.length() && twoIndex < two.length()) {
+	        // Match found → move subsequence pointer
+	        if (one.charAt(oneIndex) == two.charAt(twoIndex)) {
+	            twoIndex++;
+	        }
+	        // Always move main string pointer
+	        oneIndex++;
+	    }
+	    // If we matched entire 'two', it's a subsequence
+	    return twoIndex == two.length();
 	};
 	
 	static Function<String, String> reverseVowelsOnly = str -> {
