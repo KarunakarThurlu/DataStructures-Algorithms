@@ -288,7 +288,7 @@ public class StringHandlingTest {
 	}
 	
 	@ParameterizedTest
-	@CsvSource({ "rador, rodar", "hello, holle", "java, java" })
+	@CsvSource({ "rador, rodar", "hello, holle", "java, java","Aa,aA" })
 	@DisplayName("Test Reverse Vowels Only")
 	void testRevseVowelsOnly(String input, String expected) {
 		String actual = StringHandling.reverseVowelsOnly.apply(input);

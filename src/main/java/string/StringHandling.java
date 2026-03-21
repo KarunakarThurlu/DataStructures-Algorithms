@@ -54,8 +54,7 @@ public class StringHandling {
 	 * 25. Isomorphic Strings
 	 *
 	 * <pre>
-	 * Description:
-	 * Given two strings str1 and str2, determine if they are isomorphic.
+	 * Description: Given two strings str1 and str2, determine if they are isomorphic.
 	 *
 	 * Two strings are isomorphic if:
 	 * - Characters in str1 can be replaced to get str2.
@@ -538,6 +537,119 @@ public class StringHandling {
 		charArray[startIndex] = charArray[endIndex];
 		charArray[endIndex] = temp;
 	}
+	
+	/**
+	 * 17. Subsequence Check
+	 *
+	 * <pre>
+	 * Description: Given two strings, determine if the second string is a subsequence of the first string.
+	 *
+	 * A subsequence is a sequence that can be derived from another string by deleting some or no elements without changing the order of the remaining elements.
+	 *
+	 * Example 1: Input: one = "abcde", two = "ace" Output: true
+	 * Example 2: Input: one = "abc", two = "acb" Output: false
+	 * Example 3: Input: one = "abc", two = "" Output: true
+	 * Example 4: Input: one = "", two = "a" Output: false
+	 *
+	 * Approach:
+	 * - Use two pointers:
+	 *      oneIndex → iterate over main string
+	 *      twoIndex → iterate over subsequence
+	 *
+	 * - If characters match, move both pointers.
+	 * - Otherwise, move only main string pointer.
+	 * - If we reach end of subsequence → it is a valid subsequence.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param one the main string
+	 * @param two the string to check as subsequence
+	 * @return true if 'two' is a subsequence of 'one', otherwise false
+	 */
+	static BiFunction<String, String, Boolean> subSequenceCheck = (one, two) -> {
+	    // Handle null cases
+	    if (one == null || two == null) {
+	        return false;
+	    }
+	    int oneIndex = 0;
+	    int twoIndex = 0;
+
+	    // Traverse both strings
+	    while (oneIndex < one.length() && twoIndex < two.length()) {
+	        // Match found → move subsequence pointer
+	        if (one.charAt(oneIndex) == two.charAt(twoIndex)) {
+	            twoIndex++;
+	        }
+	        // Always move main string pointer
+	        oneIndex++;
+	    }
+	    // If we matched entire 'two', it's a subsequence
+	    return twoIndex == two.length();
+	};
+	
+	/**
+	 * 16. Reverse Vowels of a String
+	 *
+	 * <pre>
+	 * Description:
+	 * Given a string, reverse only the vowels in the string and return the result.
+	 *
+	 * Vowels include: a, e, i, o, u (both lowercase and uppercase).
+	 *
+	 * Example 1: Input: "hello"    Output: "holle"
+	 * Example 2: Input: "leetcode" Output: "leotcede"
+	 * Example 3: Input: "aA"       Output: "Aa"
+	 * Example 4: Input: "bcdfg"    Output: "bcdfg"
+	 *
+	 * Approach:
+	 * - Use two pointers:
+	 *      start → beginning of string
+	 *      end   → end of string
+	 *
+	 * - Move start forward until a vowel is found.
+	 * - Move end backward until a vowel is found.
+	 * - Swap the vowels.
+	 *
+	 * - Continue until pointers meet.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n) (char array)
+	 *
+	 * </pre>
+	 *
+	 * @param str the input string
+	 * @return string with vowels reversed
+	 */
+	static Function<String, String> reverseVowelsOnly = str -> {
+	    if (str == null || str.isEmpty())
+	        return "";
+	    char[] charArray = str.toCharArray();
+	    String vowels = "aeiouAEIOU";
+	    int start = 0;
+	    int end = charArray.length - 1;
+	    while (start < end) {
+	        // Move start to next vowel
+	        while (start < end && vowels.indexOf(charArray[start]) == -1) {
+	            start++;
+	        }
+
+	        // Move end to previous vowel
+	        while (start < end && vowels.indexOf(charArray[end]) == -1) {
+	            end--;
+	        }
+
+	        // Swap vowels
+	        if (start < end) {
+	            char temp = charArray[start];
+	            charArray[start++] = charArray[end];
+	            charArray[end--] = temp;
+	        }
+	    }
+	    return new String(charArray);
+	};
 
 	static BiFunction<String, Integer, String> stringReverseByFrequency = (String input, Integer frequency) -> {
 		StringBuilder reversedString = new StringBuilder();
@@ -758,78 +870,6 @@ public class StringHandling {
 		}
 		// Concatenate s1 with itself & check if s2 is a substring
 		return one.concat(one).contains(two);
-	};
-	
-	/**
-	 * 30. Subsequence Check
-	 *
-	 * <pre>
-	 * Description: Given two strings, determine if the second string is a subsequence of the first string.
-	 *
-	 * A subsequence is a sequence that can be derived from another string by deleting some or no elements without changing the order of the remaining elements.
-	 *
-	 * Example 1: Input: one = "abcde", two = "ace" Output: true
-	 * Example 2: Input: one = "abc", two = "acb" Output: false
-	 * Example 3: Input: one = "abc", two = "" Output: true
-	 * Example 4: Input: one = "", two = "a" Output: false
-	 *
-	 * Approach:
-	 * - Use two pointers:
-	 *      oneIndex → iterate over main string
-	 *      twoIndex → iterate over subsequence
-	 *
-	 * - If characters match, move both pointers.
-	 * - Otherwise, move only main string pointer.
-	 * - If we reach end of subsequence → it is a valid subsequence.
-	 *
-	 * Time Complexity: O(n)
-	 * Space Complexity: O(1)
-	 *
-	 * </pre>
-	 *
-	 * @param one the main string
-	 * @param two the string to check as subsequence
-	 * @return true if 'two' is a subsequence of 'one', otherwise false
-	 */
-	static BiFunction<String, String, Boolean> subSequenceCheck = (one, two) -> {
-	    // Handle null cases
-	    if (one == null || two == null) {
-	        return false;
-	    }
-	    int oneIndex = 0;
-	    int twoIndex = 0;
-
-	    // Traverse both strings
-	    while (oneIndex < one.length() && twoIndex < two.length()) {
-	        // Match found → move subsequence pointer
-	        if (one.charAt(oneIndex) == two.charAt(twoIndex)) {
-	            twoIndex++;
-	        }
-	        // Always move main string pointer
-	        oneIndex++;
-	    }
-	    // If we matched entire 'two', it's a subsequence
-	    return twoIndex == two.length();
-	};
-	
-	static Function<String, String> reverseVowelsOnly = str -> {
-		char[] charArray = str.toLowerCase().toCharArray();
-		String vowels = "aeiou";
-		int start = 0, end = str.length() - 1;
-		while (start < end) {
-			while (vowels.indexOf(str.charAt(start)) < 0) {
-				start++;
-			}
-			while (vowels.indexOf(str.charAt(end)) < 0) {
-				end--;
-			}
-			if (start < end) {
-				char temp = charArray[end];
-				charArray[end--] = charArray[start];
-				charArray[start++] = temp;
-			}
-		}
-		return String.valueOf(charArray);
 	};
 	
 }
