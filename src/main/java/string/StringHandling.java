@@ -710,6 +710,72 @@ public class StringHandling {
 		return res;
 	};
 	
+	/**
+	 * 14. Valid Parentheses
+	 *
+	 * <pre>
+	 * Description:
+	 * Given a string containing only '(', ')', '{', '}', '[' and ']',
+	 * determine if the input string is valid.
+	 *
+	 * A string is valid if:
+	 * - Open brackets are closed by the same type of brackets.
+	 * - Open brackets are closed in the correct order.
+	 *
+	 * Example 1: Input: "()"        Output: true
+	 * Example 2: Input: "()[]{}"    Output: true
+	 * Example 3: Input: "(]"        Output: false
+	 * Example 4: Input: "([)]"      Output: false
+	 * Example 5: Input: "{[]}"      Output: true
+	 *
+	 * Approach:
+	 * - Use a stack to track opening brackets.
+	 * - Traverse each character:
+	 *      - If opening bracket → push to stack
+	 *      - If closing bracket:
+	 *          - If stack empty → invalid
+	 *          - Check top of stack matches → pop
+	 *          - Else → invalid
+	 *
+	 * - At end, stack should be empty.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n)
+	 *
+	 * </pre>
+	 *
+	 * @param input the input string containing brackets
+	 * @return true if valid parentheses, false otherwise
+	 */
+	static Function<String, Boolean> validParanthases = input -> {
+		Stack<Character> stack = new Stack<>();
+		if (input.length() % 2 != 0) {
+			return false;
+		} else {
+			for (int i = 0; i < input.length(); i++) {
+				char current = input.charAt(i);
+				// Push opening brackets
+				if (current == '{' || current == '(' || current == '[') {
+					stack.push(input.charAt(i));
+				} else {
+					 // If stack is empty, no matching opening bracket
+					if (stack.isEmpty()) {
+						return false;
+					} else {
+						Character open = stack.peek();
+						// Check for matching pair
+						if ((open == '{' && current == '}') || (open == '[' && current == ']')
+								|| (open == '(' && current == ')')) {
+							stack.pop();
+						}
+					}
+				}
+			}
+		}
+		return stack.isEmpty();
+	};
+
+	
 
 	static BiFunction<String, Integer, String> stringReverseByFrequency = (String input, Integer frequency) -> {
 		StringBuilder reversedString = new StringBuilder();
@@ -883,31 +949,7 @@ public class StringHandling {
 		map.entrySet().forEach(e -> res.add(e.getValue()));
 		return res;
 	}
-
-	static Function<String, Boolean> validParanthases = input -> {
-		Stack<Character> stack = new Stack<>();
-		if (input.length() % 2 != 0) {
-			return false;
-		} else {
-			for (int i = 0; i < input.length(); i++) {
-				char current = input.charAt(i);
-				if (current == '{' || current == '(' || current == '[') {
-					stack.push(input.charAt(i));
-				} else {
-					if (stack.isEmpty()) {
-						return false;
-					} else {
-						Character open = stack.peek();
-						if ((open == '{' && current == '}') || (open == '[' && current == ']')
-								|| (open == '(' && current == ')')) {
-							stack.pop();
-						}
-					}
-				}
-			}
-		}
-		return stack.isEmpty();
-	};
+	
 
 	static BiFunction<String, String, Boolean> stringRotation = (one, two) -> {
 		// Concatenate s1 with itself & check if s2 is a substring

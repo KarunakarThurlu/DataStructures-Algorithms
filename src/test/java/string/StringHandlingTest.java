@@ -256,7 +256,14 @@ public class StringHandlingTest {
 	}
 	
 	@ParameterizedTest
-	@CsvSource({"{{}}}},false","{{}},true"})
+	@CsvSource({"'()', true",
+        "'()[]{}', true",
+        "'{[]}', true",
+        "'(]', false",
+        "'([)]', false",
+        "'(((', false",
+        "')))', false",
+        "'', true"})
 	@DisplayName("Test Valid Paranthases")
 	void testValidParanthases(String input, Boolean expected) {
 		Boolean  actual = StringHandling.validParanthases.apply(input);
