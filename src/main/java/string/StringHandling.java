@@ -650,6 +650,66 @@ public class StringHandling {
 	    }
 	    return new String(charArray);
 	};
+	
+	/**
+	 * 15. Roman to Integer
+	 *
+	 * <pre>
+	 * Description:
+	 * Convert a Roman numeral string into its corresponding integer value.
+	 *
+	 * Roman numerals:
+	 * I → 1
+	 * V → 5
+	 * X → 10
+	 * L → 50
+	 * C → 100
+	 * D → 500
+	 * M → 1000
+	 *
+	 * Special Rule:
+	 * - If a smaller value appears before a larger value, subtract it.
+	 *   Example:
+	 *      IV → 4   (5 - 1)
+	 *      IX → 9   (10 - 1)
+	 *
+	 * - Otherwise, add the value.
+	 *
+	 * Example 1: Input: "III"     Output: 3
+	 * Example 2: Input: "IV"      Output: 4
+	 * Example 3: Input: "IX"      Output: 9
+	 * Example 4: Input: "LVIII"   Output: 58
+	 * Example 5: Input: "MCMXCIV" Output: 1994
+	 *
+	 * Approach:
+	 * - Traverse the string from left to right.
+	 * - Compare current character value with next character value.
+	 * - If next > current → subtract current
+	 * - Else → add current
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param roman the Roman numeral string
+	 * @return integer value of Roman numeral
+	 */
+	static Function<String, Integer> romanToInteger = input -> {
+		Map<Character, Integer> map = Map.of('M', 1000, 'D', 500, 'C', 100, 'L', 50, 'X', 10, 'V', 5, 'I', 1);
+		Integer res = 0;
+		for (int i = 0; i < input.length(); i++) {
+			char charAt = input.charAt(i);
+			 // Check if next value is greater (subtraction case)
+			if (i + 1 < input.length() && map.get(input.charAt(i + 1)) > map.get(charAt)) {
+				res = res - map.get(charAt);
+			} else {
+				res = res + map.get(charAt);
+			}
+		}
+		return res;
+	};
+	
 
 	static BiFunction<String, Integer, String> stringReverseByFrequency = (String input, Integer frequency) -> {
 		StringBuilder reversedString = new StringBuilder();
@@ -849,20 +909,6 @@ public class StringHandling {
 		return stack.isEmpty();
 	};
 
-	static Function<String, Integer> romanToInteger = input -> {
-		Map<Character, Integer> map = Map.of('M', 1000, 'D', 500, 'C', 100, 'L', 50, 'X', 10, 'V', 5, 'I', 1);
-		Integer res = 0;
-		for (int i = 0; i < input.length(); i++) {
-			char charAt = input.charAt(i);
-			if (i + 1 < input.length() && map.get(input.charAt(i + 1)) > map.get(charAt)) {
-				res = res - map.get(charAt);
-			} else {
-				res = res + map.get(charAt);
-			}
-		}
-		return res;
-	};
-	
 	static BiFunction<String, String, Boolean> stringRotation = (one, two) -> {
 		// Concatenate s1 with itself & check if s2 is a substring
 		if (one.length() != two.length() || one == null) {
