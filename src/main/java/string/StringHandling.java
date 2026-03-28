@@ -774,8 +774,55 @@ public class StringHandling {
 		}
 		return stack.isEmpty();
 	};
-
 	
+	/**
+	 * 13. Group Anagrams
+	 *
+	 * <pre>
+	 * Description: Given a list of strings, group the anagrams together.
+	 *
+	 * Two strings are anagrams if they contain the same characters in the same frequency, but possibly in different order.
+	 *
+	 * Example 1: Input: ["eat","tea","tan","ate","nat","bat"] Output: [["eat","tea","ate"],["tan","nat"],["bat"]]
+	 * Example 2: Input: [""] Output: [[""]]
+	 * Example 3: Input: ["a"] Output: [["a"]]
+	 *
+	 * Approach:
+	 * - For each string:
+	 *      - Convert to char array
+	 *      - Sort the characters
+	 *      - Use sorted string as key
+	 *
+	 * - Store original strings in a map grouped by this key.
+	 * - Return all grouped values.
+	 *
+	 * Time Complexity: O(n * k log k)
+	 *      n → number of strings
+	 *      k → max length of string (sorting cost)
+	 *
+	 * Space Complexity: O(n * k)
+	 *
+	 * </pre>
+	 *
+	 * @param input list of strings
+	 * @return grouped list of anagrams
+	 */
+	public static List<List<String>> groupAnagramStrings(List<String> anagrams) {
+		Map<String, List<String>> map = new HashMap<>();
+		for (String s : anagrams) {
+			String string = s.chars().mapToObj(c -> (char) c).map(String::valueOf).sorted()
+					.collect(Collectors.joining());
+			if (map.containsKey(string)) {
+				map.get(string).add(s);
+			} else {
+				map.put(string, new ArrayList<>());
+				map.get(string).add(s);
+			}
+		}
+		List<List<String>> res = new ArrayList<>();
+		map.entrySet().forEach(e -> res.add(e.getValue()));
+		return res;
+	}
 
 	static BiFunction<String, Integer, String> stringReverseByFrequency = (String input, Integer frequency) -> {
 		StringBuilder reversedString = new StringBuilder();
@@ -932,24 +979,6 @@ public class StringHandling {
 		}
 		return stack.stream().map(c -> String.valueOf(c)).collect(Collectors.joining(""));
 	}
-
-	public static List<List<String>> groupAnagramStrings(List<String> anagrams) {
-		Map<String, List<String>> map = new HashMap<>();
-		for (String s : anagrams) {
-			String string = s.chars().mapToObj(c -> (char) c).map(String::valueOf).sorted()
-					.collect(Collectors.joining());
-			if (map.containsKey(string)) {
-				map.get(string).add(s);
-			} else {
-				map.put(string, new ArrayList<>());
-				map.get(string).add(s);
-			}
-		}
-		List<List<String>> res = new ArrayList<>();
-		map.entrySet().forEach(e -> res.add(e.getValue()));
-		return res;
-	}
-	
 
 	static BiFunction<String, String, Boolean> stringRotation = (one, two) -> {
 		// Concatenate s1 with itself & check if s2 is a substring
