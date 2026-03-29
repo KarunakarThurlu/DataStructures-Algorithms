@@ -823,6 +823,51 @@ public class StringHandling {
 		map.entrySet().forEach(e -> res.add(e.getValue()));
 		return res;
 	}
+	
+	/**
+	 * 12. Remove Adjacent Duplicate Characters
+	 *
+	 * <pre>
+	 * Description: Given a string, repeatedly remove adjacent duplicate characters until no such duplicates remain.
+	 *
+	 * Example 1: Input: "abbaca"   Output: "ca"
+	 * Example 2: Input: "azxxzy"   Output: "ay"
+	 * Example 3: Input: "a"        Output: "a"
+	 * Example 4: Input: ""         Output: ""
+	 * Example 5: Input: "google"   Output: "le"
+	 *
+	 * Approach:
+	 * - Use a stack to track characters.
+	 * - Traverse the string:
+	 *      - If current character matches top of stack → remove (pop)
+	 *      - Else → push to stack
+	 *
+	 * - This ensures consecutive duplicates are removed iteratively.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n)
+	 *
+	 * </pre>
+	 *
+	 * @param input the input string
+	 * @return string after removing adjacent duplicates
+	 */
+	static UnaryOperator<String> removeConsecutiveCharacters = input -> {
+		if (input == null || input.length() == 1) {
+			return input;
+		}
+		Stack<Character> stack = new Stack<>();
+		stack.push(input.charAt(0));
+		for (int i = 1; i < input.length(); i++) {
+			char currentChar = input.charAt(i);
+			if (!stack.isEmpty() && stack.peek() == currentChar) {
+				stack.pop();
+			} else {
+				stack.push(currentChar);
+			}
+		}
+		return stack.stream().map(String::valueOf).collect(Collectors.joining(""));
+	};
 
 	static BiFunction<String, Integer, String> stringReverseByFrequency = (String input, Integer frequency) -> {
 		StringBuilder reversedString = new StringBuilder();
@@ -951,35 +996,7 @@ public class StringHandling {
 		IntFunction<? extends Character> mapper = c -> (char) c;
 		return input.chars().mapToObj(mapper).collect(groupingBy(identity(), counting()));
 	};
-
-	static UnaryOperator<String> removeConsecutiveChars = input -> {
-		String current = input;
-		String previous;
-		do {
-			previous = current;
-			current = removeConsecutiveCharsUtil(previous);
-		} while (!current.equals(previous));
-		return current;
-	};
-
-	private static String removeConsecutiveCharsUtil(String input) {
-		int length = input.length();
-		Stack<Character> stack = new Stack<>();
-		for (int i = 0; i < length; i++) {
-			Character peek = stack.isEmpty() ? '0' : stack.peek();
-			if (peek == '0') {
-				stack.push(input.charAt(i));
-			} else {
-				if (stack.peek() == input.charAt(i)) {
-					stack.pop();
-				} else {
-					stack.push(input.charAt(i));
-				}
-			}
-		}
-		return stack.stream().map(c -> String.valueOf(c)).collect(Collectors.joining(""));
-	}
-
+	
 	static BiFunction<String, String, Boolean> stringRotation = (one, two) -> {
 		// Concatenate s1 with itself & check if s2 is a substring
 		if (one.length() != two.length() || one == null) {

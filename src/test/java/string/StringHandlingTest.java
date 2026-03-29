@@ -226,7 +226,7 @@ public class StringHandlingTest {
 	@MethodSource("removeConsecutiveCharsTestCases")
 	@DisplayName("Test Remove Consecutive Chars")
 	void testRemoveConsecutiveChars(String input, String expected) {
-		String actual = StringHandling.removeConsecutiveChars.apply(input);
+		String actual = StringHandling.removeConsecutiveCharacters.apply(input);
 		assertEquals(expected,actual);
 	}
 
@@ -235,7 +235,9 @@ public class StringHandlingTest {
 				Arguments.of("java","java"),
 				Arguments.of("aabcddedd","bce"),
 				Arguments.of("aabeebcddedd","ce"),
-				Arguments.of("i","i")
+				Arguments.of("i","i"),
+				Arguments.of("leetcode","ltcode"),
+				Arguments.of("google","le")
 				);
 	}
 	
