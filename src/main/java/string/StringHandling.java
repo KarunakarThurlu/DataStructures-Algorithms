@@ -868,6 +868,45 @@ public class StringHandling {
 		}
 		return stack.stream().map(String::valueOf).collect(Collectors.joining(""));
 	};
+	
+	/**
+	 * 11. Reverse Words in a String
+	 *
+	 * <pre>
+	 * Description:
+	 * Given a string, reverse the order of words.
+	 *
+	 * A word is defined as a sequence of non-space characters.
+	 * Extra spaces should be removed in the output.
+	 *
+	 * Example 1: Input: "the sky is blue"      Output: "blue is sky the"
+	 * Example 2: Input: "  hello world  "      Output: "world hello"
+	 * Example 3: Input: "a good   example"     Output: "example good a"
+	 *
+	 * Approach:
+	 * - Split the string by spaces.
+	 * - Traverse words from end to start.
+	 * - Skip empty words (caused by multiple spaces).
+	 * - Append valid words with a single space separator.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n)
+	 *
+	 * </pre>
+	 *
+	 * @param input the input string
+	 * @return string with words reversed
+	 */
+	static UnaryOperator<String> reverseWords = input -> {
+		StringBuilder result = new StringBuilder();
+		String[] words = input.split(" ");
+		for (String word : words) {
+			if (!word.equals(" ")) {
+				result.insert(0, word).insert(0, " ");
+			}
+		}
+		return new String(result).trim();
+	};
 
 	static BiFunction<String, Integer, String> stringReverseByFrequency = (String input, Integer frequency) -> {
 		StringBuilder reversedString = new StringBuilder();
@@ -980,18 +1019,7 @@ public class StringHandling {
 		}
 		return maxLength;
 	};
-
-	static UnaryOperator<String> reverseWords = input -> {
-		StringBuilder result = new StringBuilder();
-		String[] words = input.split(" ");
-		for (String word : words) {
-			if (!word.equals(" ")) {
-				result.insert(0, word).insert(0, " ");
-			}
-		}
-		return new String(result).trim();
-	};
-
+	
 	static Function<String, Map<Character, Long>> charCount = input -> {
 		IntFunction<? extends Character> mapper = c -> (char) c;
 		return input.chars().mapToObj(mapper).collect(groupingBy(identity(), counting()));
