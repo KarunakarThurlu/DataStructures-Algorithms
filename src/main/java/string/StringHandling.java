@@ -907,7 +907,60 @@ public class StringHandling {
 		}
 		return new String(result).trim();
 	};
-
+	
+	
+	/**
+	 * 10. Longest Substring Without Repeating Characters
+	 *
+	 * <pre>
+	 * Description:
+	 * Given a string, find the length of the longest substring
+	 * without repeating characters.
+	 *
+	 * Example 1: Input: "abcabcbb"   Output: 3   ("abc")
+	 * Example 2: Input: "bbbbb"      Output: 1   ("b")
+	 * Example 3: Input: "pwwkew"     Output: 3   ("wke")
+	 * Example 4: Input: ""           Output: 0
+	 *
+	 * Approach:
+	 * - Use sliding window technique with two pointers:
+	 *      left  → start of window
+	 *      right → end of window
+	 *
+	 * - Use a Set to track unique characters in current window.
+	 *
+	 * - If character is not present → expand window (right++)
+	 * - If duplicate found → shrink window (left++) until valid
+	 *
+	 * - Track maximum window size during traversal.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(min(n, charset))
+	 *
+	 * </pre>
+	 *
+	 * @param input the input string
+	 * @return length of longest substring without repeating characters
+	 */
+	static Function<String, Integer> longestSubString = str -> {
+		Set<Character> lookUp = new HashSet<>();
+		int fast = 0;
+		int slow = 0;
+		int maxLength = 0;
+		while (fast < str.length()) {
+			if (lookUp.add(str.charAt(fast))) {
+				if (maxLength < lookUp.size()) {
+					maxLength = lookUp.size();
+				}
+				fast++;
+			} else {
+				lookUp.remove(str.charAt(slow));
+				slow++;
+			}
+		}
+		return maxLength;
+	};
+	
 	static BiFunction<String, Integer, String> stringReverseByFrequency = (String input, Integer frequency) -> {
 		StringBuilder reversedString = new StringBuilder();
 		int startIndex = 0;
@@ -1003,23 +1056,6 @@ public class StringHandling {
 		return '0';
 	};
 
-	static Function<String, Integer> longestSubString = input -> {
-		Set<Character> set = new HashSet<>();
-		int maxLength = 0;
-		int pointerOne = 0;
-		int pointerTwo = 0;
-		while (pointerOne < input.length() && pointerTwo < input.length()) {
-			if (set.add(input.charAt(pointerTwo))) {
-				pointerTwo++;
-				maxLength = Math.max(maxLength, set.size());
-			} else {
-				set.remove(input.charAt(pointerOne));
-				pointerOne++;
-			}
-		}
-		return maxLength;
-	};
-	
 	static Function<String, Map<Character, Long>> charCount = input -> {
 		IntFunction<? extends Character> mapper = c -> (char) c;
 		return input.chars().mapToObj(mapper).collect(groupingBy(identity(), counting()));
