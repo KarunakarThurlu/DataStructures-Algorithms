@@ -961,6 +961,48 @@ public class StringHandling {
 		return maxLength;
 	};
 	
+	/**
+	 * 9. First Unique Character in a String
+	 *
+	 * <pre>
+	 * Description:
+	 * Given a string, find the first non-repeating character
+	 * and return it. If none exists, return '0'.
+	 *
+	 * Example 1: Input: "leetcode"      Output: 'l'
+	 * Example 2: Input: "loveleetcode"  Output: 'v'
+	 * Example 3: Input: "aabb"          Output: '0'
+	 *
+	 * Approach:
+	 * - Traverse the string.
+	 * - For each character:
+	 *      - Check if first index == last index
+	 *      - If yes → character is unique → return it
+	 *
+	 * - If no unique character found → return '0'
+	 *
+	 * Time Complexity: O(n²) (due to indexOf & lastIndexOf)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param input the input string
+	 * @return first non-repeating character or '0' if none exists
+	 */
+	static Function<String, Character> firstUniqueChar = input -> {
+		if (input == null || input.isEmpty()) {
+			return '0';
+		}
+		for (int index = 0; index < input.length(); index++) {
+			char currentChar = input.charAt(index);
+			// Check if character appears only once
+			if (input.indexOf(currentChar) == input.lastIndexOf(currentChar)) {
+				return currentChar;
+			}
+		}
+		return '0';
+	};
+	
 	static BiFunction<String, Integer, String> stringReverseByFrequency = (String input, Integer frequency) -> {
 		StringBuilder reversedString = new StringBuilder();
 		int startIndex = 0;
@@ -1044,16 +1086,6 @@ public class StringHandling {
 			}
 		}
 		return new String(result);
-	};
-
-	static Function<String, Character> firstUniqueChar = input -> {
-		for (int i = 0; i < input.length(); i++) {
-			char charAt = input.charAt(i);
-			if (input.indexOf(charAt) == input.lastIndexOf(charAt)) {
-				return charAt;
-			}
-		}
-		return '0';
 	};
 
 	static Function<String, Map<Character, Long>> charCount = input -> {
