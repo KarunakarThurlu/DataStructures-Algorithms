@@ -1003,6 +1003,45 @@ public class StringHandling {
 		return '0';
 	};
 	
+	/**
+	 * 8. Remove Duplicate Characters from String
+	 *
+	 * <pre>
+	 * Description:
+	 * Given a string, remove duplicate characters while preserving
+	 * the order of first occurrence.
+	 *
+	 * Example 1: Input: "programming"   Output: "progamin"
+	 * Example 2: Input: "aabbcc"        Output: "abc"
+	 * Example 3: Input: "abc"           Output: "abc"
+	 * Example 4: Input: ""              Output: ""
+	 *
+	 * Approach:
+	 * - Use a Set to track already seen characters.
+	 * - Traverse the string:
+	 *      - If character not in set → add to set and append to result
+	 *      - Else → skip
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n)
+	 *
+	 * </pre>
+	 *
+	 * @param input the input string
+	 * @return string with duplicate characters removed
+	 */
+	static Function<String, String> removeDuplicateChars = input -> {
+		StringBuilder result = new StringBuilder();
+		Set<Character> container = new HashSet<>();
+		for (int i = 0; i < input.length(); i++) {
+			if (!container.contains(input.charAt(i))) {
+				container.add(input.charAt(i));
+				result.append(input.charAt(i));
+			}
+		}
+		return new String(result);
+	};
+	
 	static BiFunction<String, Integer, String> stringReverseByFrequency = (String input, Integer frequency) -> {
 		StringBuilder reversedString = new StringBuilder();
 		int startIndex = 0;
@@ -1075,18 +1114,6 @@ public class StringHandling {
 	private static String sortCharsInString(String input) {
 		return input.chars().mapToObj(c -> String.valueOf((char) c)).sorted().collect(Collectors.joining());
 	}
-
-	static Function<String, String> removeDuplicateChars = input -> {
-		StringBuilder result = new StringBuilder();
-		Set<Character> container = new HashSet<>();
-		for (int i = 0; i < input.length(); i++) {
-			if (!container.contains(input.charAt(i))) {
-				container.add(input.charAt(i));
-				result.append(input.charAt(i));
-			}
-		}
-		return new String(result);
-	};
 
 	static Function<String, Map<Character, Long>> charCount = input -> {
 		IntFunction<? extends Character> mapper = c -> (char) c;
