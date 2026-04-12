@@ -1042,6 +1042,51 @@ public class StringHandling {
 		return new String(result);
 	};
 	
+	/**
+	 * 7. Valid Anagram Strings
+	 *
+	 * <pre>
+	 * Description:
+	 * Given two strings, determine if they are anagrams of each other.
+	 *
+	 * Two strings are anagrams if they contain the same characters
+	 * with the same frequency, ignoring spaces.
+	 *
+	 * Example 1: Input: "listen", "silent"        Output: true
+	 * Example 2: Input: "triangle", "integral"    Output: true
+	 * Example 3: Input: "hello", "world"          Output: false
+	 * Example 4: Input: "a gentleman", "elegant man" Output: true
+	 *
+	 * Approach:
+	 * - Remove all whitespace from both strings.
+	 * - If lengths differ → not anagrams.
+	 * - Sort both strings and compare.
+	 *
+	 * Time Complexity: O(n log n)
+	 * Space Complexity: O(n)
+	 *
+	 * </pre>
+	 *
+	 * @param first  first input string
+	 * @param second second input string
+	 * @return true if both strings are anagrams, false otherwise
+	 */
+	static BiFunction<String, String, Boolean> angramStrings = (one, two) -> {
+		// Removing white spaces from given strings
+		String stringOne = one.replaceAll("\\s", "");
+		String stringTwo = two.replaceAll("\\s", "");
+
+		// if lengths are not equal then not anagrams
+		if (stringOne.length() != stringTwo.length()) {
+			return false;
+		}
+		return sortCharsInString(stringOne).equals(sortCharsInString(stringTwo));
+	};
+
+	private static String sortCharsInString(String input) {
+		return input.chars().mapToObj(c -> String.valueOf((char) c)).sorted().collect(Collectors.joining());
+	}
+	
 	static BiFunction<String, Integer, String> stringReverseByFrequency = (String input, Integer frequency) -> {
 		StringBuilder reversedString = new StringBuilder();
 		int startIndex = 0;
@@ -1098,22 +1143,6 @@ public class StringHandling {
 		return input.toLowerCase().replace('a', '!').replace('e', '@').replace('i', '#').replace('o', '$').replace('u',
 				'%');
 	};
-
-	static BiFunction<String, String, Boolean> angramStrings = (one, two) -> {
-		// Removing white spaces from given strings
-		String stringOne = one.replaceAll("\\s", "");
-		String stringTwo = two.replaceAll("\\s", "");
-
-		// if lengths are not equal then not anagrams
-		if (stringOne.length() != stringTwo.length()) {
-			return false;
-		}
-		return sortCharsInString(stringOne).equals(sortCharsInString(stringTwo));
-	};
-
-	private static String sortCharsInString(String input) {
-		return input.chars().mapToObj(c -> String.valueOf((char) c)).sorted().collect(Collectors.joining());
-	}
 
 	static Function<String, Map<Character, Long>> charCount = input -> {
 		IntFunction<? extends Character> mapper = c -> (char) c;
