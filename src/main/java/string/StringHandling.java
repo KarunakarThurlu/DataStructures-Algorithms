@@ -1082,6 +1082,42 @@ public class StringHandling {
 		}
 		return sortCharsInString(stringOne).equals(sortCharsInString(stringTwo));
 	};
+	
+	/**
+	 * 6. Replace Vowels in a String
+	 *
+	 * <pre>
+	 * Description:
+	 * Given a string, replace all vowels with specific special characters:
+	 *
+	 * a → !
+	 * e → @
+	 * i → #
+	 * o → $
+	 * u → %
+	 *
+	 * Note:
+	 * - Input is converted to lowercase before replacement.
+	 *
+	 * Example 1: Input: "hello"     Output: "h@ll$"
+	 * Example 2: Input: "APPLE"     Output: "!ppl@"
+	 * Example 3: Input: "xyz"       Output: "xyz"
+	 *
+	 * Approach:
+	 * - Convert string to lowercase.
+	 * - Replace each vowel using chained replace operations.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n)
+	 *
+	 * </pre>
+	 *
+	 * @param input the input string
+	 * @return string with vowels replaced by special characters
+	 */
+	static Function<String, String> replaceVowels = input -> {
+		return input.toLowerCase().replace('a', '!').replace('e', '@').replace('i', '#').replace('o', '$').replace('u','%');
+	};
 
 	private static String sortCharsInString(String input) {
 		return input.chars().mapToObj(c -> String.valueOf((char) c)).sorted().collect(Collectors.joining());
@@ -1137,11 +1173,6 @@ public class StringHandling {
 
 	static Function<String, String> replaceSpecificWords = input -> {
 		return input.replaceAll("plus", "+").replaceAll("minus", "-");
-	};
-
-	static Function<String, String> replaceVowels = input -> {
-		return input.toLowerCase().replace('a', '!').replace('e', '@').replace('i', '#').replace('o', '$').replace('u',
-				'%');
 	};
 
 	static Function<String, Map<Character, Long>> charCount = input -> {

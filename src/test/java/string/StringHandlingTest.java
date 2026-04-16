@@ -112,6 +112,8 @@ public class StringHandlingTest {
 				Arguments.of("java",  "j!v!"),
 				Arguments.of("karun", "k!r%n"),
 				Arguments.of("postgresql", "p$stgr@sql"),
+				Arguments.of("APPLE","!ppl@"),
+				Arguments.of("xyz","xyz"),
 				Arguments.of("","")
 				);
 	}
