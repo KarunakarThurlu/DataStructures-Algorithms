@@ -48,7 +48,68 @@ public class StringHandling {
 	 * 23.String to integer (atoi)
 	 * 24.Generate parenthesis
 	 * 25.Check if two strings are isomorphic
+	 * 26.Robot return to origin
 	 */
+	
+	/**
+	 * 26. Robot Return to Origin
+	 *
+	 * <pre>
+	 * Description:
+	 * Given a string moves consisting of characters:
+	 * 'L', 'R', 'U', 'D',
+	 * determine if the robot returns to the origin (0,0).
+	 *
+	 * Movement rules:
+	 * L → move left  (x--)
+	 * R → move right (x++)
+	 * U → move up    (y++)
+	 * D → move down  (y--)
+	 *
+	 * Example 1: Input: "UD"        Output: true
+	 * Example 2: Input: "LL"        Output: false
+	 * Example 3: Input: "URDL"      Output: true
+	 *
+	 * Approach:
+	 * - Track x and y coordinates.
+	 * - Iterate through moves:
+	 *      - Update x or y based on direction
+	 * - At end:
+	 *      - If (x == 0 && y == 0) → return true
+	 *      - Else → false
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param moves string representing robot moves
+	 * @return true if robot returns to origin, false otherwise
+	 */
+	public static Function<String, Boolean> judgeCircle = moves -> {
+
+	    if (moves == null || moves.isEmpty()) {
+	        return true; // no movement → still at origin
+	    }
+
+	    int xCoordinate = 0;
+	    int yCoordinate = 0;
+
+	    for (int index = 0; index < moves.length(); index++) {
+	        char move = moves.charAt(index);
+	        // Update coordinates based on move
+	        if (move == 'L') {
+	            xCoordinate--;
+	        } else if (move == 'R') {
+	            xCoordinate++;
+	        } else if (move == 'U') {
+	            yCoordinate++;
+	        } else if (move == 'D') {
+	            yCoordinate--;
+	        }
+	    }
+	    return xCoordinate == 0 && yCoordinate == 0;
+	};
 	
 	/**
 	 * 25. Isomorphic Strings

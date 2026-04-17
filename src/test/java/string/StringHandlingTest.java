@@ -424,6 +424,20 @@ public class StringHandlingTest {
                 Arguments.of("abc", null, false)
         );
     }
-
+    
+    @ParameterizedTest
+    @CsvSource({
+            "UD, true",
+            "LL, false",
+            "URDL, true",
+            "UUDDLLRR, true",
+            "UUDDL, false",
+            "'', true"
+    })
+    @DisplayName("Robot return to origin")
+    void testShouldReturnToOrigin(String moves,  boolean expectedResult) {
+        boolean actualResult = StringHandling.judgeCircle.apply(moves);
+        assertEquals(expectedResult, actualResult);
+    }
 
 }
