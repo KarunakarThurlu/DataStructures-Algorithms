@@ -103,6 +103,16 @@ public class TestNumberChallenges {
                 Arguments.of(31, 5)    // 11111 -> 5
         );
     }
+    
+	@ParameterizedTest
+	@DisplayName("Test Claimbing stairs")
+	@CsvSource({"'1','1'","'2','2'","'3','3'","'4','5'","'5','8'","'6','13'"})
+	void testClaimbingStars(String inputArgument,String expectedArgument) {
+		Integer input = parseInput(inputArgument);
+		Integer expected = parseInput(expectedArgument);
+		Integer actual = NumberChallenges.climbStairs.apply(input);
+		assertEquals(expected, actual);
+	}
 	
 	private Integer parseInput(String input) {
 		if (input.isBlank()) return 0;

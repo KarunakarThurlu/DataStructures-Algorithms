@@ -18,8 +18,56 @@ public class NumberChallenges {
 	 * 6. Reverse given integer
 	 * 7. Armstrong number
 	 * 8. Count number of 1 bits
+	 * 9. Climbing Stairs
 	 */
 	
+	/**
+	 * 9. Climbing Stairs
+	 *
+	 * <pre>
+	 * Description:  You are climbing a staircase with n steps. Each time you can either climb 1 step or 2 steps.
+	 *
+	 * Find the number of distinct ways to reach the top.
+	 *
+	 * Example 1: Input: 2   Output: 2   (1+1, 2)
+	 * Example 2: Input: 3   Output: 3   (1+1+1, 1+2, 2+1)
+	 *
+	 * Approach:
+	 * - This is a Fibonacci pattern:
+	 *      ways(n) = ways(n-1) + ways(n-2)
+	 *
+	 * - Use two variables to store previous results:
+	 *      prev → ways(n-2)
+	 *      curr → ways(n-1)
+	 *
+	 * - Iteratively compute result up to n.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param n number of steps
+	 * @return number of distinct ways to climb
+	 */
+	public static IntFunction<Integer> climbStairs = n -> {
+	    if (n <= 2) {
+	        return n;
+	    }
+	    int previous = 1; // ways to reach step 1
+	    int current = 2;  // ways to reach step 2
+
+	    for (int step = 3; step <= n; step++) {
+	    	// The number of ways to reach the current step is the sum of the ways to reach the previous two steps
+	        int next = previous + current;
+	        // Update previous and current for the next iteration
+	        previous = current;
+	        // Move current to next for the next iteration
+	        current = next;
+	    }
+	    // After the loop, current holds the number of ways to reach step n
+	    return current;
+	};
 	
     /**
      * 8. Counts the number of set bits (1s) in the binary representation of a non-negative integer using Brian Kernighan’s Algorithm.
