@@ -1179,6 +1179,40 @@ public class StringHandling {
 	static Function<String, String> replaceVowels = input -> {
 		return input.toLowerCase().replace('a', '!').replace('e', '@').replace('i', '#').replace('o', '$').replace('u','%');
 	};
+	
+	/**
+	 * 5. Replace Specific Words in a String
+	 *
+	 * <pre>
+	 * Description:
+	 * Given a string, replace specific words with corresponding symbols:
+	 *
+	 * "plus"  → "+"
+	 * "minus" → "-"
+	 *
+	 * Example 1: Input: "one plus two"        Output: "one + two"
+	 * Example 2: Input: "five minus three"    Output: "five - three"
+	 * Example 3: Input: "plus minus plus"     Output: "+ - +"
+	 *
+	 * Approach:
+	 * - Use replaceAll with regex to replace specific words.
+	 * - Replace "plus" with "+".
+	 * - Replace "minus" with "-".
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n)
+	 *
+	 * </pre>
+	 *
+	 * @param input the input string
+	 * @return string with specific words replaced
+	 */
+	static Function<String, String> replaceSpecificWords = input -> {
+		if (input == null || input.isEmpty()) {
+	        return input == null ? null : "";
+	    }
+		return input.replaceAll("plus", "+").replaceAll("minus", "-");
+	};
 
 	private static String sortCharsInString(String input) {
 		return input.chars().mapToObj(c -> String.valueOf((char) c)).sorted().collect(Collectors.joining());
@@ -1231,11 +1265,7 @@ public class StringHandling {
 		}
 		return map;
 	};
-
-	static Function<String, String> replaceSpecificWords = input -> {
-		return input.replaceAll("plus", "+").replaceAll("minus", "-");
-	};
-
+	
 	static Function<String, Map<Character, Long>> charCount = input -> {
 		IntFunction<? extends Character> mapper = c -> (char) c;
 		return input.chars().mapToObj(mapper).collect(groupingBy(identity(), counting()));
