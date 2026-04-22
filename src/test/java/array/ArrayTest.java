@@ -357,7 +357,6 @@ public class ArrayTest {
             Arguments.of(new int[]{10}, 5, -1)                     // Single element not found
         );
     }
-    
     @ParameterizedTest
     @DisplayName("Test Search in rotated sorted array with various cases")
     @MethodSource("provideRotatedArrayTestCases")
@@ -365,7 +364,6 @@ public class ArrayTest {
         int actualIndex=Array.searchInRotatedSortedArray(array, target);
         assertEquals(expected, actualIndex, "Expected index and actual index should be equal");
     }
-
     private static Stream<Arguments> provideRotatedArrayTestCases() {
         return Stream.of(
             Arguments.of(new int[]{4, 5, 6, 7, 0, 1, 2}, 0, 4),    // Target found at index 4
@@ -1258,13 +1256,11 @@ public class ArrayTest {
 	}
 
 	private static Stream<Arguments> provideSearchInRoatedSortedIIArrayTestCases() {
-		return Stream.of(
-				Arguments.of(new int[] { 1, 3, 5, 6 }, 7, false), 
+		return Stream.of(Arguments.of(new int[] { 1, 3, 5, 6 }, 7, false),
 				Arguments.of(new int[] { 1, 3, 5, 6 }, 6, true),
-				Arguments.of(new int[] { 2,5,6,0,0,1,2 }, 0, true),
-				Arguments.of(new int[] { 2,5,6,0,0,1,2 }, 3, false), 
-				Arguments.of(new int[] { 1, 2, 5, 6 }, 1, true)
-			);
+				Arguments.of(new int[] { 2, 5, 6, 0, 0, 1, 2 }, 0, true),
+				Arguments.of(new int[] { 2, 5, 6, 0, 0, 1, 2 }, 3, false),
+				Arguments.of(new int[] { 1, 2, 5, 6 }, 1, true));
 	}
 	
     @ParameterizedTest
@@ -1575,6 +1571,22 @@ public class ArrayTest {
 			);
 	}
 	
+    @ParameterizedTest
+    @DisplayName("Test Minimum Size Subarray Sum")
+    @MethodSource("minimumSizeSubarraySumTestData")
+	void tesMinimumSizeSubarraySumTestData(int[] inputArray,int target, int expectedLength) {
+		int actualLength = Array.minimumSizeSubArray(inputArray,target);
+		assertEquals(expectedLength, actualLength);
+	}
+
+	static Stream<Arguments> minimumSizeSubarraySumTestData() {
+		return Stream.of(
+				Arguments.of(new int[] { 2, 3, 1, 2, 4, 3 }, 7, 2), 
+				Arguments.of(new int[] { 1, 4, 4 }, 4, 1),
+				Arguments.of(new int[] { 1, 1, 1, 1, 1, 1, 1, 1 }, 11, 0),
+				Arguments.of(new int[] { 5, 1, 3, 5, 10, 7, 4, 9, 2, 8 }, 15, 2)
+			);
+	}
 	
 	
 }

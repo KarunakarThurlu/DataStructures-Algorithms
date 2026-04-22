@@ -101,6 +101,7 @@ public class Array {
 	 * 78.House Robber II
 	 * 79.Peak Index in a Mountain Array
 	 * 80.Find maximum in Rotated Sorted Array
+	 * 81.Minimum size sub array
 	 */
 
 	/**
@@ -3881,6 +3882,64 @@ public class Array {
 			}
 		}
 		return nums[left];
+	}
+	
+	/**
+	 * 81. Minimum Size Subarray Sum
+	 *
+	 * <pre>
+	 * Description:
+	 * Given an array of positive integers nums and a target value,
+	 * find the minimal length of a contiguous subarray of which the sum
+	 * is greater than or equal to target. If no such subarray exists, return 0.
+	 *
+	 * Example 1:
+	 * Input: target = 7, nums = [2,3,1,2,4,3]
+	 * Output: 2   ([4,3])
+	 *
+	 * Example 2:
+	 * Input: target = 4, nums = [1,4,4]
+	 * Output: 1
+	 *
+	 * Example 3:
+	 * Input: target = 11, nums = [1,1,1,1,1,1,1,1]
+	 * Output: 0
+	 *
+	 * Approach:
+	 * - Use sliding window with two pointers:
+	 *      left  → start of window
+	 *      right → end of window
+	 *
+	 * - Expand window (right++) and keep adding to sum.
+	 * - When sum >= target:
+	 *      - Update minimum length
+	 *      - Shrink window (left++) to find smaller valid window
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param nums array of positive integers
+	 * @param target target sum
+	 * @return minimum length of subarray, or 0 if not found
+	 */
+	public static int minimumSizeSubArray(int[] nums, int target) {
+		int fast = 0;
+		int slow = 0;
+		int sum  = 0;
+		int minLength = Integer.MAX_VALUE;
+		while(fast<nums.length) {
+			//Expand window by adding next element
+			sum = sum + nums[fast++];
+			
+			//Shrink window from the left as long as sum is >= target
+			while(sum>=target) {
+				minLength = Math.min(fast-slow, minLength);
+				sum = sum - nums[slow++];
+			}
+		}
+		return minLength == Integer.MAX_VALUE ? 0 : minLength;
 	}
 	
 }
