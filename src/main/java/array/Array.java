@@ -102,8 +102,10 @@ public class Array {
 	 * 79.Peak Index in a Mountain Array
 	 * 80.Find maximum in Rotated Sorted Array
 	 * 81.Minimum size sub array
+	 * 82.Contagious sub array
 	 */
-
+	
+	
 	/**
 	 * 1. Two Sum : Finds indices of two numbers in an array that add up to the target sum.
 	 * 
@@ -3942,4 +3944,55 @@ public class Array {
 		return minLength == Integer.MAX_VALUE ? 0 : minLength;
 	}
 	
+	/**
+	 * 82. Contiguous Subarray (Equal 0s and 1s)
+	 *
+	 * <pre>
+	 * Description: Given a binary array (containing only 0s and 1s), find the length of the longest contiguous subarray with equal number of 0s and 1s.
+	 *
+	 * Example 1: Input: [0,1]   Output: 2
+	 * Example 2: Input: [0,1,0] Output: 2
+	 * Example 3: Input: [0,0,1,0,0,0,1,1] Output: 6
+	 *
+	 * Approach:
+	 * - Treat 0 as -1 and 1 as +1.
+	 * - Maintain a running sum (difference).
+	 *
+	 * - If same sum occurs again:
+	 *      → subarray between indices has equal 0s and 1s
+	 *
+	 * - Use a map to store first occurrence of each sum.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n)
+	 *
+	 * </pre>
+	 *
+	 * @param nums binary array
+	 * @return maximum length of valid subarray
+	 */
+	public static int contiguousSubArray(int[] nums) {
+	    int maxLength = 0;
+	    int runningSum = 0;
+
+	    Map<Integer, Integer> firstOccurrenceMap = new HashMap<>();
+
+	    // Important: handle case when subarray starts from index 0
+	    firstOccurrenceMap.put(0, -1);
+
+	    for (int index = 0; index < nums.length; index++) {
+
+	        // Convert 0 → -1, 1 → +1
+	        runningSum += (nums[index] == 0) ? -1 : 1;
+
+	        // If same sum seen before → valid subarray
+	        if (firstOccurrenceMap.containsKey(runningSum)) {
+	            maxLength = Math.max(  maxLength, index - firstOccurrenceMap.get(runningSum));
+	        } else { // Store first occurrence only
+	            firstOccurrenceMap.put(runningSum, index);
+	        }
+	    }
+
+	    return maxLength;
+	}
 }

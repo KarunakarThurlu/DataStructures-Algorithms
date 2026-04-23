@@ -1588,5 +1588,23 @@ public class ArrayTest {
 			);
 	}
 	
+    @ParameterizedTest
+    @DisplayName("Test contiguous sub array")
+    @MethodSource("contiguousSubArrayTestData")
+	void tesContiguousSubArray(int[] inputArray,int expectedLength) {
+		int actualLength = Array.contiguousSubArray(inputArray);
+		assertEquals(expectedLength, actualLength);
+	}
+
+	static Stream<Arguments> contiguousSubArrayTestData() {
+		return Stream.of(
+				Arguments.of(new int[]{0,1}, 2 ),
+				Arguments.of( new int[]{0,1,0}, 2 ),
+				Arguments.of( new int[]{0,0,1,0,0,0,1,1}, 6 ),
+				Arguments.of(new int[]{1,1,1,1}, 0 ),
+				Arguments.of(new int[]{0,0,0,0}, 0 )
+			);
+	}
+	
 	
 }
