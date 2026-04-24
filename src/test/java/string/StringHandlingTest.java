@@ -69,15 +69,16 @@ public class StringHandlingTest {
 	void testCountVowelsAndConsonent(String input, Map<String, Integer> expected) {
 		Map<String, Integer> actual = StringHandling.countVowelsAndConsonent.apply(input);
 		assertEquals(expected.get("Vowels"), actual.get("Vowels"));
-		assertEquals(expected.get("Consonents"), actual.get("Consonents"));
+		assertEquals(expected.get("Consonants"), actual.get("Consonants"));
 	}
 
 	private static Stream<Arguments> countVowelsAndConsonentTestCases() {
 		return Stream.of(
-				Arguments.of("karunakar", Map.of("Vowels", 4, "Consonents", 5)),
-				Arguments.of("abc", Map.of("Vowels", 1, "Consonents", 2)),
-				Arguments.of("a", Map.of("Vowels", 1, "Consonents", 0)),
-				Arguments.of("", Map.of("Vowels", 0, "Consonents", 0))
+				Arguments.of("karunakar", Map.of("Vowels", 4, "Consonants", 5)),
+				Arguments.of("abc", Map.of("Vowels", 1, "Consonants", 2)),
+				Arguments.of("1abc45", Map.of("Vowels", 1, "Consonants", 2)),
+				Arguments.of("a", Map.of("Vowels", 1, "Consonants", 0)),
+				Arguments.of("", Map.of("Vowels", 0, "Consonants", 0))
 				);
 	}
 	

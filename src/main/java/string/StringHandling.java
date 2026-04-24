@@ -1213,6 +1213,58 @@ public class StringHandling {
 	    }
 		return input.replaceAll("plus", "+").replaceAll("minus", "-");
 	};
+	
+	
+	/**
+	 * 4. Count Vowels and Consonants
+	 *
+	 * <pre>
+	 * Description:
+	 * Given a string, count the number of vowels and consonants.
+	 *
+	 * Vowels: a, e, i, o, u (both lowercase and uppercase)
+	 * Consonants: all other alphabetic characters
+	 *
+	 * Note:
+	 * - Non-alphabet characters are ignored.
+	 *
+	 * Example 1: Input: "hello"      Output: {Vowels=2, Consonants=3}
+	 * Example 2: Input: "AEIOU"      Output: {Vowels=5, Consonants=0}
+	 * Example 3: Input: "abc123"     Output: {Vowels=1, Consonants=2}
+	 *
+	 * Approach:
+	 * - Traverse each character in the string.
+	 * - Check if character is alphabetic:
+	 *      - If vowel → increment vowel count
+	 *      - Else → increment consonant count
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param input the input string
+	 * @return map containing counts of vowels and consonants
+	 */
+	static Function<String, Map<String, Integer>> countVowelsAndConsonent = input -> {
+		Map<String, Integer> countMap = new HashMap<>();
+		countMap.put("Vowels", 0);
+		countMap.put("Consonants", 0);
+		if (input == null || input.isEmpty())
+			return countMap;
+		String vowels = "aeiouAEIOU";
+		for (int index = 0; index < input.length(); index++) {
+			char currentChar = input.charAt(index);
+			// Consider only alphabetic characters
+			if (Character.isLetter(currentChar)) {
+				if (vowels.indexOf(currentChar) >= 0)
+					countMap.put("Vowels", countMap.getOrDefault("Vowels", 0) + 1);
+				else
+					countMap.put("Consonants", countMap.getOrDefault("Consonants",0) + 1);
+			}
+		}
+		return countMap;
+	};
 
 	private static String sortCharsInString(String input) {
 		return input.chars().mapToObj(c -> String.valueOf((char) c)).sorted().collect(Collectors.joining());
@@ -1250,21 +1302,6 @@ public class StringHandling {
 		}
 		return permutations;
 	}
-
-	static Function<String, Map<String, Integer>> countVowelsAndConsonent = input -> {
-		String vowels = "aeiouAEIOU";
-		Map<String, Integer> map = new HashMap<>();
-		map.put("Vowels", 0);
-		map.put("Consonents", 0);
-		for (int i = 0; i < input.length(); i++) {
-			if (vowels.indexOf(input.charAt(i)) >= 0) {
-				map.put("Vowels", map.get("Vowels") + 1);
-			} else {
-				map.put("Consonents", map.get("Consonents") + 1);
-			}
-		}
-		return map;
-	};
 	
 	static Function<String, Map<Character, Long>> charCount = input -> {
 		IntFunction<? extends Character> mapper = c -> (char) c;
