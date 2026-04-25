@@ -1285,22 +1285,59 @@ public class StringHandling {
 		return new String(reversedString);
 	};
 
+	
+	/**
+	 * 3. Permutations of a String
+	 *
+	 * <pre>
+	 * Description: Given a string, return all possible permutations of its characters.
+	 *
+	 * Example 1: Input: "abc"
+	 * Output: ["abc", "acb", "bac", "bca", "cab", "cba"]
+	 *
+	 * Example 2: Input: "a"
+	 * Output: ["a"]
+	 *
+	 * Example 3: Input: ""
+	 * Output: [""]
+	 *
+	 * Approach:
+	 * - Use backtracking.
+	 * - Fix one character at a time and swap with remaining characters.
+	 * - Recursively generate permutations for the rest of the string.
+	 * - Backtrack by swapping back.
+	 *
+	 * Time Complexity: O(n!)
+	 * Space Complexity: O(n) (recursion stack)
+	 *
+	 * </pre>
+	 *
+	 * @param input the input string
+	 * @return list of all permutations
+	 */
 	static Function<String, List<String>> permutationsOfString = input -> {
 		List<String> permutations = new ArrayList<>();
 		Integer startIndex = 0;
-		return findPermutations(input.toCharArray(), startIndex, permutations);
+		generatePermutations(input.toCharArray(), startIndex, permutations);
+		return permutations;
 	};
 
-	private static List<String> findPermutations(char[] charArray, Integer startIndex, List<String> permutations) {
-		if (charArray.length == startIndex) {
-			permutations.add(new String(charArray));
-		}
-		for (int i = startIndex; i < charArray.length; i++) {
-			swap(charArray, startIndex, i);
-			findPermutations(charArray, startIndex + 1, permutations);
-			swap(charArray, startIndex, i);
-		}
-		return permutations;
+	private static void generatePermutations(char[] characters, Integer startIndex, List<String> permutations) {
+	    // Base case: one permutation formed
+	    if (startIndex == characters.length) {
+	        permutations.add(new String(characters));
+	    }
+	    for (int index = startIndex; index < characters.length; index++) {
+
+	        // Swap current index with startIndex
+	        swap(characters, startIndex, index);
+
+	        // Recurse for next position
+	        generatePermutations(characters, startIndex + 1, permutations);
+
+	        // Backtrack (restore original state)
+	        swap(characters, startIndex, index);
+	    }
 	}
 	
 	static Function<String, Map<Character, Long>> charCount = input -> {
