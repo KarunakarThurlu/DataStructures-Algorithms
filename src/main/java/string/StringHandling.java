@@ -1270,22 +1270,6 @@ public class StringHandling {
 		return input.chars().mapToObj(c -> String.valueOf((char) c)).sorted().collect(Collectors.joining());
 	}
 	
-	static BiFunction<String, Integer, String> stringReverseByFrequency = (String input, Integer frequency) -> {
-		StringBuilder reversedString = new StringBuilder();
-		int startIndex = 0;
-		int endIndex = input.length() - 1;
-		while (startIndex <= endIndex) {
-			int frequencyStart = startIndex;
-			int frequencyEnd = Math.min(startIndex + frequency - 1, endIndex);
-			String substring = input.substring(frequencyStart, frequencyEnd + 1);
-			String reversedSubString = stringReverse.apply(substring);
-			reversedString.append(reversedSubString);
-			startIndex = startIndex + frequency;
-		}
-		return new String(reversedString);
-	};
-
-	
 	/**
 	 * 3. Permutations of a String
 	 *
@@ -1339,6 +1323,50 @@ public class StringHandling {
 	        swap(characters, startIndex, index);
 	    }
 	}
+	
+	/**
+	 * 2. Reverse String in Groups of K (Frequency)
+	 *
+	 * <pre>
+	 * Description: Given a string and an integer k (frequency), reverse every k characters in the string.
+	 *
+	 * If the remaining characters are fewer than k, reverse all of them.
+	 *
+	 * Example 1: Input: "abcdefg", k = 2 Output: "badcfeg"
+	 * Example 2: Input: "abcd", k = 3    Output: "cbad"
+	 * Example 3: Input: "a", k = 2       Output: "a"
+	 *
+	 * Approach:
+	 * - Traverse the string in chunks of size k.
+	 * - For each chunk:
+	 *      - Extract substring
+	 *      - Reverse it
+	 *      - Append to result
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n)
+	 *
+	 * </pre>
+	 *
+	 * @param input the input string
+	 * @param k size of group to reverse
+	 * @return string after reversing every k characters
+	 */
+	static BiFunction<String, Integer, String> stringReverseByFrequency = (String input, Integer frequency) -> {
+		StringBuilder reversedString = new StringBuilder();
+		int startIndex = 0;
+		int endIndex = input.length() - 1;
+		while (startIndex <= endIndex) {
+			int frequencyStart = startIndex;
+			int frequencyEnd = Math.min(startIndex + frequency - 1, endIndex);
+			String substring = input.substring(frequencyStart, frequencyEnd + 1);
+			String reversedSubString = stringReverse.apply(substring);
+			reversedString.append(reversedSubString);
+			startIndex = startIndex + frequency;
+		}
+		return new String(reversedString);
+	};
+
 	
 	static Function<String, Map<Character, Long>> charCount = input -> {
 		IntFunction<? extends Character> mapper = c -> (char) c;
