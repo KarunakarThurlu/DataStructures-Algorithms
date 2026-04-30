@@ -548,43 +548,6 @@ public class StringHandling {
 	    return totalChangesRequired;
 	};
 	
-	/**
-	 * 18. Reverse a String
-	 *
-	 * <pre>
-	 * Description: Given a string, reverse the characters of the string and return the reversed string.
-	 *
-	 * Example 1: Input: "hello" Output: "olleh"
-	 * Example 2: Input: "Java"  Output: "avaJ"
-	 * Example 3: Input: "a"     Output: "a"
-	 * Example 4: Input: ""      Output: ""
-	 *
-	 * Approach:
-	 * - Convert the string into a character array.
-	 * - Use two pointers:
-	 *      startIndex → beginning of the array
-	 *      endIndex   → end of the array
-	 * - Swap characters while moving pointers toward each other.
-	 * - Convert the modified array back to a string.
-	 *
-	 * Time Complexity: O(n)
-	 * Space Complexity: O(n) (due to char array)
-	 *
-	 * </pre>
-	 *
-	 * @param input the string to be reversed
-	 * @return the reversed string
-	 */
-	static UnaryOperator<String> stringReverse = input -> {
-		char[] charArray = input.toCharArray();
-		int startIndex = 0;
-		int endIndex = input.length() - 1;
-		// Swap characters from both ends moving toward center
-		while (startIndex <= endIndex) {
-			swap(charArray, startIndex++, endIndex--);
-		}
-		return new String(charArray);
-	};
 	
 	/**
 	 * Swaps two characters in the array.
@@ -710,6 +673,15 @@ public class StringHandling {
 	        }
 	    }
 	    return new String(charArray);
+	};
+	
+	static BiFunction<String, String, Boolean> stringRotation = (one, two) -> {
+		// Concatenate s1 with itself & check if s2 is a substring
+		if (one.length() != two.length() || one == null) {
+			return false;
+		}
+		// Concatenate s1 with itself & check if s2 is a substring
+		return one.concat(one).contains(two);
 	};
 	
 	/**
@@ -1360,8 +1332,15 @@ public class StringHandling {
 			int frequencyStart = startIndex;
 			int frequencyEnd = Math.min(startIndex + frequency - 1, endIndex);
 			String substring = input.substring(frequencyStart, frequencyEnd + 1);
-			String reversedSubString = stringReverse.apply(substring);
-			reversedString.append(reversedSubString);
+			int left  = 0;
+			int right = substring.length()-1;
+			char[] ch = substring.toCharArray();
+			while(left<right) {
+				char temp = ch[left];
+				ch[left++]=ch[right];
+				ch[right--]=temp;
+			}
+			reversedString.append(String.valueOf(ch));
 			startIndex = startIndex + frequency;
 		}
 		return new String(reversedString);
@@ -1373,13 +1352,42 @@ public class StringHandling {
 		return input.chars().mapToObj(mapper).collect(groupingBy(identity(), counting()));
 	};
 	
-	static BiFunction<String, String, Boolean> stringRotation = (one, two) -> {
-		// Concatenate s1 with itself & check if s2 is a substring
-		if (one.length() != two.length() || one == null) {
-			return false;
+	/**
+	 * 1. Reverse a String
+	 *
+	 * <pre>
+	 * Description: Given a string, reverse the characters of the string and return the reversed string.
+	 *
+	 * Example 1: Input: "hello" Output: "olleh"
+	 * Example 2: Input: "Java"  Output: "avaJ"
+	 * Example 3: Input: "a"     Output: "a"
+	 * Example 4: Input: ""      Output: ""
+	 *
+	 * Approach:
+	 * - Convert the string into a character array.
+	 * - Use two pointers:
+	 *      startIndex → beginning of the array
+	 *      endIndex   → end of the array
+	 * - Swap characters while moving pointers toward each other.
+	 * - Convert the modified array back to a string.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n) (due to char array)
+	 *
+	 * </pre>
+	 *
+	 * @param input the string to be reversed
+	 * @return the reversed string
+	 */
+	static UnaryOperator<String> stringReverse = input -> {
+		char[] charArray = input.toCharArray();
+		int startIndex = 0;
+		int endIndex = input.length() - 1;
+		// Swap characters from both ends moving toward center
+		while (startIndex <= endIndex) {
+			swap(charArray, startIndex++, endIndex--);
 		}
-		// Concatenate s1 with itself & check if s2 is a substring
-		return one.concat(one).contains(two);
+		return new String(charArray);
 	};
 	
 }
