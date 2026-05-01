@@ -190,18 +190,55 @@ public class BinarySearchTree {
 	
 	
 	/**
-	 * 4. InOrder Tr
-	 * @param root
-	 * @param list
-	 * @return
+	 * 4. Binary Tree Inorder Traversal
+	 *
+	 * <pre>
+	 * Description: Given the root of a binary tree, return the in order traversal of its nodes' values.
+	 *
+	 * Inorder Traversal order:
+	 * Left → Root → Right
+	 *
+	 * Example:
+	 * Input:
+	 *      1
+	 *       \
+	 *        2
+	 *       /
+	 *      3
+	 *
+	 * Output: [1,3,2]
+	 *
+	 * Approach:
+	 * - Use recursion.
+	 * - Traverse left subtree first.
+	 * - Visit current node.
+	 * - Traverse right subtree.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n) (recursion stack in worst case)
+	 *
+	 * </pre>
+	 *
+	 * @param root root node of binary tree
+	 * @param result list to store traversal output
+	 * @return inorder traversal list
 	 */
-	public static List<Integer> inOrderTraversal(TreeNode<Integer> root, List<Integer> list) {
-		if (root != null) {
-			inOrderTraversal(root.left, list);
-			list.add(root.data);
-			inOrderTraversal(root.right, list);
-		}
-		return list;
+	public static List<Integer> inOrderTraversal(TreeNode<Integer> root, List<Integer> result) {
+
+	    if (root == null) {
+	        return result;
+	    }
+
+	    // Traverse left subtree
+	    inOrderTraversal(root.left, result);
+
+	    // Visit current node
+	    result.add(root.data);
+
+	    // Traverse right subtree
+	    inOrderTraversal(root.right, result);
+
+	    return result;
 	}
 
 	/**
