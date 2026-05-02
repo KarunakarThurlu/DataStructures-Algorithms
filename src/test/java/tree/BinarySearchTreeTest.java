@@ -535,5 +535,79 @@ class BinarySearchTreeTest {
 	    );
 	}
 	
+	@ParameterizedTest
+	@MethodSource("provideLcaTestCases")
+	@DisplayName("Test Lowest Common Ancestor in Binary Tree")
+	void testLowestCommonAncestor(TreeNode<Integer> root,
+            Integer pVal,
+            Integer qVal,
+			Integer expected) {
+		TreeNode<Integer> p = findNode(root, pVal);
+		TreeNode<Integer> q = findNode(root, qVal);
+		TreeNode<Integer> result = BinarySearchTree.lowestCommonAncestor(root, p, q);
+		Integer actual = (result != null) ? result.data : null;
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideLcaTestCases() {
+
+		TreeNode<Integer> root = createSampleTree();
+
+		return Stream.of(
+
+				// Case 1: Different subtrees
+				Arguments.of(root, 5, 1, 3),
+
+				// Case 2: One node is ancestor
+				Arguments.of(root, 5, 4, 5),
+
+				// Case 3: Same node
+				Arguments.of(root, 6, 6, 6),
+
+				// Case 4: Root is LCA
+				Arguments.of(root, 6, 8, 3),
+
+				// Case 5: Node not present
+				Arguments.of(root, 5, 999, 5),
+
+				// Case 6: Null root
+				Arguments.of(null, null, null, null));
+	}
+	private static TreeNode<Integer> createSampleTree() {
+	    /*
+	            3
+	           / \
+	          5   1
+	         / \ / \
+	        6  2 0  8
+	          / \
+	         7   4
+	     */
+	    TreeNode<Integer> root = new TreeNode<>(3);
+
+	    root.left = new TreeNode<>(5);
+	    root.right = new TreeNode<>(1);
+
+	    root.left.left = new TreeNode<>(6);
+	    root.left.right = new TreeNode<>(2);
+	    root.right.left = new TreeNode<>(0);
+	    root.right.right = new TreeNode<>(8);
+
+	    root.left.right.left = new TreeNode<>(7);
+	    root.left.right.right = new TreeNode<>(4);
+
+	    return root;
+	}
+
+	private static TreeNode<Integer> findNode(TreeNode<Integer> root, Integer value) {
+		if (root == null)
+			return null;
+		if (root.data == value)
+			return root;
+		TreeNode<Integer> left = findNode(root.left, value);
+		if (left != null)
+			return left;
+		return findNode(root.right, value);
+	}
 
 }

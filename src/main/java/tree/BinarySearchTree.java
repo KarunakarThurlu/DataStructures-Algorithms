@@ -1040,4 +1040,61 @@ public class BinarySearchTree {
 			return sameTree(rootOne.left, rootTwo.left) && sameTree(rootOne.right, rootTwo.right);
 		return false;
 	}
+	
+	/**
+	 * 23. Lowest Common Ancestor of a Binary Tree
+	 *
+	 * <pre>
+	 * Description: Given a binary tree and two nodes p and q, find their lowest common ancestor (LCA).
+	 *
+	 * The LCA is defined as the lowest node in the tree that has both p and q as descendants.
+	 *
+	 * Example:
+	 * Input:
+	 *          3
+	 *         / \
+	 *        5   1
+	 *       / \ / \
+	 *      6  2 0  8
+	 *
+	 * p = 5, q = 1 → Output: 3
+	 * p = 5, q = 4 → Output: 5
+	 *
+	 * Approach:
+	 * - Use recursion.
+	 * - If current node is null → return null.
+	 * - If current node is p or q → return current node.
+	 *
+	 * - Recurse on left and right subtree:
+	 *      - If both sides return non-null → current node is LCA
+	 *      - Else → return non-null side
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n) (recursion stack)
+	 *
+	 * </pre>
+	 *
+	 * @param root root of the binary tree
+	 * @param p first node
+	 * @param q second node
+	 * @return lowest common ancestor node
+	 */
+	public static TreeNode<Integer> lowestCommonAncestor(TreeNode<Integer> root, TreeNode<Integer> p, TreeNode<Integer> q) {
+		// Base case: null or found one of the nodes
+	    if (root == null || root == p || root == q) {
+	        return root;
+	    }
+
+	    // Search in left and right subtree
+	    TreeNode<Integer> leftResult = lowestCommonAncestor(root.left, p, q);
+	    TreeNode<Integer> rightResult = lowestCommonAncestor(root.right, p, q);
+
+	    // If both sides return non-null → this is LCA
+	    if (leftResult != null && rightResult != null) {
+	        return root;
+	    }
+
+	    // Otherwise return the non-null result
+	    return leftResult != null ? leftResult : rightResult;
+	}
 }
