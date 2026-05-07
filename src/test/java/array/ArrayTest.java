@@ -1605,6 +1605,35 @@ public class ArrayTest {
 				Arguments.of(new int[]{0,0,0,0}, 0 )
 			);
 	}
+	@ParameterizedTest
+	@MethodSource("provideIncreasingTripletTestCases")
+	@DisplayName("Test Increasing Triplet Subsequence")
+	void testIncreasingTripletSubsequence(int[] nums, boolean expected) {
+	    boolean actual = Array.increasingTripletSubsequence(nums);
+	    assertEquals(expected, actual);
+	}
 	
+	private static Stream<Arguments> provideIncreasingTripletTestCases() {
+		return Stream.of(
+
+				// Case 1: Increasing sequence exists
+				Arguments.of(new int[] { 1, 2, 3, 4, 5 }, true),
+
+				// Case 2: Strictly decreasing sequence
+				Arguments.of(new int[] { 5, 4, 3, 2, 1 }, false),
+
+				// Case 3: Triplet exists in middle
+				Arguments.of(new int[] { 2, 1, 5, 0, 4, 6 }, true),
+
+				// Case 4: Duplicate values only
+				Arguments.of(new int[] { 1, 1, 1, 1 }, false),
+
+				// Case 5: Array size less than 3
+				Arguments.of(new int[] { 1, 2 }, false),
+
+				// Case 6: Null input
+				Arguments.of(null, false)
+			);
+	}
 	
 }

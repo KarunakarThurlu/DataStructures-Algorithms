@@ -103,6 +103,7 @@ public class Array {
 	 * 80.Find maximum in Rotated Sorted Array
 	 * 81.Minimum size sub array
 	 * 82.Contagious sub array
+	 * 83.Increasing Triplet Subsequence
 	 */
 	
 	
@@ -3994,5 +3995,54 @@ public class Array {
 	    }
 
 	    return maxLength;
+	}
+	
+	/**
+	 * 39. Increasing Triplet Subsequence
+	 *
+	 * <pre>
+	 * Description: Given an integer array, determine whether there exists an increasing triplet subsequence.
+	 *
+	 * A triplet exists if there are indices: i < j < k such that: nums[i] < nums[j] < nums[k]
+	 *
+	 * Example 1: Input: [1,2,3,4,5]   Output: true
+	 * Example 2: Input: [5,4,3,2,1]   Output: false
+	 * Example 3: Input: [2,1,5,0,4,6] Output: true
+	 *
+	 * Approach:
+	 * - Maintain two variables:
+	 *      firstSmallest  → smallest number found so far
+	 *      secondSmallest → second smallest number found so far
+	 *
+	 * - Traverse the array:
+	 *      - Update firstSmallest if current number is smaller
+	 *      - Else update secondSmallest
+	 *      - Else if current number is greater than both,
+	 *        increasing triplet exists
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param nums input integer array
+	 * @return true if increasing triplet exists, otherwise false
+	 */
+	public static boolean increasingTripletSubsequence(int[] nums) {
+		if (nums == null || nums.length < 3) {
+			return false;
+		}
+		Integer firstSmallest = Integer.MAX_VALUE;
+		Integer secondSmallest = Integer.MAX_VALUE;
+		for (int currentNumber : nums) {
+			if (currentNumber <= firstSmallest) {         // Update smallest number
+				firstSmallest = currentNumber;
+			} else if (currentNumber <= secondSmallest) { // Update second smallest number
+				secondSmallest = currentNumber;
+			} else {                                      // Found a number greater than both
+				return true;
+			}
+		}
+		return false;
 	}
 }
