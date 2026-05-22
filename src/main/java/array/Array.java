@@ -777,13 +777,13 @@ public class Array {
 			}
 
 			if (array[startIndex] <= array[mid]) { // Left half is sorted
-				if (target >= array[startIndex] && target < array[mid]) {
+				if (array[startIndex] <= target && target < array[mid]) {
 					endIndex = mid - 1;
 				} else {
 					startIndex = mid + 1;
 				}
 			} else { // Right half is sorted
-				if (target > array[mid] && target <= array[endIndex]) {
+				if (array[mid] < target && target <= array[endIndex]) {
 					startIndex = mid + 1;
 				} else {
 					endIndex = mid - 1;
