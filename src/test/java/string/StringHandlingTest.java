@@ -440,5 +440,20 @@ public class StringHandlingTest {
         boolean actualResult = StringHandling.judgeCircle.apply(moves);
         assertEquals(expectedResult, actualResult);
     }
+    
+    @ParameterizedTest
+    @CsvSource({
+            "aaAbcBC, 3",
+            "abc, 0",
+            "AbcdBe, 1",
+            "UUDDLLRR, 0",
+            "U, 0",
+            "'', 0"
+    })
+    @DisplayName("Count Special Characters")
+    void testCountSpecialCharacters(String moves,  int expectedResult) {
+        int actualResult = StringHandling.countSpecialCharacters.apply(moves);
+        assertEquals(expectedResult, actualResult);
+    }
 
 }

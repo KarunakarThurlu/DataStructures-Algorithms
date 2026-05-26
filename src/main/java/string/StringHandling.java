@@ -49,7 +49,68 @@ public class StringHandling {
 	 * 24.Generate parenthesis
 	 * 25.Check if two strings are isomorphic
 	 * 26.Robot return to origin
+	 * 27.Count the Number of Special Characters I
+	 * 
 	 */
+	
+	/**
+	 * 27. Count Special Characters
+	 *
+	 * <pre>
+	 * Description: A character is considered special if both its lowercase and uppercase forms exist in the string. Return the total count of such characters.
+	 *
+	 * Example 1: Input: "aaAbBc" Output: 2
+	 * 
+	 * Explanation:
+	 * 'a' and 'A' exist
+	 * 'b' and 'B' exist
+	 *
+	 * Example 2: Input: "abc" Output: 0
+	 * Example 3: Input: "AbBCab" Output: 2
+	 *
+	 * Approach:
+	 * - Maintain two frequency arrays:
+	 *      lowercase letters
+	 *      uppercase letters
+	 *
+	 * - Traverse the string:
+	 *      - Store lowercase frequencies separately
+	 *      - Store uppercase frequencies separately
+	 *
+	 * - Count characters present in both arrays.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param word input string
+	 * @return count of special characters
+	 */
+	public static Function<String, Integer> countSpecialCharacters = word -> {
+		if (word == null || word.isEmpty()) {
+			return 0;
+		}
+		int specialCharacterCount = 0;
+		int[] lowerCaseFrequency = new int[26];
+		int[] upperCaseFrequency = new int[26];
+		for (char currentChar : word.toCharArray()) {
+			// Lowercase character
+			if (currentChar >= 'a' && currentChar <= 'z') {
+				lowerCaseFrequency[currentChar - 'a']++;
+			}// Uppercase character
+			else if (currentChar >= 'A' && currentChar <= 'Z') {
+				upperCaseFrequency[currentChar - 'A']++;
+			}
+		}
+		// Count characters existing in both cases
+		for (int index = 0; index < 26; index++) {
+			if (lowerCaseFrequency[index] > 0 && upperCaseFrequency[index] > 0) {
+				specialCharacterCount++;
+			}
+		}
+		return specialCharacterCount;
+	};
 	
 	/**
 	 * 26. Robot Return to Origin
