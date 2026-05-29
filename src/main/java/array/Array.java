@@ -11,8 +11,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Array {
@@ -104,6 +106,7 @@ public class Array {
 	 * 81.Minimum size sub array
 	 * 82.Contagious sub array
 	 * 83.Increasing Triplet Subsequence
+	 * 84.Evaluate Reverse Polish Notation
 	 */
 	
 	
@@ -3998,7 +4001,7 @@ public class Array {
 	}
 	
 	/**
-	 * 39. Increasing Triplet Subsequence
+	 * 83. Increasing Triplet Subsequence
 	 *
 	 * <pre>
 	 * Description: Given an integer array, determine whether there exists an increasing triplet subsequence.
@@ -4045,4 +4048,64 @@ public class Array {
 		}
 		return false;
 	}
+	
+	/**
+	 * 84. Evaluate Reverse Polish Notation
+	 *
+	 * <pre>
+	 * Description: Evaluate the value of an arithmetic expression in Reverse Polish Notation (Postfix Expression).
+	 *
+	 * Supported operators: +, -, *, /
+	 *
+	 * Example 1: Input: ["2","1","+","3","*"]  Output: 9
+	 * Explanation: ((2 + 1) * 3)
+	 *
+	 * Example 2: Input: ["4","13","5","/","+"] Output: 6 
+	 * Explanation: (4 + (13 / 5))
+	 *
+	 * Example 3: Input: ["10","6","9","3","+","-11","*","/","*","17","+","5","+"] Output: 22
+	 *
+	 * Approach:
+	 * - Use a stack.
+	 * - Traverse tokens:
+	 *      - If number → push to stack
+	 *      - If operator:
+	 *          - Pop two elements
+	 *          - Apply operation
+	 *          - Push result back
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(n)
+	 *
+	 * </pre>
+	 *
+	 * @param tokens postfix expression tokens
+	 * @return evaluated result
+	 */
+	public static int evalRPN(String tokens[]) {
+		if (tokens == null || tokens.length == 0) {
+	        return 0;
+	    }
+		Stack<Integer> stack = new Stack<Integer>();
+		for (String token : tokens) {
+			if (!isOperator.test(token)) {
+				stack.push(Integer.parseInt(token));
+			} else {
+				int y = stack.pop();
+				int x = stack.pop();
+				switch (token) {
+				case "+" -> stack.push(x + y);
+				case "*" -> stack.push(x * y);
+				case "-" -> stack.push(x - y);
+				case "/" -> stack.push(x / y);
+				default -> throw new IllegalArgumentException("Unexpected value: " + token);
+				}
+			}
+		}
+		return stack.pop();
+	}
+	public static Predicate<String> isOperator = token ->{
+		return token.equals("+") || token.equals("-") || token.equals("*") || token.equals("/");
+	};
+	
 }

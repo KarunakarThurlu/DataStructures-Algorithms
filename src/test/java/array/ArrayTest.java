@@ -1636,4 +1636,34 @@ public class ArrayTest {
 			);
 	}
 	
+	@ParameterizedTest
+	@MethodSource("provideEvalRpnTestCases")
+	@DisplayName("Test Evaluate Reverse Polish Notation")
+	void testEvalRPN(String[] tokens, int expected) {
+		int actual = Array.evalRPN(tokens);
+		assertEquals(expected, actual);
+	}
+
+	private static Stream<Arguments> provideEvalRpnTestCases() {
+		return Stream.of(
+
+				// Case 1: Basic addition and multiplication
+				Arguments.of(new String[] { "2", "1", "+", "3", "*" }, 9),
+
+				// Case 2: Division operation
+				Arguments.of(new String[] { "4", "13", "5", "/", "+" }, 6),
+
+				// Case 3: Complex expression
+				Arguments.of(new String[] { "10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+" }, 22),
+
+				// Case 4: Single number
+				Arguments.of(new String[] { "5" }, 5),
+
+				// Case 5: Negative numbers
+				Arguments.of(new String[] { "4", "-2", "/", "2", "-3", "-", "-" }, -7),
+
+				// Case 6: Null input
+				Arguments.of(null, 0));
+	}
+	
 }
