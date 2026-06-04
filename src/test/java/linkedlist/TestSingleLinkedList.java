@@ -281,6 +281,7 @@ public class TestSingleLinkedList {
 	private static Stream<Arguments> rotateLinkedListProvider() {
 		return Stream.of(
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 2, 3, 4, 5)),2, addAtEndOfHeadNode(Arrays.asList(4,5,1,2,3))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 2, 3, 4, 5, 6)),4, addAtEndOfHeadNode(Arrays.asList(3,4,5,6,1,2))),
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(10, 20, 20)),1, addAtEndOfHeadNode(Arrays.asList(20, 10, 20))),
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1, 1)),0, addAtEndOfHeadNode(Arrays.asList(1, 1))),
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(10, 11, 12, 13, 14, 15)),1, addAtEndOfHeadNode(Arrays.asList(15, 10, 11, 12, 13, 14))),

@@ -613,40 +613,29 @@ public class SingleLinkedList {
 	 * @return new head of the rotated linked list
 	 */
 	public static <T> Node<T> rotateLinkedList(Node<T> head, int k) {
-		  // Edge cases: empty list or single node
-	    if (head == null || head.next == null || k == 0) {
-	        return head;
-	    }
+		// Edge cases: empty list or single node
+		if (head == null || head.next == null || k == 0) {
+			return head;
+		}
+		Node<T> fast = head;
+		Node<T> slow = head;
+		while (k-- >= 0 && fast != null) {
+			fast = fast.next;
+		}
 
-	    // Step 1: Find length of the linked list and last node
-	    Node<T> tail = head;
-	    int length = 1;
+		while (fast != null) {
+			fast = fast.next;
+			slow = slow.next;
+		}
 
-	    while (tail.next != null) {
-	        length++;
-	        tail = tail.next;
-	    }
-
-	    // Step 2: Normalize k when k > length
-	    k = k % length;
-	    if (k == 0) {
-	        return head; // No rotation needed
-	    }
-
-	    // Step 3: Make the linked list circular
-	    tail.next = head;
-
-	    // Step 4: Find the new tail (length - k steps)
-	    Node<T> newTail = head;
-	    for (int i = 1; i < length - k; i++) {
-	        newTail = newTail.next;
-	    }
-
-	    // Step 5: Set new head and break the circular link
-	    Node<T> newHead = newTail.next;
-	    newTail.next = null;
-
-	    return newHead;
+		Node<T> newHead = slow.next;
+		slow.next = null;
+		Node<T> temp = newHead;
+		while (temp.next != null) {
+			temp = temp.next;
+		}
+		temp.next = head;
+		return newHead;
 	}
 	 
 	/**
