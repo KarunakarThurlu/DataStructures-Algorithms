@@ -430,5 +430,20 @@ public class TestSingleLinkedList {
 				Arguments.of(addAtEndOfHeadNode(Arrays.asList(9, 9, 9, 9, 9, 9, 9)), addAtEndOfHeadNode(Arrays.asList(9, 9, 9, 9)), addAtEndOfHeadNode(Arrays.asList(8, 9, 9, 9, 0, 0, 0, 1)))
 			);
 	}
+	
+	@ParameterizedTest
+	@MethodSource("deleteMidNodeOfLinkedList")
+	@DisplayName("Test delete mid node of linked list")
+	void testDeleteMidNodeOfLinkedList(Node<Integer> head, Node<Integer> expected) {
+		Node<Integer> actual = SingleLinkedList.deleteMidNode(head);
+		assertEquals(expected, actual);
+	}
+	private static Stream<Arguments> deleteMidNodeOfLinkedList() {
+		return Stream.of(
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(2, 4, 3)), addAtEndOfHeadNode(Arrays.asList(2, 3))),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(0)), null),
+				Arguments.of(addAtEndOfHeadNode(Arrays.asList(1,2,3,4)), addAtEndOfHeadNode(Arrays.asList(1,2,4)))
+			);
+	}
 
 }

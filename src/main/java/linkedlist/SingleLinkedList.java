@@ -35,7 +35,67 @@ public class SingleLinkedList {
 	 * 24.Odd even linked list
 	 * 25.Add two numbers represented by linked list
 	 * 26.Intersection of two linked lists
+	 * 27.Delete MidNode
 	 */
+	
+	
+	/**
+	 * 42. Delete Middle Node of a Linked List
+	 *
+	 * <pre>
+	 * Description:
+	 * Given the head of a singly linked list, delete the middle node
+	 * and return the head of the modified list.
+	 *
+	 * If the list contains only one node, return null.
+	 *
+	 * Example 1:
+	 * Input: 1 -> 2 -> 3 -> 4 -> 5
+	 * Output: 1 -> 2 -> 4 -> 5
+	 *
+	 * Example 2:
+	 * Input: 1 -> 2 -> 3 -> 4
+	 * Output: 1 -> 2 -> 4
+	 *
+	 * Example 3:
+	 * Input: 1
+	 * Output: null
+	 *
+	 * Approach:
+	 * - Use two pointers:
+	 *      slow → moves one step at a time
+	 *      fast → moves two steps at a time
+	 *
+	 * - Maintain a previous pointer to track the node before slow.
+	 * - When fast reaches the end:
+	 *      slow points to the middle node.
+	 * - Remove the middle node by updating previous.next.
+	 *
+	 * Time Complexity: O(n)
+	 * Space Complexity: O(1)
+	 *
+	 * </pre>
+	 *
+	 * @param head head of the linked list
+	 * @return head of the linked list after deleting the middle node
+	 */
+	public static Node<Integer> deleteMidNode(Node<Integer> head) {
+		if (head.next == null) {
+			return head.next;
+		}
+		Node<Integer> fast = head;
+		Node<Integer> slow = head;
+		 Node<Integer> previousNode = null;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			previousNode = slow;
+			slow = slow.next;
+		}
+		if (previousNode != null && previousNode.next != null) {
+			previousNode.next = previousNode.next.next;
+		}
+		return head;
+	}
 	
 	/**
 	 * 
