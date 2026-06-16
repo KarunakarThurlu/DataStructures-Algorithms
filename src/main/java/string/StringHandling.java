@@ -50,8 +50,65 @@ public class StringHandling {
 	 * 25.Check if two strings are isomorphic
 	 * 26.Robot return to origin
 	 * 27.Count the Number of Special Characters I
-	 * 
+	 * 28.Process String with special characters
 	 */
+	
+	
+	/**
+	 * 28. Process String with Special Operations
+	 *
+	 * <pre>
+	 * Description:Given a string containing alphabetic characters and special symbols,
+	 * process the string according to the following rules:
+	 *
+	 * '*' → Remove the last character from the current result.
+	 * '#' → Duplicate the current result and append it.
+	 * '%' → Reverse the current result.
+	 *
+	 * Alphabetic characters are appended to the result.
+	 *
+	 * Example 1: Input: "abc#" Output: "abcabc"
+	 * Example 2: Input: "abc*" Output: "ab"
+	 * Example 3: Input: "abc%" Output: "cba"
+	 * Example 4: Input: "a#b%" Output: "baa"
+	 *
+	 * Approach:
+	 * - Traverse each character in the string.
+	 * - Apply the corresponding operation:
+	 *      - Letter → append
+	 *      - '*' → remove last character if present
+	 *      - '#' → duplicate current string
+	 *      - '%' → reverse current string
+	 *
+	 * Time Complexity: O(n²)
+	 * Space Complexity: O(n)
+	 *
+	 * </pre>
+	 *
+	 * @param input input string containing characters and operations
+	 * @return processed string
+	 */
+	public static Function<String,String> processString = (String str)  -> {
+		if (str == null || str.isEmpty()) {
+			return "";
+		}
+		StringBuilder result = new StringBuilder();
+		for (char currentChar : str.toCharArray()) {
+			if (Character.isAlphabetic(currentChar)) {
+				result.append(currentChar);
+			} else if (currentChar == '*' && result.length() > 0) {
+				// Remove last character if available
+				result.deleteCharAt(result.length() - 1);
+			} else if (currentChar == '#') {
+				// Duplicate current content
+				result.append(result);
+			} else if (currentChar == '%') {
+				// Reverse current content
+				result.reverse();
+			}
+		}
+		return result.toString();
+	};
 	
 	/**
 	 * 27. Count Special Characters

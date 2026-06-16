@@ -455,5 +455,19 @@ public class StringHandlingTest {
         int actualResult = StringHandling.countSpecialCharacters.apply(moves);
         assertEquals(expectedResult, actualResult);
     }
+    
+    @ParameterizedTest
+    @CsvSource({
+    	"abc#, abcabc",
+        "abc%, cba",
+        "abc*, ab",
+        "a#b%*, ba",
+        "*abc, abc"
+    })
+    @DisplayName("Test Process String With Special Characters")
+    void testProcessStringWithSpecialCharacters(String moves,  String expectedResult) {
+        String actualResult = StringHandling.processString.apply(moves);
+        assertEquals(expectedResult, actualResult);
+    }
 
 }
