@@ -1,6 +1,8 @@
 package numbers;
 
 import java.math.BigInteger;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
@@ -19,7 +21,93 @@ public class NumberChallenges {
 	 * 7. Armstrong number
 	 * 8. Count number of 1 bits
 	 * 9. Climbing Stairs
+	 * 10.Amount to text
 	 */
+	
+	 private static final Map<Long, String> LOOKUP = new LinkedHashMap<>();
+
+	    static {
+	        // Indian Number System
+	        LOOKUP.put(10000000L, "Crore");
+	        LOOKUP.put(100000L, "Lakh");
+	        LOOKUP.put(1000L, "Thousand");
+	        LOOKUP.put(100L, "Hundred");
+
+	        // Tens
+	        LOOKUP.put(90L, "Ninety");
+	        LOOKUP.put(80L, "Eighty");
+	        LOOKUP.put(70L, "Seventy");
+	        LOOKUP.put(60L, "Sixty");
+	        LOOKUP.put(50L, "Fifty");
+	        LOOKUP.put(40L, "Forty");
+	        LOOKUP.put(30L, "Thirty");
+	        LOOKUP.put(20L, "Twenty");
+
+	        // 1 - 19
+	        LOOKUP.put(19L, "Nineteen");
+	        LOOKUP.put(18L, "Eighteen");
+	        LOOKUP.put(17L, "Seventeen");
+	        LOOKUP.put(16L, "Sixteen");
+	        LOOKUP.put(15L, "Fifteen");
+	        LOOKUP.put(14L, "Fourteen");
+	        LOOKUP.put(13L, "Thirteen");
+	        LOOKUP.put(12L, "Twelve");
+	        LOOKUP.put(11L, "Eleven");
+	        LOOKUP.put(10L, "Ten");
+	        LOOKUP.put(9L, "Nine");
+	        LOOKUP.put(8L, "Eight");
+	        LOOKUP.put(7L, "Seven");
+	        LOOKUP.put(6L, "Six");
+	        LOOKUP.put(5L, "Five");
+	        LOOKUP.put(4L, "Four");
+	        LOOKUP.put(3L, "Three");
+	        LOOKUP.put(2L, "Two");
+	        LOOKUP.put(1L, "One");
+	    }
+
+	    public static String amountToWords(Long amount) {
+	        if (amount == null || amount < 0)
+	            throw new IllegalArgumentException("Invalid amount");
+	        if (amount == 0)
+	            return "Zero";
+	        return convert(amount).trim().replaceAll("\\s+", " ");
+	    }
+
+		private static String convert(Long amount) {
+			StringBuilder sb = new StringBuilder();
+			for (Map.Entry<Long, String> entry : LOOKUP.entrySet()) {
+				long key = entry.getKey();
+				if (amount >= key) {
+					// Numbers >=100 use quotient recursively
+					if (key >= 100) {
+						sb.append(convert(amount / key)).append(" ").append(entry.getValue());
+						amount %= key;
+						if (amount != 0) {
+							// British/Indian style
+							if (amount < 100) {
+								sb.append(" and ");
+							} else {
+								sb.append(" ");
+							}
+							sb.append(convert(amount));
+						}
+						return sb.toString();
+					}
+					// Tens (20,30,40...)
+					if (key >= 20) {
+						sb.append(entry.getValue());
+						amount %= key;
+						if (amount != 0) {
+							sb.append(" ").append(convert(amount));
+						}
+						return sb.toString();
+					}
+					// 1-19
+					return entry.getValue();
+				}
+			}
+			return "";
+		}
 	
 	/**
 	 * 9. Climbing Stairs
